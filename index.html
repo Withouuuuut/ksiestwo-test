@@ -83,12 +83,11 @@
   }
 }
 </script>
-<link rel="stylesheet" href="/index.css">
 </head>
-  <body class="bg-brand-cream text-brand-dark antialiased selection:bg-brand-gold selection:text-white pb-safe">
+  <body class="bg-brand-cream text-brand-dark antialiased selection:bg-brand-gold selection:text-white pb-safe relative">
 
-    <!-- Language Switcher -->
-    <div class="fixed top-6 right-6 z-50 animate-fade-in">
+    <!-- Language Switcher (Changed from fixed to absolute to scroll away) -->
+    <div class="absolute top-6 right-6 z-50 animate-fade-in">
       <div class="flex bg-white/90 backdrop-blur-sm rounded-full shadow-lg p-1 border border-brand-stone">
         <button onclick="setLanguage('pl')" id="btn-pl" class="px-4 py-1.5 rounded-full text-xs font-bold tracking-widest transition-all duration-300 bg-brand-dark text-white shadow-md">PL</button>
         <button onclick="setLanguage('en')" id="btn-en" class="px-4 py-1.5 rounded-full text-xs font-bold tracking-widest transition-all duration-300 text-brand-muted hover:text-brand-dark">EN</button>
@@ -480,6 +479,5 @@
         document.body.style.overflow = '';
       }
     </script>
-  <script type="module" src="/index.tsx"></script>
-</body>
+  </body>
 </html>
