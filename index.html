@@ -73,6 +73,18 @@
       
       /* Sticky Nav Active State */
       .nav-btn.active { background-color: #1a1a1a; color: #ffffff; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+
+      /* Scroll Reveal Animation */
+      .item-row {
+        opacity: 0;
+        transform: translateY(15px);
+        transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        will-change: opacity, transform;
+      }
+      .item-row.is-visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
     </style>
 <script type="importmap">
 {
@@ -287,6 +299,26 @@
       // --- LOGIC ---
       let LANG = 'pl';
       
+      // Intersection Observer for animations
+      const scrollObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            scrollObserver.unobserve(entry.target); // Animate once
+          }
+        });
+      }, {
+        threshold: 0.1,
+        rootMargin: '0px 0px -20px 0px' // Trigger slightly before bottom
+      });
+
+      function setupScrollAnimations() {
+        document.querySelectorAll('.item-row').forEach(el => {
+          // Reset state if needed, though usually we want them to stay visible once shown
+          scrollObserver.observe(el);
+        });
+      }
+      
       // Initial Render
       document.addEventListener('DOMContentLoaded', () => {
         renderAll();
@@ -332,6 +364,9 @@
         const menuContainer = document.getElementById('menu-container');
         // Clear current content carefully to avoid jank if possible, but innerHTML is simplest
         menuContainer.innerHTML = MENU_DATA.map(section => createSectionHTML(section)).join('');
+        
+        // Setup animations after render
+        setTimeout(setupScrollAnimations, 100);
       }
 
       function createSectionHTML(section) {
@@ -399,8 +434,9 @@
       function createItemHTML(item) {
         const name = LANG === 'en' ? item.enName : item.plName;
         const desc = LANG === 'en' ? item.descEN : item.descPL;
+        // Added 'item-row' class for scroll animation
         return `
-          <div class="group flex justify-between items-start py-5 border-b border-brand-stone/40 last:border-0 transition-colors duration-300 hover:bg-brand-cream/50 px-2 rounded-lg">
+          <div class="item-row group flex justify-between items-start py-5 border-b border-brand-stone/40 last:border-0 transition-colors duration-300 hover:bg-brand-cream/50 px-2 rounded-lg">
             <div class="flex-1 pr-6">
               <h4 class="font-serif text-lg font-medium text-brand-dark mb-1 group-hover:text-brand-gold transition-colors duration-300">${name}</h4>
               <p class="font-sans text-sm text-brand-muted font-light leading-relaxed">${desc}</p>
@@ -425,6 +461,11 @@
         const collapseText = LANG === 'en' ? 'Hide Menu' : 'Ukryj Menu';
         
         btnText.textContent = isOpen ? collapseText : expandText;
+        
+        if (isOpen) {
+           // Wait for expansion then check visibility
+           setTimeout(setupScrollAnimations, 100);
+        }
       }
 
       function scrollToSection(id) {
