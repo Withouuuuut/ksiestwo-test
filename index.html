@@ -13,7 +13,7 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
     
     <script>
       tailwind.config = {
@@ -26,10 +26,10 @@
             colors: {
               brand: {
                 dark: '#1a1a1a',
-                gold: '#d4af37',
+                gold: '#b8952b', /* Darkened for better contrast on white */
                 cream: '#fcfbf9',
                 stone: '#e6e2dd',
-                muted: '#8c8c8c'
+                muted: '#525252' /* Darkened to pass WCAG AA for small text */
               }
             },
             animation: {
@@ -53,6 +53,13 @@
     <style>
       html { scroll-behavior: smooth; }
       body { -webkit-tap-highlight-color: transparent; }
+      
+      /* Focus Styles for Accessibility */
+      button:focus-visible, a:focus-visible {
+        outline: 2px solid #b8952b;
+        outline-offset: 2px;
+      }
+
       /* Hide scrollbar */
       .no-scrollbar::-webkit-scrollbar { display: none; }
       .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
@@ -86,7 +93,7 @@
         transform: translateY(0);
       }
     </style>
-<script type="importmap">
+  <script type="importmap">
 {
   "imports": {
     "react": "https://aistudiocdn.com/react@^19.2.0",
@@ -96,30 +103,30 @@
 }
 </script>
 </head>
-  <body class="bg-brand-cream text-brand-dark antialiased selection:bg-brand-gold selection:text-white pb-safe relative">
+  <body class="bg-brand-cream text-brand-dark antialiased selection:bg-brand-gold selection:text-white pb-[env(safe-area-inset-bottom)] relative">
 
-    <!-- Language Switcher (Changed from fixed to absolute to scroll away) -->
-    <div class="absolute top-6 right-6 z-50 animate-fade-in">
+    <!-- Language Switcher -->
+    <div class="absolute top-6 right-6 z-50 animate-fade-in" role="region" aria-label="Language selection">
       <div class="flex bg-white/90 backdrop-blur-sm rounded-full shadow-lg p-1 border border-brand-stone">
-        <button onclick="setLanguage('pl')" id="btn-pl" class="px-4 py-1.5 rounded-full text-xs font-bold tracking-widest transition-all duration-300 bg-brand-dark text-white shadow-md">PL</button>
-        <button onclick="setLanguage('en')" id="btn-en" class="px-4 py-1.5 rounded-full text-xs font-bold tracking-widest transition-all duration-300 text-brand-muted hover:text-brand-dark">EN</button>
+        <button onclick="setLanguage('pl')" id="btn-pl" aria-pressed="true" class="px-4 py-1.5 rounded-full text-xs font-bold tracking-widest transition-all duration-300 bg-brand-dark text-white shadow-md">PL</button>
+        <button onclick="setLanguage('en')" id="btn-en" aria-pressed="false" class="px-4 py-1.5 rounded-full text-xs font-bold tracking-widest transition-all duration-300 text-brand-muted hover:text-brand-dark">EN</button>
       </div>
     </div>
 
     <!-- Header -->
-    <header class="pt-24 pb-12 px-6 text-center relative overflow-hidden">
+    <header class="pt-24 pb-12 px-6 text-center relative overflow-hidden" role="banner">
       <div class="relative z-10 animate-fade-in-up">
-        <div class="w-16 h-16 mx-auto bg-brand-gold/10 rounded-full flex items-center justify-center mb-6 shadow-sm border border-brand-gold/20">
+        <div class="w-16 h-16 mx-auto bg-brand-gold/10 rounded-full flex items-center justify-center mb-6 shadow-sm border border-brand-gold/20" aria-hidden="true">
            <span class="font-serif font-bold text-2xl text-brand-dark">KS</span>
         </div>
         <h1 class="font-serif text-4xl md:text-6xl font-medium text-brand-dark mb-3 tracking-tight">Księstwo Sushi</h1>
         <p id="header-subtitle" class="font-sans text-brand-muted text-xs md:text-sm tracking-[0.3em] uppercase">Wyborne Sushi — Menu</p>
       </div>
-      <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[120%] h-full bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-white via-transparent to-transparent opacity-60 -z-10 pointer-events-none"></div>
+      <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[120%] h-full bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-white via-transparent to-transparent opacity-60 -z-10 pointer-events-none" aria-hidden="true"></div>
     </header>
 
     <!-- Sticky Nav -->
-    <nav class="sticky top-0 z-40 bg-brand-cream/85 backdrop-blur-md border-b border-brand-stone/50 shadow-sm transition-all duration-300">
+    <nav class="sticky top-0 z-40 bg-brand-cream/85 backdrop-blur-md border-b border-brand-stone/50 shadow-sm transition-all duration-300" aria-label="Menu categories">
       <div class="max-w-4xl mx-auto px-4">
         <div id="nav-container" class="flex overflow-x-auto no-scrollbar py-4 gap-2 md:justify-center md:gap-6">
           <!-- Nav items injected by JS -->
@@ -133,34 +140,34 @@
     </main>
 
     <!-- Footer -->
-    <footer class="py-16 bg-brand-dark text-brand-stone rounded-t-[2rem]">
+    <footer class="py-16 bg-brand-dark text-brand-stone rounded-t-[2rem]" role="contentinfo">
       <div class="container mx-auto px-6 text-center">
         <h2 class="font-serif text-3xl mb-1 text-white">Księstwo Sushi</h2>
         <p id="footer-subtitle" class="font-sans text-xs text-brand-muted uppercase tracking-[0.2em] mb-10">Wyborne Sushi</p>
         
         <div class="flex flex-col md:flex-row justify-center items-center gap-6 mb-12">
-          <a href="tel:+48502525544" class="flex items-center gap-3 px-6 py-4 rounded-full bg-white/5 hover:bg-white/10 transition-colors border border-white/10 group w-full md:w-auto justify-center">
-            <img src="images/phone.png" alt="Phone" class="w-5 h-5 object-contain opacity-90">
+          <a href="tel:+48502525544" class="flex items-center gap-3 px-6 py-4 rounded-full bg-white/5 hover:bg-white/10 transition-colors border border-white/10 group w-full md:w-auto justify-center focus:ring-2 focus:ring-brand-gold focus:outline-none" aria-label="Call us at +48 502 525 544">
+            <img src="images/phone.png" alt="" aria-hidden="true" class="w-5 h-5 object-contain opacity-90">
             <span class="font-sans font-medium text-sm">+48 502 525 544</span>
           </a>
-          <a href="https://www.instagram.com/ksiestwosushi" target="_blank" class="flex items-center gap-3 px-6 py-4 rounded-full bg-white/5 hover:bg-white/10 transition-colors border border-white/10 group w-full md:w-auto justify-center">
-            <img src="images/instagram.png" alt="Instagram" class="w-5 h-5 object-contain opacity-90">
+          <a href="https://www.instagram.com/ksiestwosushi" target="_blank" class="flex items-center gap-3 px-6 py-4 rounded-full bg-white/5 hover:bg-white/10 transition-colors border border-white/10 group w-full md:w-auto justify-center focus:ring-2 focus:ring-brand-gold focus:outline-none" aria-label="Visit our Instagram">
+            <img src="images/instagram.png" alt="" aria-hidden="true" class="w-5 h-5 object-contain opacity-90">
             <span class="font-sans font-medium text-sm">@ksiestwosushi</span>
           </a>
-          <a href="https://maps.app.goo.gl/1WmFXGEPnDcBiz3p9" target="_blank" class="flex items-center gap-3 px-6 py-4 rounded-full bg-white/5 hover:bg-white/10 transition-colors border border-white/10 group w-full md:w-auto justify-center">
-            <img src="images/google_maps.png" alt="Maps" class="w-5 h-5 object-contain opacity-90">
+          <a href="https://maps.app.goo.gl/1WmFXGEPnDcBiz3p9" target="_blank" class="flex items-center gap-3 px-6 py-4 rounded-full bg-white/5 hover:bg-white/10 transition-colors border border-white/10 group w-full md:w-auto justify-center focus:ring-2 focus:ring-brand-gold focus:outline-none" aria-label="Open location in Google Maps">
+            <img src="images/google_maps.png" alt="" aria-hidden="true" class="w-5 h-5 object-contain opacity-90">
             <span class="font-sans font-medium text-sm">Krupówki 38A, Zakopane</span>
           </a>
         </div>
         
-        <div class="w-16 h-px bg-brand-gold/30 mx-auto mb-8"></div>
+        <div class="w-16 h-px bg-brand-gold/30 mx-auto mb-8" aria-hidden="true"></div>
         <p id="footer-copy" class="text-xs text-brand-muted font-sans opacity-60"></p>
       </div>
     </footer>
 
     <!-- Lightbox -->
-    <div id="lightbox" class="fixed inset-0 z-[100] flex items-center justify-center bg-black/95 backdrop-blur-sm transition-opacity duration-300 opacity-0 pointer-events-none" onclick="closeLightbox()">
-      <button class="absolute top-6 right-6 text-white/70 hover:text-white transition-colors">
+    <div id="lightbox" role="dialog" aria-modal="true" aria-label="Image View" class="fixed inset-0 z-[100] flex items-center justify-center bg-black/95 backdrop-blur-sm transition-opacity duration-300 opacity-0 pointer-events-none" onclick="closeLightbox()">
+      <button id="lightbox-close" aria-label="Close image" class="absolute top-6 right-6 text-white/70 hover:text-white transition-colors p-2 rounded-full hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white">
         <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
       </button>
       <div class="relative max-w-5xl w-[90vw] max-h-[90vh] flex items-center justify-center p-2" onclick="event.stopPropagation()">
@@ -234,10 +241,10 @@
         },
         {
           id: 'uramaki-combined',
-          title: { en: 'Uramaki & Tempura (8 pcs)', pl: 'Uramaki & Tempura (8 szt.)' },
+          title: { en: 'Uramaki & Tempura', pl: 'Uramaki & Tempura' },
           introPhoto: 'images/tempura.jpg',
-          introDescEN: 'Our selection of Uramaki (inside-out rolls) and crispy Tempura Uramaki.',
-          introDescPL: 'Nasz wybór Uramaki (rolek ryżem na zewnątrz) oraz chrupiących Uramaki w Tempurze.',
+          introDescEN: 'Our selection of Uramaki (inside-out rolls) and crispy Tempura Uramaki (8 pcs).',
+          introDescPL: 'Nasz wybór Uramaki (rolek ryżem na zewnątrz) oraz chrupiących Uramaki w Tempurze (8 szt.).',
           subSections: [
             {
               titleEN: 'Classic Uramaki',
@@ -298,6 +305,7 @@
 
       // --- LOGIC ---
       let LANG = 'pl';
+      let lastFocusedElement = null;
       
       // Intersection Observer for animations
       const scrollObserver = new IntersectionObserver((entries) => {
@@ -314,7 +322,6 @@
 
       function setupScrollAnimations() {
         document.querySelectorAll('.item-row').forEach(el => {
-          // Reset state if needed, though usually we want them to stay visible once shown
           scrollObserver.observe(el);
         });
       }
@@ -323,6 +330,16 @@
       document.addEventListener('DOMContentLoaded', () => {
         renderAll();
         setupScrollSpy();
+        
+        // Handle lightbox escape
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape') {
+             const lb = document.getElementById('lightbox');
+             if (!lb.classList.contains('opacity-0')) {
+               closeLightbox();
+             }
+          }
+        });
       });
 
       function setLanguage(lang) {
@@ -337,10 +354,14 @@
         const btnEn = document.getElementById('btn-en');
         if (LANG === 'pl') {
           btnPl.className = 'px-4 py-1.5 rounded-full text-xs font-bold tracking-widest transition-all duration-300 bg-brand-dark text-white shadow-md';
+          btnPl.setAttribute('aria-pressed', 'true');
           btnEn.className = 'px-4 py-1.5 rounded-full text-xs font-bold tracking-widest transition-all duration-300 text-brand-muted hover:text-brand-dark';
+          btnEn.setAttribute('aria-pressed', 'false');
         } else {
           btnEn.className = 'px-4 py-1.5 rounded-full text-xs font-bold tracking-widest transition-all duration-300 bg-brand-dark text-white shadow-md';
+          btnEn.setAttribute('aria-pressed', 'true');
           btnPl.className = 'px-4 py-1.5 rounded-full text-xs font-bold tracking-widest transition-all duration-300 text-brand-muted hover:text-brand-dark';
+          btnPl.setAttribute('aria-pressed', 'false');
         }
 
         // Update Static Text
@@ -355,6 +376,7 @@
             onclick="scrollToSection('${section.id}')" 
             class="nav-btn whitespace-nowrap px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 ${index === 0 ? 'active' : 'text-brand-muted hover:text-brand-dark hover:bg-white'}" 
             data-target="${section.id}"
+            aria-current="${index === 0 ? 'true' : 'false'}"
           >
             ${LANG === 'en' ? section.title.en : section.title.pl}
           </button>
@@ -362,7 +384,6 @@
 
         // Render Menu Sections
         const menuContainer = document.getElementById('menu-container');
-        // Clear current content carefully to avoid jank if possible, but innerHTML is simplest
         menuContainer.innerHTML = MENU_DATA.map(section => createSectionHTML(section)).join('');
         
         // Setup animations after render
@@ -396,29 +417,38 @@
 
         return `
           <section id="${section.id}" class="scroll-mt-32 bg-white rounded-xl overflow-hidden shadow-[0_4px_30px_rgba(0,0,0,0.03)] border border-brand-stone/30">
-            <!-- Hero Image -->
-            <div class="relative group cursor-pointer overflow-hidden aspect-[21/9] md:aspect-[3/1]" onclick="openLightbox('${section.introPhoto}')">
-              <img src="${section.introPhoto}" alt="${title}" loading="lazy" class="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105">
-              <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-80 transition-opacity duration-300"></div>
+            <!-- Hero Image Button (Accessible) -->
+            <button 
+                onclick="openLightbox('${section.introPhoto}')" 
+                class="w-full block relative group cursor-pointer overflow-hidden aspect-[3/2] md:aspect-[3/1] text-left focus:outline-none focus:ring-4 focus:ring-brand-gold/50"
+                aria-label="${viewText}: ${title}"
+            >
+              <img src="${section.introPhoto}" alt="" loading="lazy" class="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105">
+              <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-80 transition-opacity duration-300"></div>
               <div class="absolute bottom-0 left-0 w-full p-6 md:p-8 text-white">
-                <h2 class="font-serif text-3xl md:text-4xl lg:text-5xl font-light mb-2 tracking-wide">${title}</h2>
-                <div class="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-y-2 group-hover:translate-y-0">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="11" y1="8" x2="11" y2="14"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>
+                <h2 class="font-serif text-3xl md:text-4xl lg:text-5xl font-medium mb-2 tracking-wide drop-shadow-lg">${title}</h2>
+                <div class="flex items-center gap-2 opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-y-0 md:translate-y-2 group-hover:translate-y-0">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="11" y1="8" x2="11" y2="14"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>
                   <span class="text-xs font-sans tracking-widest uppercase">${viewText}</span>
                 </div>
               </div>
-            </div>
+            </button>
 
             <!-- Intro Text -->
             <div class="p-6 md:p-8 border-b border-brand-stone/30">
-              <p class="font-serif text-xl text-brand-dark/80 italic leading-relaxed text-center max-w-2xl mx-auto">"${introDesc}"</p>
-              ${smallNote ? `<p class="text-center text-xs text-brand-muted mt-4 font-sans uppercase tracking-widest">${smallNote}</p>` : ''}
+              <p class="font-serif text-xl text-brand-dark/80 italic leading-relaxed text-left max-w-2xl">"${introDesc}"</p>
+              ${smallNote ? `<p class="text-left text-xs text-brand-muted mt-4 font-sans uppercase tracking-widest">${smallNote}</p>` : ''}
             </div>
 
             <!-- Accordion Button -->
-            <button onclick="toggleSection('${section.id}')" class="w-full flex flex-col items-center justify-center py-4 bg-brand-cream/50 hover:bg-brand-cream transition-colors border-b border-brand-stone/30 group">
-              <span id="btn-text-${section.id}" class="font-sans text-xs font-bold tracking-[0.2em] text-brand-gold uppercase mb-1">${expandText}</span>
-              <svg id="chevron-${section.id}" class="chevron text-brand-gold" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+            <button 
+                onclick="toggleSection('${section.id}')" 
+                aria-expanded="false" 
+                aria-controls="content-${section.id}"
+                class="w-full flex flex-col items-center justify-center py-4 bg-brand-cream/50 hover:bg-brand-cream transition-colors border-b border-brand-stone/30 group focus:outline-none focus:bg-brand-stone/20"
+            >
+              <span id="btn-text-${section.id}" class="font-sans text-xs font-bold tracking-[0.2em] text-brand-dark/70 group-hover:text-brand-dark uppercase mb-1 transition-colors">${expandText}</span>
+              <svg id="chevron-${section.id}" class="chevron text-brand-gold" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
             </button>
 
             <!-- Collapsible Content -->
@@ -434,7 +464,6 @@
       function createItemHTML(item) {
         const name = LANG === 'en' ? item.enName : item.plName;
         const desc = LANG === 'en' ? item.descEN : item.descPL;
-        // Added 'item-row' class for scroll animation
         return `
           <div class="item-row group flex justify-between items-start py-5 border-b border-brand-stone/40 last:border-0 transition-colors duration-300 hover:bg-brand-cream/50 px-2 rounded-lg">
             <div class="flex-1 pr-6">
@@ -452,18 +481,25 @@
         const content = document.getElementById(`content-${id}`);
         const chevron = document.getElementById(`chevron-${id}`);
         const btnText = document.getElementById(`btn-text-${id}`);
+        // The button that triggered this is the parent of the text/chevron, but simpler to select by event target if passed, 
+        // however we didn't pass 'this'. We can find it relative to ID usage.
+        // Let's rely on state update for attributes below.
         
         content.classList.toggle('open');
         chevron.classList.toggle('rotate');
         
         const isOpen = content.classList.contains('open');
+        
+        // Find the button to update aria-expanded
+        const button = document.querySelector(`button[aria-controls="content-${id}"]`);
+        if (button) button.setAttribute('aria-expanded', isOpen);
+
         const expandText = LANG === 'en' ? 'View Menu' : 'Pokaż Menu';
         const collapseText = LANG === 'en' ? 'Hide Menu' : 'Ukryj Menu';
         
         btnText.textContent = isOpen ? collapseText : expandText;
         
         if (isOpen) {
-           // Wait for expansion then check visibility
            setTimeout(setupScrollAnimations, 100);
         }
       }
@@ -471,7 +507,7 @@
       function scrollToSection(id) {
         const el = document.getElementById(id);
         if (el) {
-          const y = el.getBoundingClientRect().top + window.pageYOffset - 120; // Offset for sticky nav
+          const y = el.getBoundingClientRect().top + window.pageYOffset - 120; 
           window.scrollTo({ top: y, behavior: 'smooth' });
         }
       }
@@ -481,7 +517,7 @@
         const sections = MENU_DATA.map(s => document.getElementById(s.id));
 
         window.addEventListener('scroll', () => {
-          const scrollPos = window.scrollY + 200; // Offset for trigger point
+          const scrollPos = window.scrollY + 200; 
 
           let currentId = '';
           for (const section of sections) {
@@ -491,11 +527,12 @@
           }
 
           navBtns.forEach(btn => {
-            if (btn.dataset.target === currentId) {
+            const isCurrent = btn.dataset.target === currentId;
+            btn.setAttribute('aria-current', isCurrent);
+            
+            if (isCurrent) {
               btn.classList.add('active', 'bg-brand-dark', 'text-white', 'shadow-md');
               btn.classList.remove('text-brand-muted', 'hover:text-brand-dark', 'hover:bg-white');
-              
-              // Scroll nav to keep button in view
               btn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
             } else {
               btn.classList.remove('active', 'bg-brand-dark', 'text-white', 'shadow-md');
@@ -507,17 +544,26 @@
 
       // --- Lightbox Logic ---
       function openLightbox(src) {
+        lastFocusedElement = document.activeElement;
         const lb = document.getElementById('lightbox');
         const img = document.getElementById('lightbox-img');
+        const closeBtn = document.getElementById('lightbox-close');
+        
         img.src = src;
         lb.classList.remove('opacity-0', 'pointer-events-none');
         document.body.style.overflow = 'hidden';
+        
+        // Move focus to close button
+        setTimeout(() => closeBtn.focus(), 100);
       }
 
       function closeLightbox() {
         const lb = document.getElementById('lightbox');
         lb.classList.add('opacity-0', 'pointer-events-none');
         document.body.style.overflow = '';
+        
+        // Restore focus
+        if (lastFocusedElement) lastFocusedElement.focus();
       }
     </script>
   </body>
