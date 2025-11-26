@@ -1,291 +1,339 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
+<html lang="pl"> <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Księstwo Sushi — Menu</title>
   <style>
     :root{
-      --bg:#f4f4f6; /* Чуть более современный светло-серый */
+      --bg:#f8f6f4;
       --card:#ffffff;
-      --muted:#8e8e93;
-      --accent:#ff6b6b; /* Более яркий, аппетитный акцент */
-      --text:#1d1d1f;
-      --maxw:600px; /* Ограничим ширину для лучшего вида на ПК (как мобильное приложение) */
+      --muted:#888;
+      --accent:#d88b6a; /* Теплый лососевый цвет */
+      --text:#222;
       --radius:16px;
-      --shadow: 0 4px 20px rgba(0,0,0,0.06);
+      --shadow: 0 10px 25px rgba(0,0,0,0.06);
     }
-    *{box-sizing:border-box; -webkit-tap-highlight-color: transparent;}
+    *{box-sizing:border-box}
     
     body{
       margin:0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Georgia, serif; /* Более современный шрифт */
       background: var(--bg);
       color:var(--text);
       -webkit-font-smoothing:antialiased;
-      padding: 0;
+      padding:20px;
       display:flex;
       justify-content:center;
-      min-height: 100vh;
     }
 
     .wrap{
       width:100%;
-      max-width:var(--maxw);
-      background: var(--bg);
-      padding-bottom: 40px;
+      max-width:800px; /* Немного уже для "мобильного" вида */
+      background: var(--card);
+      border-radius: 24px;
+      padding: 30px 20px 100px 20px; /* Большой отступ снизу для футера */
+      box-shadow: var(--shadow);
+      position: relative;
     }
-    
+
     /* --- HEADER --- */
     header{
-      background: var(--card);
-      padding: 20px 24px;
-      border-bottom-left-radius: 24px;
-      border-bottom-right-radius: 24px;
-      box-shadow: var(--shadow);
-      margin-bottom: 20px;
-      position: relative;
-      z-index: 10;
-    }
-    
-    .brand{
-      display:flex;
-      flex-direction: column;
-      align-items: center;
       text-align: center;
-      gap: 8px;
-      margin-bottom: 16px;
+      margin-bottom: 30px;
     }
-    
     .logo-text {
-      font-size: 22px;
-      font-weight: 800;
-      letter-spacing: -0.5px;
+        font-family: "Georgia", serif;
+        font-size: 28px;
+        font-weight: 700;
+        color: var(--text);
+        letter-spacing: -0.5px;
+        margin-bottom: 5px;
     }
-    .sub{color:var(--muted); font-size:14px; font-weight: 500;}
+    .sub{color:var(--muted); font-size:14px; text-transform: uppercase; letter-spacing: 1px;}
 
-    /* --- LANGUAGE SWITCHER --- */
-    .lang-switch{
-      display:flex;
-      justify-content: center;
-      background: #eeeef0;
+    /* --- ЯЗЫКОВОЙ ПЕРЕКЛЮЧАТЕЛЬ --- */
+    .lang-widget {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      z-index: 100;
+    }
+    .lang-row {
+      background: #f2f0eb;
       padding: 4px;
       border-radius: 12px;
-      width: fit-content;
-      margin: 0 auto;
+      display: flex;
+      gap: 4px;
     }
-    .lang-btn{
-      border:none;
-      background:transparent;
-      padding: 6px 20px;
-      border-radius: 9px;
-      cursor:pointer;
-      font-weight:600;
-      font-size: 13px;
+    .lang-btn {
+      border: none;
+      background: transparent;
+      padding: 6px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 12px;
       color: var(--muted);
-      transition: all 0.2s ease;
+      transition: all 0.2s;
     }
-    .lang-btn.active{
-      background:var(--card);
-      color:var(--text);
+    .lang-btn.active {
+      background: #fff;
+      color: var(--text);
       box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
 
-    /* --- ACCORDION SECTIONS --- */
-    .menu-container {
-        padding: 0 16px;
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
+    /* --- НАВИГАЦИЯ (ЧИПСЫ) --- */
+    nav{
+      display:flex;
+      gap:10px;
+      overflow-x: auto;
+      padding-bottom: 10px;
+      margin-bottom: 20px;
+      scrollbar-width: none; /* Firefox */
+    }
+    nav::-webkit-scrollbar { display: none; } /* Chrome */
+    
+    .nav-chip{
+      background: #fff;
+      border: 1px solid #eee;
+      padding: 10px 18px;
+      border-radius: 30px;
+      font-weight: 600;
+      font-size: 13px;
+      color: var(--text);
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+    }
+    .nav-chip:hover {
+        border-color: var(--accent);
+        color: var(--accent);
     }
 
-    .section {
-      background: var(--card);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      overflow: hidden;
-      transition: transform 0.2s;
+    /* --- СЕКЦИИ МЕНЮ --- */
+    .menu-section {
+        margin-bottom: 30px;
+        scroll-margin-top: 20px;
     }
-    
-    /* Заголовок-кнопка */
-    .section-header {
-        padding: 18px 20px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
+
+    /* Карточка с фото (Intro Card) */
+    .intro-card {
+        position: relative;
+        border-radius: var(--radius);
+        overflow: hidden;
+        margin-bottom: 15px;
+        box-shadow: var(--shadow);
         cursor: pointer;
-        user-select: none;
-        background: var(--card);
+    }
+
+    .intro-card img {
+        width: 100%;
+        height: 220px;
+        object-fit: cover;
+        display: block;
+        transition: transform 0.3s;
     }
     
-    .section-title {
-        font-size: 17px;
-        font-weight: 700;
-        margin: 0;
-    }
-    
-    /* Стрелочка */
-    .icon-chevron {
-        width: 24px;
-        height: 24px;
-        background: #f2f2f7;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: transform 0.3s ease;
-        color: var(--accent);
-        font-size: 12px;
-    }
-    
-    /* Состояние открытой секции */
-    .section.open .icon-chevron {
-        transform: rotate(180deg);
-        background: var(--accent);
+    /* Градиент поверх фото для читаемости текста */
+    .intro-overlay {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
+        padding: 60px 20px 20px 20px;
         color: white;
     }
-
-    /* Анимация открытия */
-    .section-body {
-        display: grid;
-        grid-template-rows: 0fr;
-        transition: grid-template-rows 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    
+    .intro-title {
+        font-size: 22px;
+        font-weight: 700;
+        margin: 0 0 5px 0;
+        text-shadow: 0 2px 10px rgba(0,0,0,0.3);
     }
     
-    .items-wrapper {
+    .intro-desc {
+        font-size: 13px;
+        opacity: 0.9;
+        line-height: 1.4;
+        max-width: 90%;
+    }
+
+    /* --- СПИСОК ПОЗИЦИЙ (ACCORDION) --- */
+    details {
+        background: #fff;
+        border-radius: var(--radius);
+        border: 1px solid #f0f0f0;
         overflow: hidden;
     }
     
-    .items-content {
-        padding: 0 20px 20px 20px;
+    summary {
+        list-style: none;
+        padding: 15px 20px;
+        font-weight: 600;
+        font-size: 14px;
+        color: var(--accent);
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: background 0.2s;
+    }
+    summary:hover { background: #fafafa; }
+    summary::-webkit-details-marker { display: none; }
+    
+    summary::after {
+        content: '▼';
+        font-size: 10px;
+        transition: transform 0.2s;
+    }
+    details[open] summary::after { transform: rotate(180deg); }
+    details[open] summary { border-bottom: 1px solid #f0f0f0; }
+
+    /* Анимация открытия */
+    .items-wrapper {
+        padding: 0 20px;
+        max-height: 0;
+        overflow: hidden;
+        opacity: 0;
+        transition: all 0.3s ease;
+    }
+    details[open] .items-wrapper {
+        max-height: 2000px; /* Достаточно большое число */
+        opacity: 1;
+        padding-top: 15px;
+        padding-bottom: 15px;
     }
 
-    .section.open .section-body {
-        grid-template-rows: 1fr;
-    }
-
-    /* --- ITEMS --- */
     .item {
-      padding: 12px 0;
-      border-bottom: 1px solid #f0f0f0;
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 12px;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        padding: 10px 0;
+        border-bottom: 1px solid #f7f7f7;
     }
     .item:last-child { border-bottom: none; }
     
-    .item-info { flex: 1; }
-    
-    .name {
-        font-weight: 600;
-        font-size: 15px;
-        margin-bottom: 4px;
-        line-height: 1.3;
-    }
-    
-    .desc {
-        font-size: 13px;
-        color: var(--muted);
-        line-height: 1.4;
-    }
-    
-    .price {
-        font-weight: 700;
-        color: var(--text);
-        font-size: 15px;
-        white-space: nowrap;
-        background: #f2f2f7;
-        padding: 4px 8px;
-        border-radius: 6px;
-    }
+    .item-meta { flex: 1; padding-right: 15px; }
+    .item-name { font-weight: 700; font-size: 15px; margin-bottom: 4px; color: #333; }
+    .item-desc { font-size: 13px; color: var(--muted); line-height: 1.3; }
+    .item-price { font-weight: 700; color: var(--text); font-size: 15px; white-space: nowrap; }
 
-    /* --- FOOTER --- */
-    footer{
-      margin-top: 30px;
-      text-align: center;
-      padding: 20px;
-      color: var(--muted);
-      font-size: 13px;
+    /* Две колонки для Uramaki */
+    .cols-2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+    }
+    .col-title {
+        font-size: 12px;
+        text-transform: uppercase;
+        color: var(--accent);
+        font-weight: 800;
+        margin-bottom: 10px;
+        border-bottom: 2px solid #f0f0f0;
+        padding-bottom: 5px;
+    }
+    @media(max-width: 600px){ .cols-2 { grid-template-columns: 1fr; } }
+
+    /* --- КОНТАКТЫ (ИКОНКИ) --- */
+    .footer-section {
+        margin-top: 40px;
+        text-align: center;
+        border-top: 1px solid #eee;
+        padding-top: 30px;
     }
     
-    .notice-box {
-        background: #fff8e1;
-        border-radius: 12px;
-        padding: 16px;
-        margin: 20px 16px;
-        font-size: 13px;
-        line-height: 1.5;
-        color: #5d4037;
-        border: 1px solid #ffe0b2;
+    .contact-icons {
+        display: flex;
+        justify-content: center;
+        gap: 25px;
+        margin-bottom: 20px;
     }
-    .notice-title { font-weight: bold; margin-bottom: 6px; display: block; }
+    
+    .icon-link {
+        display: block;
+        width: 50px;
+        height: 50px;
+        transition: transform 0.2s;
+    }
+    .icon-link img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
+    }
+    .icon-link:hover { transform: scale(1.1); }
+
+    .footer-text { font-size: 12px; color: var(--muted); }
+
+    /* --- LIGHTBOX --- */
+    .lightbox {
+      display: none; 
+      position: fixed; 
+      z-index: 1000;
+      left: 0; top: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.95); 
+      align-items: center; justify-content: center;
+      opacity: 0; transition: opacity 0.3s;
+    }
+    .lightbox.open { display: flex; opacity: 1; }
+    .lightbox img { max-width: 90%; max-height: 80vh; border-radius: 8px; box-shadow: 0 0 50px rgba(0,0,0,0.5); }
+    .lightbox-close { position: absolute; top: 20px; right: 20px; color: #fff; font-size: 40px; cursor: pointer; }
 
   </style>
 </head>
 <body>
 
   <div class="wrap" id="app">
-    <header>
-      <div class="brand">
-        <div class="logo-text">Księstwo Sushi</div>
-        <div class="sub" id="subtitle">Fine sushi — Menu</div>
+    
+    <div class="lang-widget">
+      <div class="lang-row">
+        <button class="lang-btn active" data-lang="pl">PL</button>
+        <button class="lang-btn" data-lang="en">EN</button>
       </div>
-      
-      <div class="lang-switch">
-        <button class="lang-btn active" data-lang="en">English</button>
-        <button class="lang-btn" data-lang="pl">Polski</button>
-      </div>
-    </header>
-
-    <div class="menu-container" id="menu-area"></div>
-
-    <div class="notice-box">
-        <span class="notice-title" id="notice-title">Notice</span>
-        <span id="notice-text"></span>
     </div>
 
-    <footer>
-      <div id="footer-text">Księstwo Sushi © 2025</div>
-    </footer>
+    <header>
+      <div class="logo-text">Księstwo Sushi</div>
+      <div class="sub" id="subtitle">Fine sushi — Menu</div>
+    </header>
+
+    <nav id="nav"></nav>
+
+    <div id="menu-area"></div>
+
+    <div class="footer-section">
+      <div class="contact-icons" id="contacts-area">
+        </div>
+      <div class="footer-text">
+        Księstwo Sushi © 2025<br>
+        <span id="open-web">Menu — open web version</span>
+      </div>
+    </div>
+
   </div>
   
+  <div id="myLightbox" class="lightbox">
+    <span class="lightbox-close">×</span>
+    <img id="lightbox-img" src="">
+  </div>
+
   <script>
-    /* --- ДАННЫЕ МЕНЮ --- */
+    /* --- ДАННЫЕ МЕНЮ (ОБНОВЛЕНЫ ФОТО) --- */
     const MENU = [
-      {
-        id:'sushi-sets',
-        title:{en:'Sushi Sets', pl:'Zestawy Sushi'},
-        items:[
-          {
-            enName:'KIRO (14 pcs)', 
-            plName:'KIRO (14 szt.)', 
-            descEN:'4x Hosomaki (tuna, salmon, butterfish), 4x Hosomaki (cucumber, oshinko, kampyo), 4x Futomaki Ohio/Kani (butterfish or surimi), 2x Nigiri (salmon)', 
-            descPL:'4x Hosomaki (tuńczyk, łosoś, maślana), 4x Hosomaki (ogórek, oshinko, kampyo), 4x Futomaki Ohio/Kani (maślana lub surimi), 2x Nigiri (łosoś)', 
-            price:'70 zł', 
-          },
-          {
-            enName:'ORENJI (16 pcs)', 
-            plName:'ORENJI (16 szt.)', 
-            descEN:'4x California Ebi (steamed shrimp), 4x California Awokado Kani (surimi wrapped in avocado), 4x Ohio/Awokado Kani (butterfish/surimi wrapped in sesame), 4x Nigiri (salmon/shrimp)', 
-            descPL:'4x California Ebi (parzona krewetka), 4x California Awokado Kani (surimi owijane awokado), 4x Ohio/Awokado Kani (maślana/surimi owijane w sezam), 4x Nigiri (łosoś/krewetka)', 
-            price:'90 zł', 
-          },
-          {
-            enName:'AKA (24 pcs)', 
-            plName:'AKA (24 szt.)', 
-            descEN:'4x Gold California (surimi wrapped in salmon), 4x Ebi Ten (shrimp tempura), 4x Mango Sake (salmon wrapped in mango), 4x Futomaki Ohio Ten (butterfish tempura), 4x Futomaki Ebi Spicy (spicy shrimp), 4x Nigiri (tuna/eel)', 
-            descPL:'4x Gold California (surimi owijane łososiem), 4x Ebi Ten (krewetka w tempurze), 4x Mango Sake (łosoś owijany mango), 4x Futomaki Ohio Ten (maślana w tempurze), 4x Futomaki Ebi Spicy (pikantna krewetka), 4x Nigiri (tuńczyk/węgorz)', 
-            price:'130 zł', 
-          }
-        ]
-      },
       {
         id:'starters',
         title:{en:'Starters', pl:'Przystawki'},
+        // Используем 'wakame.jpg' как обложку, но можно поставить 'ebiten.jpg'
+        img: 'images/wakame.jpg', 
+        descEN: 'Light and fresh starters: Wakame, Ebiten, Tataki.',
+        descPL: 'Lekkie i świeże przystawki: Wakame, Ebiten, Tataki.',
         items:[
-          {enName:'Goma Wakame', plName:'Goma Wakame', descEN:'wakame salad', descPL:'sałatka z wodorostów', price:'20 zł'},
-          {enName:'Ebiten (3 pcs)', plName:'Ebiten (3 szt.)', descEN:'shrimp tempura served with ponzu sauce', descPL:'krewetki smażone w cieście tempura podawane z sosem ponzu', price:'30 zł'},
+          {enName:'Goma Wakame', plName:'Goma Wakame', descEN:'wakame salad', descPL:'sałatka wakame', price:'20 zł'},
+          {enName:'Ebiten (3 pcs)', plName:'Ebiten (3 szt.)', descEN:'shrimp tempura served with ponzu sauce', descPL:'krewetka tempura z sosem ponzu', price:'30 zł'},
           {enName:'Sake Tataki', plName:'Sake Tataki', descEN:'salmon tartare', descPL:'tatar z łososia', price:'50 zł'},
           {enName:'Maguro Tataki', plName:'Maguro Tataki', descEN:'tuna tartare', descPL:'tatar z tuńczyka', price:'55 zł'}
         ]
@@ -293,186 +341,223 @@
       {
         id:'soups',
         title:{en:'Soups', pl:'Zupy'},
+        img: 'images/ramen-zupa.jpg', 
+        descEN: 'Rich Ramen bowls (800ml) with chicken or beef.',
+        descPL: 'Bogaty Ramen (800ml) z kurczakiem lub wołowiną.',
         items:[
-          {
-            enName:'Ramen Chicken / Beef', 
-            plName:'Ramen Chicken / Beef', 
-            descEN:'flavorful broth with vegetables, meat and ramen noodles. Chicken 48 zł / Beef 55 zł', 
-            descPL:'aromatyczny bulion z mięsem, warzywami i makaronem ramen', 
-            price:'48/55 zł',
-          }
+          {enName:'Ramen Chicken', plName:'Ramen Chicken', descEN:'broth, chicken, vegetables, noodles', descPL:'bulion, kurczak, warzywa, makaron', price:'48 zł'},
+          {enName:'Ramen Beef', plName:'Ramen Beef', descEN:'broth, beef, vegetables, noodles', descPL:'bulion, wołowina, warzywa, makaron', price:'55 zł'}
         ]
       },
       {
-        id:'sushi',
-        title:{en:'Sushi — Nigiri / Futomaki', pl:'Sushi — Nigiri / Futomaki'},
+        id:'nigiri',
+        title:{en:'Nigiri (2 pc)', pl:'Nigiri (2 szt.)'},
+        img: 'images/nigiri1.jpg', 
+        descEN: 'Hand-pressed rice topped with fresh fish.',
+        descPL: 'Ręcznie formowany ryż z plastrem świeżej ryby.',
         items:[
-          {enName:'Sake (Nigiri 2 pcs)', plName:'Sake (Nigiri 2 szt.)', descEN:'salmon', descPL:'łosoś', price:'26 zł'},
-          {enName:'Ohio (Nigiri 2 pcs)', plName:'Ohio (Nigiri 2 szt.)', descEN:'butterfish', descPL:'maślana', price:'25 zł'},
-          {enName:'Maguro (Nigiri 2 pcs)', plName:'Maguro (Nigiri 2 szt.)', descEN:'tuna', descPL:'tuńczyk', price:'30 zł'},
-          {enName:'Unagi (Nigiri 2 pcs)', plName:'Unagi (Nigiri 2 szt.)', descEN:'eel', descPL:'węgorz', price:'30 zł'}, 
-          {enName:'Hotate (Nigiri 2 pcs)', plName:'Hotate (Nigiri 2 szt.)', descEN:'scallops', descPL:'małże św. Jakuba', price:'32 zł'}, 
-          {enName:'Tako (Nigiri 2 pcs)', plName:'Tako (Nigiri 2 szt.)', descEN:'octopus', descPL:'ośmiornica', price:'30 zł'}, 
-          {enName:'Ika (Nigiri 2 pcs)', plName:'Ika (Nigiri 2 szt.)', descEN:'squid', descPL:'kalmar', price:'30 zł'}, 
-          {enName:'Ebi (Nigiri 2 pcs)', plName:'Ebi (Nigiri 2 szt.)', descEN:'shrimp', descPL:'krewetka', price:'30 zł'}, 
-          
-          {enName:'Sake Philadelphia (4 pcs)', plName:'Sake Philadelphia (4 szt.)', descEN:'salmon with philadelphia cream cheese', descPL:'łosoś z serkiem philadelphia', price:'38 zł'},
-          {enName:'Maguro Negi Togarashi (4 pcs)', plName:'Maguro Negi Togarashi (4 szt.)', descEN:'tuna with spicy leek', descPL:'tuńczyk z porem na ostро', price:'42 zł'},
-          {enName:'Ohio Spice Mango (4 pcs)', plName:'Ohio Spice Mango (4 szt.)', descEN:'spicy butterfish with mango', descPL:'pikantna maślana z mango', price:'40 zł'}, 
-          {enName:'Ebi Spicy (4 pcs)', plName:'Ebi Spicy (4 szt.)', descEN:'spicy shrimp', descPL:'pikantna parzona krewetka', price:'40 zł'}, 
-          {enName:'Ebi Tempura (4 pcs)', plName:'Ebi Tempura (4 szt.)', descEN:'shrimp tempura', descPL:'krewetka w tempurze', price:'40 zł'}, 
-          {enName:'Unagi Kabayaki (4 pcs)', plName:'Unagi Kabayaki (4 szt.)', descEN:'grilled eel with kabayaki sauce', descPL:'grillowany węgorz w sosie kabayaki', price:'45 zł'}, 
-          {enName:'Ika Tempura (4 pcs)', plName:'Ika Tempura (4 szt.)', descEN:'squid tempura', descPL:'kalmar w tempurze', price:'48 zł'}, 
-          {enName:'Veggi (4 pcs)', plName:'Veggi (4 szt.)', descEN:'vegetables', descPL:'warzywa', price:'36 zł'} 
+          {enName:'Sake', plName:'Sake', descEN:'salmon', descPL:'łosoś', price:'26 zł'}, 
+          {enName:'Ohio', plName:'Ohio', descEN:'butterfish', descPL:'ryba maślana', price:'25 zł'},
+          {enName:'Maguro', plName:'Maguro', descEN:'tuna', descPL:'tuńczyk', price:'30 zł'},
+          {enName:'Unagi', plName:'Unagi', descEN:'eel', descPL:'węgorz', price:'30 zł'},
+          {enName:'Ebi', plName:'Ebi', descEN:'shrimp', descPL:'krewetka', price:'30 zł'},
+          {enName:'Hotate', plName:'Hotate', descEN:'scallops', descPL:'małże św. Jakuba', price:'32 zł'}
         ]
       },
       {
-        id:'uramaki',
-        title:{en:'Uramaki (8 pc)', pl:'Uramaki (8 szt.)'},
+        id:'futomaki',
+        title:{en:'Futomaki (6 pc)', pl:'Futomaki (6 szt.)'},
+        img: 'images/futomaki.jpg',
+        descEN: 'Thick traditional rolls with nori on the outside.',
+        descPL: 'Grube, tradycyjne rolki z nori na zewnątrz.',
         items:[
-          {enName:'Sake Philadelphia', plName:'Sake Philadelphia', descEN:'salmon with philadelphia cream cheese', descPL:'łosoś z serkiem philadelphia', price:'38 zł'},
-          {enName:'Ohio Spice Sake', plName:'Ohio Spice Sake', descEN:'salmon wrapped in roasted butterfish', descPL:'łosoś owijany opalaną maślaną', price:'42 zł'},
-          {enName:'Maguro Spicy Ebi Ten', plName:'Maguro Spicy Ebi Ten', descEN:'shrimp tempura wrapped in roasted tuna', descPL:'krewetka w tempurze owijana opalanym tuńczykiem', price:'45 zł'},
-          {enName:'Kegon', plName:'Kegon', descEN:'salmon wrapped in grilled eel', descPL:'łosoś owijany grillowanym węgorzem', price:'45 zł'},
-          {enName:'Sake Aburi', plName:'Sake Aburi', descEN:'salmon wrapped in roasted spicy salmon', descPL:'łosoś owijany opalanym pikantnym łososiem', price:'45 zł'},
-          {enName:'Tobiko Ohio Ten', plName:'Tobiko Ohio Ten', descEN:'butterfish tempura coated with flying fish roe', descPL:'maślana w tempurze obtoczona kawiorem z latająщей ryбы', price:'48 zł'},
-          {enName:'Nashi Sake', plName:'Nashi Sake', descEN:'salmon wrapped in Japanese pear', descPL:'łosoś owijany japońską gruszką', price:'45 zł'},
-          {enName:'Sake Tataki Ebi Ten', plName:'Sake Tataki Ebi Ten', descEN:'shrimp tempura topped with salmon tartare', descPL:'krewetki w tempurze обложенные татаром z łososia', price:'48 zł'},
+          {enName:'Sake Philadelphia', plName:'Sake Philadelphia', descEN:'salmon, cream cheese', descPL:'łosoś, serek philadelphia', price:'38 zł'}, 
+          {enName:'Maguro Negi Togarashi', plName:'Maguro Negi Togarashi', descEN:'spicy tuna', descPL:'pikantny tuńczyk', price:'42 zł'},
+          {enName:'Ebi Tempura', plName:'Ebi Tempura', descEN:'shrimp tempura', descPL:'krewetka w tempurze', price:'40 zł'},
+          {enName:'Unagi Kabayaki', plName:'Unagi Kabayaki', descEN:'grilled eel', descPL:'grillowany węgorz', price:'45 zł'}
+        ]
+      },
+      {
+        id:'uramaki-combined',
+        title:{en:'Uramaki & Tempura', pl:'Uramaki & Tempura'},
+        // Используем tempura.jpg так как это визуально привлекательно
+        img: 'images/tempura.jpg', 
+        descEN: 'Inside-out rolls (8 pcs) and crispy Tempura rolls.',
+        descPL: 'Rolki "odwrócone" (8 szt.) oraz chrupiące rolki w Tempurze.',
+        
+        // Два списка внутри одной секции
+        isSplit: true,
+        itemsLeft: [
+          {enName:'Gold California', plName:'Gold California', descEN:'surimi wrapped in salmon', descPL:'surimi owijane łososiem', price:'40 zł'},
+          {enName:'Sake Philadelphia', plName:'Sake Philadelphia', descEN:'salmon, cream cheese', descPL:'łosoś, serek philadelphia', price:'38 zł'}, 
           {enName:'Awokado Sake', plName:'Awokado Sake', descEN:'salmon wrapped in avocado', descPL:'łosoś owijany awokado', price:'42 zł'},
           {enName:'Mango Sake', plName:'Mango Sake', descEN:'salmon wrapped in mango', descPL:'łosoś owijany mango', price:'42 zł'},
-          {enName:'Maguro Orange Pepper', plName:'Maguro Orange Pepper', descEN:'tuna with chopped leek and orange pepper', descPL:'tuńczyk z siekanym porem i orange pepper', price:'45 zł'},
-          {enName:'Ebi Ten Mamemori', plName:'Ebi Ten Mamemori', descEN:'shrimp tempura wrapped in soy paper', descPL:'krewetka w tempurze zawijana w papier sojowy', price:'42 zł'},
-          {enName:'Gold California', plName:'Gold California', descEN:'surimi wrapped in salmon', descPL:'surimi owijane łososiem', price:'40 zł'},
-          {enName:'Rainbow', plName:'Rainbow', descEN:'Surimi wrapped in variety of raw fish', descPL:'surimi owijane wachlarzem ryб', price:'48 zł'}
-        ]
-      },
-      {
-        id:'uramaki-temp',
-        title:{en:'Uramaki in Tempura (8 pc)', pl:'Uramaki w Tempurze (8 szt.)'},
-        items:[
+          {enName:'Ebi Ten Mamemori', plName:'Ebi Ten Mamemori', descEN:'shrimp tempura in soy paper', descPL:'krewetka w tempurze w papierze sojowym', price:'42 zł'},
+          {enName:'Rainbow', plName:'Rainbow', descEN:'assorted fish', descPL:'wachlarz ryb', price:'48 zł'}
+        ],
+        itemsRight: [
           {enName:'Tempura Sake', plName:'Tempura Sake', descEN:'salmon', descPL:'łosoś', price:'38 zł'},
           {enName:'Tempura Ohio', plName:'Tempura Ohio', descEN:'butterfish', descPL:'maślana', price:'38 zł'},
           {enName:'Tempura Maguro', plName:'Tempura Maguro', descEN:'tuna', descPL:'tuńczyk', price:'42 zł'},
-          {enName:'Tempura Ebi', plName:'Tempura Ebi', descEN:'steamed shrimp', descPL:'parzona krewetka', price:'40 zł'},
-          {enName:'Tempura Unagi Kabayaki', plName:'Tempura Unagi Kabayaki', descEN:'grilled eel', descPL:'grillowany węgorz', price:'45 zł'}
+          {enName:'Tempura Ebi', plName:'Tempura Ebi', descEN:'shrimp', descPL:'krewetka', price:'40 zł'}
         ]
       },
       {
         id:'oyakomaki',
-        title:{en:'Oyakomaki / Sashimi', pl:'Oyakomaki / Sashimi'},
+        title:{en:'Oyakomaki (2 pc)', pl:'Oyakomaki (2 szt.)'},
+        img: 'images/oyakomaki.jpg',
+        descEN: 'Specialty rolls wrapped in fish or avocado.',
+        descPL: 'Specjalne rolki zawijane w rybę lub awokado.',
         items:[
-          {enName:'Sake Ebi Tataki (2 pcs)', plName:'Sake Ebi Tataki (2 szt.)', descEN:'chopped shrimp wrapped in salmon', descPL:'siekana krewetka owijana w łososia', price:'36 zł'},
-          {enName:'Sake Ikura', plName:'Sake Ikura', descEN:'salmon caviar wrapped in tuna', descPL:'kawior z łososia owijany tuńczykiem', price:'42 zł'},
-          {enName:'Maguro Sake Tataki (2 pcs)', plName:'Maguro Sake Tataki (2 szt.)', descEN:'chopped salmon wrapped in tuna', descPL:'siekany łosoś owijany tuńczykiem', price:'45 zł'}, 
-          {enName:'Sashimi Mizu (9 pcs)', plName:'Sashimi Mizu (9 pcs)', descEN:'slices of raw fish — salmon, tuna, butterfish', descPL:'slajsy surowej ryby – łosoś, tuńczyk, maślana', price:'95 zł'}
+          {enName:'Sake Ebi Tataki', plName:'Sake Ebi Tataki', descEN:'shrimp wrapped in salmon', descPL:'krewetka owijana w łososia', price:'36 zł'}, 
+          {enName:'Sake Ikura', plName:'Sake Ikura', descEN:'caviar wrapped in tuna', descPL:'kawior owijany tuńczykiem', price:'42 zł'}
+        ]
+      },
+      {
+        id:'sashimi',
+        title:{en:'Sashimi', pl:'Sashimi'},
+        img: 'images/sashimi.jpg',
+        descEN: 'Fresh slices of raw fish (9 pcs).',
+        descPL: 'Świeże plastry surowej ryby (9 szt.).',
+        items:[
+          {enName:'Mizu', plName:'Mizu', descEN:'salmon, tuna, butterfish', descPL:'łosoś, tuńczyk, maślana', price:'95 zł'}
         ]
       }
     ];
 
     const menuArea = document.getElementById('menu-area');
+    const nav = document.getElementById('nav');
     const langBtns = document.querySelectorAll('.lang-btn');
-    let LANG = 'en';
+    let LANG = 'pl';
 
-    const NOTICE_TEXTS = {
-        en: 'We kindly inform you that we add a waiter service of 10% to the final bill.<br><br>According to the recipe, items may contain: cucumber, oshinko, kampyo, avocado, mango, melon, lettuce, sesame, philadelphia cheese, mayonnaise, sauces, **gluten**, edible gold.',
-        pl: 'Uprzejmie informujemy, że doliczamy serwis kelnerski w wysokości 10% do rachunku końcowego.<br><br>Zgodnie z recepturą mogą zawierać: ogórka, oshinko, kampyo, awokado, mango, melona, sałatę, sezam, serek philadelphia, majonez, sosy, **gluten**, złoto jadalne.'
-    };
+    /* --- ГЕНЕРАЦИЯ МЕНЮ --- */
+    function render() {
+      // 1. Навигация
+      nav.innerHTML = '';
+      MENU.forEach(sec => {
+        const chip = document.createElement('div');
+        chip.className = 'nav-chip';
+        chip.textContent = sec.title[LANG];
+        chip.onclick = () => document.getElementById(sec.id).scrollIntoView({behavior:'smooth'});
+        nav.appendChild(chip);
+      });
 
-    function renderMenu(){
+      // 2. Секции
       menuArea.innerHTML = '';
+      MENU.forEach(sec => {
+        const section = document.createElement('div');
+        section.className = 'menu-section';
+        section.id = sec.id;
+
+        // Intro Card (Картинка + Заголовок)
+        const card = document.createElement('div');
+        card.className = 'intro-card';
+        card.onclick = () => openLightbox(sec.img);
+        
+        card.innerHTML = `
+            <img src="${sec.img}" alt="${sec.title[LANG]}">
+            <div class="intro-overlay">
+                <div class="intro-title">${sec.title[LANG]}</div>
+                <div class="intro-desc">${LANG==='en' ? sec.descEN : sec.descPL}</div>
+            </div>
+        `;
+        section.appendChild(card);
+
+        // Accordion Details
+        const details = document.createElement('details');
+        const summaryText = LANG==='en' ? 'Show Menu' : 'Pokaż Menu';
+        details.innerHTML = `<summary>${summaryText}</summary>`;
+        
+        const wrapper = document.createElement('div');
+        wrapper.className = 'items-wrapper';
+
+        // Логика для разделенных колонок (Uramaki) или обычного списка
+        if (sec.isSplit) {
+            const cols = document.createElement('div');
+            cols.className = 'cols-2';
+            
+            // Левая колонка
+            const left = document.createElement('div');
+            left.innerHTML = `<div class="col-title">Standard</div>`;
+            sec.itemsLeft.forEach(item => left.appendChild(createItemEl(item)));
+            cols.appendChild(left);
+            
+            // Правая колонка
+            const right = document.createElement('div');
+            right.innerHTML = `<div class="col-title">Tempura</div>`;
+            sec.itemsRight.forEach(item => right.appendChild(createItemEl(item)));
+            cols.appendChild(right);
+            
+            wrapper.appendChild(cols);
+        } else {
+            // Обычный список
+            sec.items.forEach(item => wrapper.appendChild(createItemEl(item)));
+        }
+
+        details.appendChild(wrapper);
+        section.appendChild(details);
+        menuArea.appendChild(section);
+      });
       
-      MENU.forEach((sec, index)=>{
-        // Создаем Секцию
-        const sectionDiv = document.createElement('div');
-        sectionDiv.className = 'section';
-        // Первую секцию можно сделать открытой по умолчанию, если хотите (sectionDiv.classList.add('open'))
+      updateStaticText();
+    }
+
+    function createItemEl(item) {
+        const el = document.createElement('div');
+        el.className = 'item';
+        el.innerHTML = `
+            <div class="item-meta">
+                <div class="item-name">${LANG==='en' ? item.enName : item.plName}</div>
+                <div class="item-desc">${LANG==='en' ? item.descEN : item.descPL}</div>
+            </div>
+            <div class="item-price">${item.price}</div>
+        `;
+        return el;
+    }
+
+    function updateStaticText() {
+        document.getElementById('subtitle').textContent = LANG==='en' ? 'Fine sushi — Menu' : 'Wyborne sushi — Menu';
+        document.getElementById('open-web').textContent = LANG==='en' ? 'Menu — open web version' : 'Menu — wersja online';
         
-        // --- ЗАГОЛОВОК (HEADER) ---
-        const headerDiv = document.createElement('div');
-        headerDiv.className = 'section-header';
-        headerDiv.onclick = () => {
-             // Логика "Аккордеона": переключаем класс 'open'
-             sectionDiv.classList.toggle('open');
-        };
+        // Обновление иконок контактов
+        const contacts = document.getElementById('contacts-area');
+        contacts.innerHTML = `
+            <a href="tel:+48502525544" class="icon-link">
+                <img src="images/phone.png" alt="Phone">
+            </a>
+            <a href="https://www.instagram.com/ksiestwosushi" target="_blank" class="icon-link">
+                <img src="images/instagram.png" alt="Instagram">
+            </a>
+            <a href="https://maps.google.com/?q=Krupówki+38A,+Zakopane" target="_blank" class="icon-link">
+                <img src="images/google_maps.png" alt="Maps">
+            </a>
+        `;
+    }
 
-        const h3 = document.createElement('h3');
-        h3.className = 'section-title';
-        h3.textContent = sec.title[LANG];
-
-        const icon = document.createElement('div');
-        icon.className = 'icon-chevron';
-        icon.innerHTML = '▼'; // Простая стрелочка
-
-        headerDiv.appendChild(h3);
-        headerDiv.appendChild(icon);
-
-        // --- ТЕЛО (BODY) ---
-        const bodyDiv = document.createElement('div');
-        bodyDiv.className = 'section-body';
-        
-        const wrapperDiv = document.createElement('div');
-        wrapperDiv.className = 'items-wrapper';
-
-        const contentDiv = document.createElement('div');
-        contentDiv.className = 'items-content';
-
-        sec.items.forEach(it=>{
-            const itemDiv = document.createElement('div');
-            itemDiv.className = 'item';
-
-            const infoDiv = document.createElement('div');
-            infoDiv.className = 'item-info';
-
-            const nameDiv = document.createElement('div');
-            nameDiv.className = 'name';
-            nameDiv.textContent = (LANG==='en'?it.enName:it.plName);
-
-            const descDiv = document.createElement('div');
-            descDiv.className = 'desc';
-            descDiv.innerHTML = (LANG==='en' ? it.descEN : it.descPL) || '';
-
-            const priceDiv = document.createElement('div');
-            priceDiv.className = 'price';
-            priceDiv.textContent = it.price || '';
-
-            infoDiv.appendChild(nameDiv);
-            if(descDiv.innerHTML) infoDiv.appendChild(descDiv);
-
-            itemDiv.appendChild(infoDiv);
-            itemDiv.appendChild(priceDiv);
-            contentDiv.appendChild(itemDiv);
+    /* --- ЛОГИКА --- */
+    langBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            langBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            LANG = btn.dataset.lang;
+            render();
         });
-
-        wrapperDiv.appendChild(contentDiv);
-        bodyDiv.appendChild(wrapperDiv);
-
-        sectionDiv.appendChild(headerDiv);
-        sectionDiv.appendChild(bodyDiv);
-        
-        menuArea.appendChild(sectionDiv);
-      });
-    }
-
-    function updateTexts(){
-      document.getElementById('subtitle').textContent = (LANG==='en') ? 'Fine sushi — Menu' : 'Wyborne sushi — Menu';
-      document.getElementById('notice-title').textContent = (LANG==='en') ? 'Notice' : 'Uwaga';
-      document.getElementById('notice-text').innerHTML = NOTICE_TEXTS[LANG];
-      document.getElementById('footer-text').textContent = 'Księstwo Sushi © 2025';
-    }
-
-    langBtns.forEach(b=>{
-      b.addEventListener('click', ()=>{
-        langBtns.forEach(x=>x.classList.remove('active'));
-        b.classList.add('active');
-        LANG = b.dataset.lang;
-        renderMenu(); 
-        updateTexts();
-      });
     });
 
-    // START
-    renderMenu();
-    updateTexts();
+    // Lightbox
+    const lb = document.getElementById('myLightbox');
+    const lbImg = document.getElementById('lightbox-img');
+    const lbClose = document.querySelector('.lightbox-close');
+    
+    function openLightbox(src) {
+        lbImg.src = src;
+        lb.classList.add('open');
+    }
+    lbClose.onclick = () => lb.classList.remove('open');
+    lb.onclick = (e) => { if(e.target === lb) lb.classList.remove('open'); }
+
+    // Start
+    render();
 
   </script>
 </body>
