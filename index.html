@@ -34,11 +34,9 @@
       border-radius:16px;
       padding:22px;
       box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-      max-height: calc(100vh - 48px);
-      overflow-y: auto;
     }
     
-    /* STICKY LANGUAGE BAR: Only the language buttons are sticky */
+    /* СТИЛИ ДЛЯ ЛИПКОГО БЛОКА ЯЗЫКОВ */
     .sticky-lang-bar {
         position: sticky;
         top: -22px; 
@@ -52,10 +50,8 @@
         display: flex; 
         justify-content: flex-end; 
         align-items: center; 
-        transform: translateZ(0); 
-        -webkit-transform: translateZ(0); 
     }
-
+    
     .sticky-lang-bar.scrolled {
       box-shadow: 0 4px 12px rgba(0,0,0,0.05);
       padding-bottom: 8px; 
@@ -121,18 +117,15 @@
       overflow-x: auto;
       padding-bottom: 8px; 
       
-      /* СТИЛИ ДЛЯ ИНДИКАЦИИ ПРОКРУТКИ */
       padding-left: 10px; 
       padding-right: 10px;
       margin-left: -10px;
       margin-right: -10px;
       
-      /* Градиентные тени */
       box-shadow: 
         inset 10px 0 8px -8px rgba(0,0,0,0.2), 
         inset -10px 0 8px -8px rgba(0,0,0,0.2); 
       
-      /* Скрываем скроллбар */
       -ms-overflow-style: none; 
       scrollbar-width: none; 
     }
@@ -187,31 +180,21 @@
     .item{
       display:flex;
       gap:12px;
-      align-items:center;
+      align-items:flex-start; /* Изменено, чтобы текст не центрировался по вертикали с пустым thumb */
       padding:8px;
       border-radius:10px;
-      transition: background-color 0.4s ease-out; 
     }
     
-    /* СТИЛЬ ВЫДЕЛЕНИЯ */
-    .item-highlight {
-      background-color: #fffacd; 
-    }
-
-
+    /* УДАЛЯЕМ МИНИАТЮРУ */
     .thumb{
-      width:88px;
-      height:62px;
-      background:#eee;
-      border-radius:8px;
-      overflow:hidden;
-      flex-shrink:0;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      color:var(--muted);
-      font-size:12px;
+        width: 0; /* Убираем ширину */
+        height: 0; /* Убираем высоту */
+        flex-shrink: 0;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
     }
+    
     .meta{flex:1}
     .name{font-weight:700;margin-bottom:6px}
     .desc{font-size:13px;color:var(--muted);margin-bottom:6px}
@@ -232,106 +215,6 @@
     @media (max-width:900px){
       .content{flex-direction:column-reverse}
       .right{width:100%}
-    }
-    
-    /* --- LIGHTBOX STYLES (ОБНОВЛЕНЫ) --- */
-    .lightbox {
-      display: none;
-      position: fixed;
-      z-index: 1000;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      overflow: auto;
-      background-color: rgba(0, 0, 0, 0); 
-      align-items: center;
-      justify-content: center;
-      opacity: 0; 
-      transition: opacity 0.3s ease-in-out, background-color 0.3s ease-in-out; 
-    }
-    
-    .lightbox.open {
-      display: flex; 
-      opacity: 1; 
-      background-color: rgba(0, 0, 0, 0.9); 
-    }
-    
-    .lightbox-content {
-      margin: auto;
-      display: block;
-      max-width: 90%;
-      max-height: 90vh;
-      border-radius: var(--radius);
-      box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
-      cursor: pointer;
-      transform: scale(0.95); 
-      transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.5, 1.1); 
-    }
-    
-    .lightbox.open .lightbox-content {
-        transform: scale(1); 
-    }
-
-    .lightbox-close {
-      position: absolute;
-      top: 15px;
-      right: 35px;
-      color: #fff;
-      font-size: 40px;
-      font-weight: bold;
-      transition: 0.3s;
-      cursor: pointer;
-    }
-    .lightbox-close:hover,
-    .lightbox-close:focus {
-      color: #bbb;
-      text-decoration: none;
-    }
-
-    /* GALLERY STYLES */
-    .gallery-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); 
-      gap: 12px;
-      margin-top: 12px;
-    }
-    .gallery-item {
-      border-radius: var(--radius);
-      overflow: hidden;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-      position: relative;
-      cursor: pointer;
-      transition: transform 0.2s;
-    }
-    .gallery-item:hover {
-      transform: translateY(-2px);
-    }
-    .gallery-img-wrapper {
-      aspect-ratio: 4/3; 
-      width: 100%;
-      display: block;
-    }
-    .gallery-img-wrapper img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-    }
-    .gallery-caption {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      padding: 8px;
-      background: rgba(0,0,0,0.6);
-      color: white;
-      font-size: 11px;
-      font-weight: 600;
-      text-align: center;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
     }
   </style>
 </head>
@@ -374,22 +257,12 @@
     
   </div>
   
-  <div id="myLightbox" class="lightbox">
-    <span class="lightbox-close">×</span>
-    <img class="lightbox-content" id="lightbox-img">
-  </div>
-  
-  
   <script>
     // DATA: menu items with EN and PL text and prices (zł)
     const MENU = [
-      // 1. РАЗДЕЛ ДЛЯ ГАЛЕРЕИ (Теперь просто "Popular")
-      {
-        id: 'sushi-gallery',
-        title: {en: 'Popular', pl: 'Popularne'},
-        isGallery: true
-      },
-      // 2. РАЗДЕЛ ДЛЯ НАБОРОВ (Без миниатюр и исключен из галереи, цельные описания)
+      // 1. УДАЛЕН РАЗДЕЛ ДЛЯ ГАЛЕРЕИ
+      
+      // 2. РАЗДЕЛ ДЛЯ НАБОРОВ
       {
         id:'sushi-sets',
         title:{en:'Sushi Sets', pl:'Zestawy Sushi'},
@@ -400,8 +273,6 @@
             descEN:'4x Hosomaki (tuna, salmon, butterfish), 4x Hosomaki (cucumber, oshinko, kampyo), 4x Futomaki Ohio/Kani (butterfish or surimi), 2x Nigiri (salmon)', 
             descPL:'4x Hosomaki (tuńczyk, łosoś, maślana), 4x Hosomaki (ogórek, oshinko, kampyo), 4x Futomaki Ohio/Kani (maślana lub surimi), 2x Nigiri (łosoś)', 
             price:'70 zł', 
-            itemId:'set-kiro',
-            imgFile:null 
           },
           {
             enName:'ORENJI (16 pcs)', 
@@ -409,8 +280,6 @@
             descEN:'4x California Ebi (steamed shrimp), 4x California Awokado Kani (surimi wrapped in avocado), 4x Ohio/Awokado Kani (butterfish/surimi wrapped in sesame), 4x Nigiri (salmon/shrimp)', 
             descPL:'4x California Ebi (parzona krewetka), 4x California Awokado Kani (surimi owijane awokado), 4x Ohio/Awokado Kani (maślana/surimi owijane w sezam), 4x Nigiri (łosoś/krewetka)', 
             price:'90 zł', 
-            itemId:'set-orenji',
-            imgFile:null 
           },
           {
             enName:'AKA (24 pcs)', 
@@ -418,8 +287,6 @@
             descEN:'4x Gold California (surimi wrapped in salmon), 4x Ebi Ten (shrimp tempura), 4x Mango Sake (salmon wrapped in mango), 4x Futomaki Ohio Ten (butterfish tempura), 4x Futomaki Ebi Spicy (spicy shrimp), 4x Nigiri (tuna/eel)', 
             descPL:'4x Gold California (surimi owijane łososiem), 4x Ebi Ten (krewetka w tempurze), 4x Mango Sake (łosoś owijany mango), 4x Futomaki Ohio Ten (maślana w tempurze), 4x Futomaki Ebi Spicy (pikantna krewetka), 4x Nigiri (tuńczyk/węgorz)', 
             price:'130 zł', 
-            imgFile:null,
-            itemId:'set-aka'
           }
         ]
       },
@@ -428,10 +295,10 @@
         id:'starters',
         title:{en:'Starters', pl:'Przystawki'},
         items:[
-          {enName:'Goma Wakame', plName:'Goma Wakame', descEN:'wakame salad', descPL:'sałatka z wodorostów', price:'20 zł', itemId:'s-goma'},
-          {enName:'Ebiten (3 pcs)', plName:'Ebiten (3 szt.)', descEN:'shrimp tempura served with ponzu sauce', descPL:'krewetki smażone w cieście tempura podawane z sosem ponzu', price:'30 zł', itemId:'s-ebiten'},
-          {enName:'Sake Tataki', plName:'Sake Tataki', descEN:'salmon tartare', descPL:'tatar z łososia', price:'50 zł', itemId:'s-saketat'},
-          {enName:'Maguro Tataki', plName:'Maguro Tataki', descEN:'tuna tartare', descPL:'tatar z tuńczyka', price:'55 zł', itemId:'s-magtat'}
+          {enName:'Goma Wakame', plName:'Goma Wakame', descEN:'wakame salad', descPL:'sałatka z wodorostów', price:'20 zł'},
+          {enName:'Ebiten (3 pcs)', plName:'Ebiten (3 szt.)', descEN:'shrimp tempura served with ponzu sauce', descPL:'krewetki smażone w cieście tempura podawane z sosem ponzu', price:'30 zł'},
+          {enName:'Sake Tataki', plName:'Sake Tataki', descEN:'salmon tartare', descPL:'tatar z łososia', price:'50 zł'},
+          {enName:'Maguro Tataki', plName:'Maguro Tataki', descEN:'tuna tartare', descPL:'tatar z tuńczyka', price:'55 zł'}
         ]
       },
       {
@@ -444,8 +311,6 @@
             descEN:'flavorful broth with vegetables, meat and ramen noodles. Chicken 48 zł / Beef 55 zł', 
             descPL:'aromatyczny bulion z mięsem, warzywami i makaronem ramen', 
             price:'48 zł / 55 zł',
-            imgFile:'SUSHI KSIESTWO SOCIAL MEDIA V2-729 (1).jpg',
-            itemId:'soup-ramen'
           }
         ]
       },
@@ -454,55 +319,55 @@
         title:{en:'Sushi — Nigiri / Futomaki', pl:'Sushi — Nigiri / Futomaki'},
         items:[
           // --- NIGIRI (2 szt.) ---
-          {enName:'Sake (Nigiri 2 pcs)', plName:'Sake (Nigiri 2 szt.)', descEN:'salmon', descPL:'łosoś', price:'26 zł', itemId:'n-sake'},
-          {enName:'Ohio (Nigiri 2 pcs)', plName:'Ohio (Nigiri 2 szt.)', descEN:'butterfish', descPL:'maślana', price:'25 zł', itemId:'n-ohio'},
-          {enName:'Maguro (Nigiri 2 pcs)', plName:'Maguro (Nigiri 2 szt.)', descEN:'tuna', descPL:'tuńczyk', price:'30 zł', itemId:'n-maguro'},
-          {enName:'Unagi (Nigiri 2 pcs)', plName:'Unagi (Nigiri 2 szt.)', descEN:'eel', descPL:'węgorz', price:'30 zł', itemId:'n-unagi'}, 
-          {enName:'Hotate (Nigiri 2 pcs)', plName:'Hotate (Nigiri 2 szt.)', descEN:'scallops', descPL:'małże św. Jakuba', price:'32 zł', itemId:'n-hotate'}, 
-          {enName:'Tako (Nigiri 2 pcs)', plName:'Tako (Nigiri 2 szt.)', descEN:'octopus', descPL:'ośmiornica', price:'30 zł', itemId:'n-tako'}, 
-          {enName:'Ika (Nigiri 2 pcs)', plName:'Ika (Nigiri 2 szt.)', descEN:'squid', descPL:'kalmar', price:'30 zł', itemId:'n-ika'}, 
-          {enName:'Ebi (Nigiri 2 pcs)', plName:'Ebi (Nigiri 2 szt.)', descEN:'shrimp', descPL:'krewetka', price:'30 zł', itemId:'n-ebi'}, 
+          {enName:'Sake (Nigiri 2 pcs)', plName:'Sake (Nigiri 2 szt.)', descEN:'salmon', descPL:'łosoś', price:'26 zł'},
+          {enName:'Ohio (Nigiri 2 pcs)', plName:'Ohio (Nigiri 2 szt.)', descEN:'butterfish', descPL:'maślana', price:'25 zł'},
+          {enName:'Maguro (Nigiri 2 pcs)', plName:'Maguro (Nigiri 2 szt.)', descEN:'tuna', descPL:'tuńczyk', price:'30 zł'},
+          {enName:'Unagi (Nigiri 2 pcs)', plName:'Unagi (Nigiri 2 szt.)', descEN:'eel', descPL:'węgorz', price:'30 zł'}, 
+          {enName:'Hotate (Nigiri 2 pcs)', plName:'Hotate (Nigiri 2 szt.)', descEN:'scallops', descPL:'małże św. Jakuba', price:'32 zł'}, 
+          {enName:'Tako (Nigiri 2 pcs)', plName:'Tako (Nigiri 2 szt.)', descEN:'octopus', descPL:'ośmiornica', price:'30 zł'}, 
+          {enName:'Ika (Nigiri 2 pcs)', plName:'Ika (Nigiri 2 szt.)', descEN:'squid', descPL:'kalmar', price:'30 zł'}, 
+          {enName:'Ebi (Nigiri 2 pcs)', plName:'Ebi (Nigiri 2 szt.)', descEN:'shrimp', descPL:'krewetka', price:'30 zł'}, 
           
           // --- FUTOMAKI (4 szt.) ---
-          {enName:'Sake Philadelphia (4 pcs)', plName:'Sake Philadelphia (4 szt.)', descEN:'salmon with philadelphia cream cheese', descPL:'łosoś z serkiem philadelphia', price:'38 zł', itemId:'f-sakephi'},
-          {enName:'Maguro Negi Togarashi (4 pcs)', plName:'Maguro Negi Togarashi (4 szt.)', descEN:'tuna with spicy leek', descPL:'tuńczyk z porem na ostro', price:'42 zł', itemId:'f-magnegi'},
-          {enName:'Ohio Spice Mango (4 pcs)', plName:'Ohio Spice Mango (4 szt.)', descEN:'spicy butterfish with mango', descPL:'pikantna maślana z mango', price:'40 zł', itemId:'f-ohiomango'}, 
-          {enName:'Ebi Spicy (4 pcs)', plName:'Ebi Spicy (4 szt.)', descEN:'spicy shrimp', descPL:'pikantna parzona krewetka', price:'40 zł', itemId:'f-ebisp'}, 
-          {enName:'Ebi Tempura (4 pcs)', plName:'Ebi Tempura (4 szt.)', descEN:'shrimp tempura', descPL:'krewetka w tempurze', price:'40 zł', itemId:'f-ebiten'}, 
-          {enName:'Unagi Kabayaki (4 pcs)', plName:'Unagi Kabayaki (4 szt.)', descEN:'grilled eel with kabayaki sauce', descPL:'grillowany węgorz w sosie kabayaki', price:'45 zł', itemId:'f-unagikaba'}, 
-          {enName:'Ika Tempura (4 pcs)', plName:'Ika Tempura (4 szt.)', descEN:'squid tempura', descPL:'kalmar w tempurze', price:'48 zł', itemId:'f-ikaten'}, 
-          {enName:'Veggi (4 pcs)', plName:'Veggi (4 szt.)', descEN:'vegetables', descPL:'warzywa', price:'36 zł', itemId:'f-veggi'} 
+          {enName:'Sake Philadelphia (4 pcs)', plName:'Sake Philadelphia (4 szt.)', descEN:'salmon with philadelphia cream cheese', descPL:'łosoś z serkiem philadelphia', price:'38 zł'},
+          {enName:'Maguro Negi Togarashi (4 pcs)', plName:'Maguro Negi Togarashi (4 szt.)', descEN:'tuna with spicy leek', descPL:'tuńczyk z porem na ostро', price:'42 zł'},
+          {enName:'Ohio Spice Mango (4 pcs)', plName:'Ohio Spice Mango (4 szt.)', descEN:'spicy butterfish with mango', descPL:'pikantna maślana z mango', price:'40 zł'}, 
+          {enName:'Ebi Spicy (4 pcs)', plName:'Ebi Spicy (4 szt.)', descEN:'spicy shrimp', descPL:'pikantna parzona krewetka', price:'40 zł'}, 
+          {enName:'Ebi Tempura (4 pcs)', plName:'Ebi Tempura (4 szt.)', descEN:'shrimp tempura', descPL:'krewetka w tempurze', price:'40 zł'}, 
+          {enName:'Unagi Kabayaki (4 pcs)', plName:'Unagi Kabayaki (4 szt.)', descEN:'grilled eel with kabayaki sauce', descPL:'grillowany węgorz w sosie kabayaki', price:'45 zł'}, 
+          {enName:'Ika Tempura (4 pcs)', plName:'Ika Tempura (4 szt.)', descEN:'squid tempura', descPL:'kalmar w tempurze', price:'48 zł'}, 
+          {enName:'Veggi (4 pcs)', plName:'Veggi (4 szt.)', descEN:'vegetables', descPL:'warzywa', price:'36 zł'} 
         ]
       },
       {
         id:'uramaki',
         title:{en:'Uramaki (8 pc)', pl:'Uramaki (8 szt.)'},
         items:[
-          {enName:'Sake Philadelphia', plName:'Sake Philadelphia', descEN:'salmon with philadelphia cream cheese', descPL:'łosoś z serkiem philadelphia', price:'38 zł', imgFile:'SUSHI KSIESTWO SOCIAL MEDIA V2-170.jpg', itemId:'u-sakephi'},
-          {enName:'Ohio Spice Sake', plName:'Ohio Spice Sake', descEN:'salmon wrapped in roasted butterfish', descPL:'łosoś owijany opalaną maślaną', price:'42 zł', itemId:'u-ohiosake'},
-          {enName:'Maguro Spicy Ebi Ten', plName:'Maguro Spicy Ebi Ten', descEN:'shrimp tempura wrapped in roasted tuna', descPL:'krewetka w tempurze owijana opalanym tuńczykiem', price:'45 zł', itemId:'u-magroebi'},
-          {enName:'Kegon', plName:'Kegon', descEN:'salmon wrapped in grilled eel', descPL:'łosoś owijany grillowanym węgorzem', price:'45 zł', imgFile:'SUSHI KSIESTWO SOCIAL MEDIA V2-343 (1).jpg', itemId:'u-kegon'},
-          {enName:'Sake Aburi', plName:'Sake Aburi', descEN:'salmon wrapped in roasted spicy salmon', descPL:'łosoś owijany opalanym pikantnym łososiem', price:'45 zł', itemId:'u-sakeaburi'},
-          {enName:'Tobiko Ohio Ten', plName:'Tobiko Ohio Ten', descEN:'butterfish tempura coated with flying fish roe', descPL:'maślana w tempurze obtoczona kawiorem z latająщей ryby', price:'48 zł', itemId:'u-tobiohio'},
-          {enName:'Nashi Sake', plName:'Nashi Sake', descEN:'salmon wrapped in Japanese pear', descPL:'łosoś owijany japońską gruszką', price:'45 zł', itemId:'u-nashisake'},
-          {enName:'Sake Tataki Ebi Ten', plName:'Sake Tataki Ebi Ten', descEN:'shrimp tempura topped with salmon tartare', descPL:'krewetki w tempurze obłożone tatarem z łososia', price:'48 zł', itemId:'u-saketatent'},
-          {enName:'Awokado Sake', plName:'Awokado Sake', descEN:'salmon wrapped in avocado', descPL:'łosoś owijany awokado', price:'42 zł', imgFile:'SUSHI KSIESTWO SOCIAL MEDIA V2-43.jpg', itemId:'u-awokado'},
-          {enName:'Mango Sake', plName:'Mango Sake', descEN:'salmon wrapped in mango', descPL:'łosoś owijany mango', price:'42 zł', itemId:'u-mango'},
-          {enName:'Maguro Orange Pepper', plName:'Maguro Orange Pepper', descEN:'tuna with chopped leek and orange pepper', descPL:'tuńczyk z siekanym porem i orange pepper', price:'45 zł', itemId:'u-magorange'},
-          {enName:'Ebi Ten Mamemori', plName:'Ebi Ten Mamemori', descEN:'shrimp tempura wrapped in soy paper', descPL:'krewetka w tempurze zawijana w papier sojowy', price:'42 zł', itemId:'u-ebitenmame'},
-          {enName:'Gold California', plName:'Gold California', descEN:'surimi wrapped in salmon', descPL:'surimi owijane łososiem', price:'40 zł', imgFile:'SUSHI KSIESTWO SOCIAL MEDIA V2-94.jpg', itemId:'u-goldcal'},
-          {enName:'Rainbow', plName:'Rainbow', descEN:'Surimi wrapped in variety of raw fish', descPL:'surimi owijane wachlarzem ryb', price:'48 zł', imgFile:'SUSHI KSIESTWO SOCIAL MEDIA V2-511.jpg', itemId:'u-rainbow'}
+          {enName:'Sake Philadelphia', plName:'Sake Philadelphia', descEN:'salmon with philadelphia cream cheese', descPL:'łosoś z serkiem philadelphia', price:'38 zł'},
+          {enName:'Ohio Spice Sake', plName:'Ohio Spice Sake', descEN:'salmon wrapped in roasted butterfish', descPL:'łosoś owijany opalaną maślaną', price:'42 zł'},
+          {enName:'Maguro Spicy Ebi Ten', plName:'Maguro Spicy Ebi Ten', descEN:'shrimp tempura wrapped in roasted tuna', descPL:'krewetka w tempurze owijana opalanym tuńczykiem', price:'45 zł'},
+          {enName:'Kegon', plName:'Kegon', descEN:'salmon wrapped in grilled eel', descPL:'łosoś owijany grillowanym węgorzem', price:'45 zł'},
+          {enName:'Sake Aburi', plName:'Sake Aburi', descEN:'salmon wrapped in roasted spicy salmon', descPL:'łosoś owijany opalanym pikantnym łososiem', price:'45 zł'},
+          {enName:'Tobiko Ohio Ten', plName:'Tobiko Ohio Ten', descEN:'butterfish tempura coated with flying fish roe', descPL:'maślana w tempurze obtoczona kawiorem z latająщей ryбы', price:'48 zł'},
+          {enName:'Nashi Sake', plName:'Nashi Sake', descEN:'salmon wrapped in Japanese pear', descPL:'łosoś owijany japońską gruszką', price:'45 zł'},
+          {enName:'Sake Tataki Ebi Ten', plName:'Sake Tataki Ebi Ten', descEN:'shrimp tempura topped with salmon tartare', descPL:'krewetki w tempurze обложенные татаром z łososia', price:'48 zł'},
+          {enName:'Awokado Sake', plName:'Awokado Sake', descEN:'salmon wrapped in avocado', descPL:'łosoś owijany awokado', price:'42 zł'},
+          {enName:'Mango Sake', plName:'Mango Sake', descEN:'salmon wrapped in mango', descPL:'łosoś owijany mango', price:'42 zł'},
+          {enName:'Maguro Orange Pepper', plName:'Maguro Orange Pepper', descEN:'tuna with chopped leek and orange pepper', descPL:'tuńczyk z siekanym porem i orange pepper', price:'45 zł'},
+          {enName:'Ebi Ten Mamemori', plName:'Ebi Ten Mamemori', descEN:'shrimp tempura wrapped in soy paper', descPL:'krewetka w tempurze zawijana w papier sojowy', price:'42 zł'},
+          {enName:'Gold California', plName:'Gold California', descEN:'surimi wrapped in salmon', descPL:'surimi owijane łososiem', price:'40 zł'},
+          {enName:'Rainbow', plName:'Rainbow', descEN:'Surimi wrapped in variety of raw fish', descPL:'surimi owijane wachlarzem ryб', price:'48 zł'}
         ]
       },
       {
         id:'uramaki-temp',
         title:{en:'Uramaki in Tempura (8 pc)', pl:'Uramaki w Tempurze (8 szt.)'},
         items:[
-          {enName:'Tempura Sake', plName:'Tempura Sake', descEN:'salmon', descPL:'łosoś', price:'38 zł', itemId:'ut-sake'},
-          {enName:'Tempura Ohio', plName:'Tempura Ohio', descEN:'butterfish', descPL:'maślana', price:'38 zł', itemId:'ut-ohio'},
-          {enName:'Tempura Maguro', plName:'Tempura Maguro', descEN:'tuna', descPL:'tuńczyk', price:'42 zł', itemId:'ut-maguro'},
-          {enName:'Tempura Ebi', plName:'Tempura Ebi', descEN:'steamed shrimp', descPL:'parzona krewetka', price:'40 zł', itemId:'ut-ebi'},
-          {enName:'Tempura Unagi Kabayaki', plName:'Tempura Unagi Kabayaki', descEN:'grilled eel', descPL:'grillowany węgorz', price:'45 zł', itemId:'ut-unagi'}
+          {enName:'Tempura Sake', plName:'Tempura Sake', descEN:'salmon', descPL:'łosoś', price:'38 zł'},
+          {enName:'Tempura Ohio', plName:'Tempura Ohio', descEN:'butterfish', descPL:'maślana', price:'38 zł'},
+          {enName:'Tempura Maguro', plName:'Tempura Maguro', descEN:'tuna', descPL:'tuńczyk', price:'42 zł'},
+          {enName:'Tempura Ebi', plName:'Tempura Ebi', descEN:'steamed shrimp', descPL:'parzona krewetka', price:'40 zł'},
+          {enName:'Tempura Unagi Kabayaki', plName:'Tempura Unagi Kabayaki', descEN:'grilled eel', descPL:'grillowany węgorz', price:'45 zł'}
         ]
       },
       {
@@ -510,11 +375,11 @@
         title:{en:'Oyakomaki / Sashimi', pl:'Oyakomaki / Sashimi'},
         items:[
           // Oyakomaki (2 szt.)
-          {enName:'Sake Ebi Tataki (2 pcs)', plName:'Sake Ebi Tataki (2 szt.)', descEN:'chopped shrimp wrapped in salmon', descPL:'siekana krewetka owijana w łososia', price:'36 zł', itemId:'o-sakeebi'},
-          {enName:'Sake Ikura', plName:'Sake Ikura', descEN:'salmon caviar wrapped in tuna', descPL:'kawior z łososia owijany tuńczykiem', price:'42 zł', itemId:'o-sakeiku'},
-          {enName:'Maguro Sake Tataki (2 pcs)', plName:'Maguro Sake Tataki (2 szt.)', descEN:'chopped salmon wrapped in tuna', descPL:'siekany łosoś owijany tuńczykiem', price:'45 zł', itemId:'o-magsake'}, 
+          {enName:'Sake Ebi Tataki (2 pcs)', plName:'Sake Ebi Tataki (2 szt.)', descEN:'chopped shrimp wrapped in salmon', descPL:'siekana krewetka owijana w łososia', price:'36 zł'},
+          {enName:'Sake Ikura', plName:'Sake Ikura', descEN:'salmon caviar wrapped in tuna', descPL:'kawior z łososia owijany tuńczykiem', price:'42 zł'},
+          {enName:'Maguro Sake Tataki (2 pcs)', plName:'Maguro Sake Tataki (2 szt.)', descEN:'chopped salmon wrapped in tuna', descPL:'siekany łosoś owijany tuńczykiem', price:'45 zł'}, 
           // Sashimi (9 szt.)
-          {enName:'Sashimi Mizu (9 pcs)', plName:'Sashimi Mizu (9 pcs)', descEN:'slices of raw fish — salmon, tuna, butterfish', descPL:'slajsy surowej ryby – łosoś, tuńczyk, maślana', price:'95 zł', itemId:'o-sashimi'}
+          {enName:'Sashimi Mizu (9 pcs)', plName:'Sashimi Mizu (9 pcs)', descEN:'slices of raw fish — salmon, tuna, butterfish', descPL:'slajsy surowej ryby – łosoś, tuńczyk, maślana', price:'95 zł'}
         ]
       }
     ];
@@ -537,17 +402,17 @@
     
     // Функция для проверки состояния прокрутки и применения тени (для Sticky Lang Bar)
     function checkStickyState() {
-        if (wrap.scrollTop > 0) {
+        // Убрали проверку прокрутки, чтобы не было ошибок на мобильных устройствах, если нет overflow
+        // Но оставили для возможного будущего скроллинга
+        const scrollElement = wrap.scrollHeight > wrap.clientHeight ? wrap : document.documentElement;
+        if (scrollElement.scrollTop > 0) {
             stickyLangBar.classList.add('scrolled');
         } else {
             stickyLangBar.classList.remove('scrolled');
         }
     }
     
-    // Включаем прослушивание прокрутки на элементе wrap
     wrap.addEventListener('scroll', checkStickyState);
-    
-    // При первой загрузке тоже проверяем
     window.addEventListener('load', checkStickyState);
 
 
@@ -567,34 +432,14 @@
       });
     }
 
-    // ФУНКЦИЯ: Сбор всех элементов для галереи
-    function getGalleryItems(lang) {
-        const galleryItems = [];
-        MENU.forEach(section => {
-            // ИСКЛЮЧАЕМ РАЗДЕЛ "Sushi Sets" (id:'sushi-sets') ИЗ ГАЛЕРЕИ
-            if (section.items && section.id !== 'sushi-sets') { 
-                section.items.forEach(item => {
-                    // Включаем в галерею только те элементы, у которых есть фото
-                    if (item.imgFile && item.itemId) { 
-                        galleryItems.push({
-                            name: item[lang + 'Name'],
-                            imgFile: item.imgFile,
-                            price: item.price,
-                            itemId: item.itemId, 
-                            sectionId: section.id 
-                        });
-                    }
-                });
-            }
-        });
-        return galleryItems;
-    }
-
-
+    // Упрощенная функция renderMenu (БЕЗ ФОТО)
     function renderMenu(){
       menuArea.innerHTML = '';
       
       MENU.forEach(sec=>{
+        // Игнорируем галерею, если она случайно осталась
+        if (sec.isGallery) return; 
+
         const s = document.createElement('section');
         s.className='section';
         s.id = sec.id;
@@ -602,145 +447,44 @@
         h2.textContent = sec.title[LANG];
         s.appendChild(h2);
 
-        // СПЕЦИАЛЬНЫЙ РЕНДЕРИНГ ДЛЯ ГАЛЕРЕИ
-        if (sec.isGallery) {
-            const galleryItems = getGalleryItems(LANG);
-            const grid = document.createElement('div');
-            grid.className = 'gallery-grid';
+        const container = document.createElement('div');
+        container.className='items';
+
+        sec.items.forEach(it=>{
+            const div = document.createElement('div');
+            div.className='item';
+
+            // Создаем пустой thumb, чтобы сохранить CSS-структуру
+            const thumb = document.createElement('div');
+            thumb.className = 'thumb';
+
+            const meta = document.createElement('div');
+            meta.className='meta';
+            const name = document.createElement('div');
+            name.className='name';
+            name.textContent = (LANG==='en'?it.enName:it.plName);
+            const desc = document.createElement('div');
+            desc.className='desc';
+            desc.innerHTML = (LANG==='en' ? it.descEN : it.descPL) || ''; 
+            const price = document.createElement('div');
+            price.className='price';
+            price.textContent = it.price || '';
+
+            // Добавляем пустой thumb (важно для правильного расположения текста)
+            div.appendChild(thumb);
             
-            galleryItems.forEach(item => {
-                const itemDiv = document.createElement('div');
-                itemDiv.className = 'gallery-item js-gallery-link'; // Класс для перехода
-                itemDiv.dataset.img = 'images/' + item.imgFile;
-                itemDiv.dataset.targetId = item.itemId; // Целевой ID элемента в меню
+            meta.appendChild(name);
+            if(desc.innerHTML) meta.appendChild(desc);
+            meta.appendChild(price);
 
-                const wrapper = document.createElement('div');
-                wrapper.className = 'gallery-img-wrapper';
+            div.appendChild(meta);
+            container.appendChild(div);
+        });
 
-                const img = document.createElement('img');
-                img.alt = item.name;
-                img.src = 'images/' + item.imgFile;
-                
-                wrapper.appendChild(img);
-
-                const caption = document.createElement('div');
-                caption.className = 'gallery-caption';
-                caption.textContent = item.name + ' (' + item.price + ')';
-
-                itemDiv.appendChild(wrapper);
-                itemDiv.appendChild(caption);
-                grid.appendChild(itemDiv);
-            });
-
-            s.appendChild(grid);
-            
-        } else {
-            // СТАНДАРТНЫЙ РЕНДЕРИНГ МЕНЮ
-            const container = document.createElement('div');
-            container.className='items';
-
-            sec.items.forEach(it=>{
-                const div = document.createElement('div');
-                div.className='item';
-                div.id = it.itemId; // Добавление ID для элемента меню
-
-                const thumb = document.createElement('div');
-                thumb.className = 'thumb';
-
-                const defaultImgPath = 'https://via.placeholder.com/300x200?text=photo';
-                const imgPath = it.imgFile ? ('images/' + it.imgFile) : defaultImgPath;
-                
-                let hasImage = !!it.imgFile; 
-
-                // Если это раздел с наборами, даже если есть imgFile (AKA), мы не показываем миниатюру
-                if (sec.id === 'sushi-sets') {
-                    hasImage = false;
-                }
-                
-                const link = document.createElement('a');
-                link.href = '#'; 
-                
-                // Используем js-lightbox-link, только если есть фото
-                if (hasImage) {
-                    link.className = 'js-lightbox-link'; 
-                    link.dataset.img = imgPath; 
-                }
-                
-                // Рендерим изображение только если оно есть
-                if (hasImage) {
-                    const img = document.createElement('img');
-                    img.style.width = '100%';
-                    img.style.height = '100%';
-                    img.style.objectFit = 'cover';
-                    img.alt = (LANG==='en'?it.enName:it.plName);
-                    img.src = imgPath; 
-                    link.appendChild(img);
-                    thumb.appendChild(link);
-                } else {
-                    // Если фото нет (или это набор), показываем пустое место/заглушку
-                    thumb.textContent = ''; 
-                    thumb.style.backgroundColor = 'transparent';
-                    thumb.style.border = 'none';
-                    thumb.style.boxShadow = 'none';
-                }
-
-                const meta = document.createElement('div');
-                meta.className='meta';
-                const name = document.createElement('div');
-                name.className='name';
-                name.textContent = (LANG==='en'?it.enName:it.plName);
-                const desc = document.createElement('div');
-                desc.className='desc';
-                desc.innerHTML = (LANG==='en' ? it.descEN : it.descPL) || ''; 
-                const price = document.createElement('div');
-                price.className='price';
-                price.textContent = it.price || '';
-
-                // Всегда добавляем thumb/пустой блок для сохранения структуры
-                div.appendChild(thumb);
-                
-                meta.appendChild(name);
-                if(desc.innerHTML) meta.appendChild(desc);
-                meta.appendChild(price);
-
-                div.appendChild(meta);
-                container.appendChild(div);
-            });
-
-            s.appendChild(container);
-        }
-        
+        s.appendChild(container);
         menuArea.appendChild(s);
       });
     }
-
-    // ФУНКЦИЯ: Убирает выделение со всех элементов
-    function clearHighlights() {
-        document.querySelectorAll('.item').forEach(item => {
-            item.classList.remove('item-highlight');
-        });
-    }
-    
-    // ФУНКЦИЯ: Переход к элементу и его выделение
-    function goToAndHighlightItem(itemId) {
-        const targetElement = document.getElementById(itemId);
-        if (targetElement) {
-            // 1. Убрать все предыдущие выделения
-            clearHighlights();
-
-            // 2. Прокрутить до элемента
-            targetElement.scrollIntoView({ behavior: 'smooth', block: 'center' }); 
-
-            // 3. Выделить элемент
-            targetElement.classList.add('item-highlight');
-
-            // 4. Убрать выделение через 1.5 секунды
-            setTimeout(() => {
-                targetElement.classList.remove('item-highlight');
-            }, 1500); 
-        }
-    }
-
 
     function updateTexts(){
       document.getElementById('title').textContent = 'Księstwo Sushi';
@@ -752,97 +496,12 @@
       document.getElementById('notice-text').innerHTML = NOTICE_TEXTS[LANG];
     }
 
-
-    // --- LIGHTBOX LOGIC (ОБНОВЛЕНО) ---
-    const lightbox = document.getElementById('myLightbox');
-    const lightboxImg = document.getElementById('lightbox-img');
-    const closeBtn = document.querySelector('.lightbox-close');
-
-    function openLightbox(imgPath) {
-      lightboxImg.src = imgPath;
-      lightbox.style.display = 'flex'; 
-      
-      setTimeout(() => {
-        lightbox.classList.add('open');
-      }, 10); 
-    }
-
-    function closeLightbox() {
-      lightbox.classList.remove('open');
-      
-      setTimeout(() => {
-        lightbox.style.display = 'none';
-        lightboxImg.src = ''; 
-      }, 300); 
-    }
-
-    closeBtn.onclick = closeLightbox;
-    // Lightbox closes on background click
-    lightbox.onclick = (e) => {
-      if (e.target === lightbox) {
-        closeLightbox();
-      }
-    };
-    // NEW RULE: Clicking the image itself closes the lightbox
-    lightboxImg.onclick = (e) => {
-      e.stopPropagation();
-      closeLightbox(); 
-    };
-
-    
-    // ФУНКЦИЯ: Прикрепляет слушателей к галерее (переход) и к меню (лайтбокс)
-    function attachLightboxListeners() {
-      setTimeout(() => { 
-        // 1. Слушатели для обычных элементов меню (открывают лайтбокс)
-        document.querySelectorAll('.js-lightbox-link').forEach(link => {
-          link.onclick = null; 
-          link.onclick = (e) => {
-            e.preventDefault();
-            const imgPath = link.dataset.img;
-            if (imgPath.indexOf('placeholder') === -1) {
-                openLightbox(imgPath);
-            }
-          };
-        });
-
-        // 2. Слушатели для элементов галереи (переходят к элементу в меню)
-        document.querySelectorAll('.js-gallery-link').forEach(link => {
-            link.onclick = null; 
-            link.onclick = (e) => {
-                e.preventDefault();
-                const targetId = link.dataset.targetId; 
-                // Вместо открытия лайтбокса, переходим и выделяем элемент
-                if (targetId) {
-                    goToAndHighlightItem(targetId);
-                } else {
-                    // Если это просто галерейная ссылка, открываем лайтбокс (как запасной вариант)
-                    const imgPath = link.dataset.img;
-                    if (imgPath.indexOf('placeholder') === -1) {
-                        openLightbox(imgPath);
-                    }
-                }
-            };
-        });
-
-      }, 100); 
-    }
-    
-    // Wrapping renderMenu to automatically re-attach listeners after content update
-    const tempRenderMenu = renderMenu;
-    renderMenu = function() {
-        tempRenderMenu();
-        attachLightboxListeners();
-    }
-
-    // --- END LIGHTBOX LOGIC ---
-
     // language buttons
     langBtns.forEach(b=>{
       b.addEventListener('click', ()=>{
         langBtns.forEach(x=>x.classList.remove('active'));
         b.classList.add('active');
         LANG = b.dataset.lang;
-        clearHighlights(); // Убираем выделение при смене языка
         createNav();
         renderMenu(); 
         updateTexts();
