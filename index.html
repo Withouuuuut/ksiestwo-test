@@ -2,267 +2,257 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
   <title>Księstwo Sushi — Menu</title>
   <style>
     :root{
-      --bg:#f8f6f4;
+      --bg:#f4f4f6; /* Чуть более современный светло-серый */
       --card:#ffffff;
-      --muted:#7b7b7b;
-      --accent:#d88b6a;
-      --text:#111;
-      --maxw:1000px;
-      --radius:12px;
+      --muted:#8e8e93;
+      --accent:#ff6b6b; /* Более яркий, аппетитный акцент */
+      --text:#1d1d1f;
+      --maxw:600px; /* Ограничим ширину для лучшего вида на ПК (как мобильное приложение) */
+      --radius:16px;
+      --shadow: 0 4px 20px rgba(0,0,0,0.06);
     }
-    *{box-sizing:border-box}
+    *{box-sizing:border-box; -webkit-tap-highlight-color: transparent;}
+    
     body{
       margin:0;
-      font-family: "Georgia", "Times New Roman", serif;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       background: var(--bg);
       color:var(--text);
       -webkit-font-smoothing:antialiased;
-      -moz-osx-font-smoothing:grayscale;
-      padding:24px;
+      padding: 0;
       display:flex;
       justify-content:center;
+      min-height: 100vh;
     }
 
     .wrap{
       width:100%;
       max-width:var(--maxw);
-      background: var(--card); 
-      border-radius:16px;
-      padding:22px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+      background: var(--bg);
+      padding-bottom: 40px;
     }
     
-    /* СТИЛИ ДЛЯ ЛИПКОГО БЛОКА ЯЗЫКОВ */
-    .sticky-lang-bar {
-        position: sticky;
-        top: -22px; 
-        margin: 0 -22px; 
-        padding: 22px 22px 0 22px; 
-        background: var(--card);
-        border-top-left-radius: var(--radius);
-        border-top-right-radius: var(--radius);
-        z-index: 10;
-        transition: box-shadow 0.3s;
-        display: flex; 
-        justify-content: flex-end; 
-        align-items: center; 
-    }
-    
-    .sticky-lang-bar.scrolled {
-      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-      padding-bottom: 8px; 
-    }
-    
-    .lang-switch{
-      display:flex;
-      gap:8px;
-      align-items:center;
-    }
-    
+    /* --- HEADER --- */
     header{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
-      margin-bottom: 14px; 
+      background: var(--card);
+      padding: 20px 24px;
+      border-bottom-left-radius: 24px;
+      border-bottom-right-radius: 24px;
+      box-shadow: var(--shadow);
+      margin-bottom: 20px;
+      position: relative;
+      z-index: 10;
     }
+    
     .brand{
       display:flex;
-      gap:14px;
-      align-items:center;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 8px;
+      margin-bottom: 16px;
     }
-    .logo{
-      width:64px;
-      height:64px;
-      border-radius:8px;
-      background:linear-gradient(135deg,var(--accent),#f3c9b3);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      font-weight:700;
-      color:#fff;
-      font-size:20px;
-      box-shadow:0 6px 18px rgba(216,139,106,0.25);
+    
+    .logo-text {
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
     }
-    h1{margin:0;font-size:20px;letter-spacing:0.6px}
-    .sub{color:var(--muted); font-size:13px}
+    .sub{color:var(--muted); font-size:14px; font-weight: 500;}
 
+    /* --- LANGUAGE SWITCHER --- */
+    .lang-switch{
+      display:flex;
+      justify-content: center;
+      background: #eeeef0;
+      padding: 4px;
+      border-radius: 12px;
+      width: fit-content;
+      margin: 0 auto;
+    }
     .lang-btn{
+      border:none;
       background:transparent;
-      border:1px solid rgba(0,0,0,0.06);
-      padding:8px 10px;
-      border-radius:8px;
+      padding: 6px 20px;
+      border-radius: 9px;
       cursor:pointer;
       font-weight:600;
-      transition: background 0.2s;
+      font-size: 13px;
+      color: var(--muted);
+      transition: all 0.2s ease;
     }
     .lang-btn.active{
-      background:var(--accent);
-      color:white;
-      border-color:transparent;
-    }
-    .lang-btn:hover:not(.active) {
-        background: rgba(0,0,0,0.05);
+      background:var(--card);
+      color:var(--text);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
 
-    /* Navigation Chips */
-    nav{
-      display:flex;
-      gap:12px;
-      margin: 14px 0;
-      overflow-x: auto;
-      padding-bottom: 8px; 
-      
-      padding-left: 10px; 
-      padding-right: 10px;
-      margin-left: -10px;
-      margin-right: -10px;
-      
-      box-shadow: 
-        inset 10px 0 8px -8px rgba(0,0,0,0.2), 
-        inset -10px 0 8px -8px rgba(0,0,0,0.2); 
-      
-      -ms-overflow-style: none; 
-      scrollbar-width: none; 
+    /* --- ACCORDION SECTIONS --- */
+    .menu-container {
+        padding: 0 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
     }
-    nav::-webkit-scrollbar {
-        display: none; 
+
+    .section {
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      transition: transform 0.2s;
     }
     
-    .nav-chip{
-      flex-shrink: 0;
-      background:var(--card);
-      padding:8px 12px;
-      border-radius:999px;
-      font-weight:600;
-      border:1px solid rgba(0,0,0,0.03);
-      cursor:pointer;
-      font-size:14px;
-    }
-
-    .content{
-      display:flex;
-      gap:28px;
-      align-items:flex-start;
-    }
-
-    .left{
-      flex:1.1;
-      min-width:260px;
-    }
-    .right{
-      width:320px;
-      min-width:220px;
-    }
-
-    .section{
-      background:var(--card);
-      border-radius:var(--radius);
-      padding:14px;
-      margin-bottom:14px;
-      border:1px solid rgba(0,0,0,0.03);
-      scroll-margin-top: 55px; 
-    }
-    .section h2{
-      margin:0 0 8px 0;
-      font-size:16px;
-      letter-spacing:0.8px;
-    }
-    .items{
-      display:grid;
-      gap:10px;
-    }
-
-    .item{
-      display:flex;
-      gap:12px;
-      align-items:flex-start; /* Изменено, чтобы текст не центрировался по вертикали с пустым thumb */
-      padding:8px;
-      border-radius:10px;
+    /* Заголовок-кнопка */
+    .section-header {
+        padding: 18px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        cursor: pointer;
+        user-select: none;
+        background: var(--card);
     }
     
-    /* УДАЛЯЕМ МИНИАТЮРУ */
-    .thumb{
-        width: 0; /* Убираем ширину */
-        height: 0; /* Убираем высоту */
-        flex-shrink: 0;
+    .section-title {
+        font-size: 17px;
+        font-weight: 700;
         margin: 0;
-        padding: 0;
+    }
+    
+    /* Стрелочка */
+    .icon-chevron {
+        width: 24px;
+        height: 24px;
+        background: #f2f2f7;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: transform 0.3s ease;
+        color: var(--accent);
+        font-size: 12px;
+    }
+    
+    /* Состояние открытой секции */
+    .section.open .icon-chevron {
+        transform: rotate(180deg);
+        background: var(--accent);
+        color: white;
+    }
+
+    /* Анимация открытия */
+    .section-body {
+        display: grid;
+        grid-template-rows: 0fr;
+        transition: grid-template-rows 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .items-wrapper {
         overflow: hidden;
     }
     
-    .meta{flex:1}
-    .name{font-weight:700;margin-bottom:6px}
-    .desc{font-size:13px;color:var(--muted);margin-bottom:6px}
-    .price{font-weight:800;color:var(--accent)}
+    .items-content {
+        padding: 0 20px 20px 20px;
+    }
 
+    .section.open .section-body {
+        grid-template-rows: 1fr;
+    }
+
+    /* --- ITEMS --- */
+    .item {
+      padding: 12px 0;
+      border-bottom: 1px solid #f0f0f0;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+    }
+    .item:last-child { border-bottom: none; }
+    
+    .item-info { flex: 1; }
+    
+    .name {
+        font-weight: 600;
+        font-size: 15px;
+        margin-bottom: 4px;
+        line-height: 1.3;
+    }
+    
+    .desc {
+        font-size: 13px;
+        color: var(--muted);
+        line-height: 1.4;
+    }
+    
+    .price {
+        font-weight: 700;
+        color: var(--text);
+        font-size: 15px;
+        white-space: nowrap;
+        background: #f2f2f7;
+        padding: 4px 8px;
+        border-radius: 6px;
+    }
+
+    /* --- FOOTER --- */
     footer{
-      margin-top:18px;
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:12px;
-      flex-wrap:wrap;
+      margin-top: 30px;
+      text-align: center;
+      padding: 20px;
+      color: var(--muted);
+      font-size: 13px;
     }
-    .contacts{color:var(--muted); font-size:14px}
-    .small{font-size:13px;color:var(--muted)}
+    
+    .notice-box {
+        background: #fff8e1;
+        border-radius: 12px;
+        padding: 16px;
+        margin: 20px 16px;
+        font-size: 13px;
+        line-height: 1.5;
+        color: #5d4037;
+        border: 1px solid #ffe0b2;
+    }
+    .notice-title { font-weight: bold; margin-bottom: 6px; display: block; }
 
-    /* responsive */
-    @media (max-width:900px){
-      .content{flex-direction:column-reverse}
-      .right{width:100%}
-    }
   </style>
 </head>
 <body>
+
   <div class="wrap" id="app">
-    <div class="sticky-lang-bar" id="sticky-lang-bar">
-        <div class="lang-switch">
-            <button class="lang-btn active" data-lang="en">EN</button>
-            <button class="lang-btn" data-lang="pl">PL</button>
-        </div>
-    </div>
     <header>
       <div class="brand">
-        <div class="logo">KS</div>
-        <div>
-          <h1 id="title">Księstwo Sushi</h1>
-          <div class="sub" id="subtitle">Fine sushi — Menu</div>
-        </div>
+        <div class="logo-text">Księstwo Sushi</div>
+        <div class="sub" id="subtitle">Fine sushi — Menu</div>
+      </div>
+      
+      <div class="lang-switch">
+        <button class="lang-btn active" data-lang="en">English</button>
+        <button class="lang-btn" data-lang="pl">Polski</button>
       </div>
     </header>
 
-    <nav id="nav"></nav>
-    <div class="content">
-      <div class="left" id="menu-area">
-        </div>
+    <div class="menu-container" id="menu-area"></div>
 
-      <aside class="right">
-        <div class="section">
-          <h2 id="notice-title">Notice</h2>
-          <div class="small" id="notice-text">
-            </div>
-        </div>
-      </aside>
+    <div class="notice-box">
+        <span class="notice-title" id="notice-title">Notice</span>
+        <span id="notice-text"></span>
     </div>
 
     <footer>
-      <div class="contacts" id="footer-left">Księstwo Sushi</div>
-      <div class="small" id="footer-right">Menu — open web version</div>
+      <div id="footer-text">Księstwo Sushi © 2025</div>
     </footer>
-    
   </div>
   
   <script>
-    // DATA: menu items with EN and PL text and prices (zł)
+    /* --- ДАННЫЕ МЕНЮ --- */
     const MENU = [
-      // 1. УДАЛЕН РАЗДЕЛ ДЛЯ ГАЛЕРЕИ
-      
-      // 2. РАЗДЕЛ ДЛЯ НАБОРОВ
       {
         id:'sushi-sets',
         title:{en:'Sushi Sets', pl:'Zestawy Sushi'},
@@ -290,7 +280,6 @@
           }
         ]
       },
-      // 3. СУЩЕСТВУЮЩИЕ РАЗДЕЛЫ МЕНЮ
       {
         id:'starters',
         title:{en:'Starters', pl:'Przystawki'},
@@ -310,7 +299,7 @@
             plName:'Ramen Chicken / Beef', 
             descEN:'flavorful broth with vegetables, meat and ramen noodles. Chicken 48 zł / Beef 55 zł', 
             descPL:'aromatyczny bulion z mięsem, warzywami i makaronem ramen', 
-            price:'48 zł / 55 zł',
+            price:'48/55 zł',
           }
         ]
       },
@@ -318,7 +307,6 @@
         id:'sushi',
         title:{en:'Sushi — Nigiri / Futomaki', pl:'Sushi — Nigiri / Futomaki'},
         items:[
-          // --- NIGIRI (2 szt.) ---
           {enName:'Sake (Nigiri 2 pcs)', plName:'Sake (Nigiri 2 szt.)', descEN:'salmon', descPL:'łosoś', price:'26 zł'},
           {enName:'Ohio (Nigiri 2 pcs)', plName:'Ohio (Nigiri 2 szt.)', descEN:'butterfish', descPL:'maślana', price:'25 zł'},
           {enName:'Maguro (Nigiri 2 pcs)', plName:'Maguro (Nigiri 2 szt.)', descEN:'tuna', descPL:'tuńczyk', price:'30 zł'},
@@ -328,7 +316,6 @@
           {enName:'Ika (Nigiri 2 pcs)', plName:'Ika (Nigiri 2 szt.)', descEN:'squid', descPL:'kalmar', price:'30 zł'}, 
           {enName:'Ebi (Nigiri 2 pcs)', plName:'Ebi (Nigiri 2 szt.)', descEN:'shrimp', descPL:'krewetka', price:'30 zł'}, 
           
-          // --- FUTOMAKI (4 szt.) ---
           {enName:'Sake Philadelphia (4 pcs)', plName:'Sake Philadelphia (4 szt.)', descEN:'salmon with philadelphia cream cheese', descPL:'łosoś z serkiem philadelphia', price:'38 zł'},
           {enName:'Maguro Negi Togarashi (4 pcs)', plName:'Maguro Negi Togarashi (4 szt.)', descEN:'tuna with spicy leek', descPL:'tuńczyk z porem na ostро', price:'42 zł'},
           {enName:'Ohio Spice Mango (4 pcs)', plName:'Ohio Spice Mango (4 szt.)', descEN:'spicy butterfish with mango', descPL:'pikantna maślana z mango', price:'40 zł'}, 
@@ -374,144 +361,119 @@
         id:'oyakomaki',
         title:{en:'Oyakomaki / Sashimi', pl:'Oyakomaki / Sashimi'},
         items:[
-          // Oyakomaki (2 szt.)
           {enName:'Sake Ebi Tataki (2 pcs)', plName:'Sake Ebi Tataki (2 szt.)', descEN:'chopped shrimp wrapped in salmon', descPL:'siekana krewetka owijana w łososia', price:'36 zł'},
           {enName:'Sake Ikura', plName:'Sake Ikura', descEN:'salmon caviar wrapped in tuna', descPL:'kawior z łososia owijany tuńczykiem', price:'42 zł'},
           {enName:'Maguro Sake Tataki (2 pcs)', plName:'Maguro Sake Tataki (2 szt.)', descEN:'chopped salmon wrapped in tuna', descPL:'siekany łosoś owijany tuńczykiem', price:'45 zł'}, 
-          // Sashimi (9 szt.)
           {enName:'Sashimi Mizu (9 pcs)', plName:'Sashimi Mizu (9 pcs)', descEN:'slices of raw fish — salmon, tuna, butterfish', descPL:'slajsy surowej ryby – łosoś, tuńczyk, maślana', price:'95 zł'}
         ]
       }
     ];
 
-    // helper to render
-    const nav = document.getElementById('nav');
     const menuArea = document.getElementById('menu-area');
     const langBtns = document.querySelectorAll('.lang-btn');
     let LANG = 'en';
-    
-    // --- STICKY LOGIC ELEMENTS ---
-    const stickyLangBar = document.getElementById('sticky-lang-bar');
-    const wrap = document.querySelector('.wrap');
-    
-    // Тексты для блока "Notice"
+
     const NOTICE_TEXTS = {
         en: 'We kindly inform you that we add a waiter service of 10% to the final bill.<br><br>According to the recipe, items may contain: cucumber, oshinko, kampyo, avocado, mango, melon, lettuce, sesame, philadelphia cheese, mayonnaise, sauces, **gluten**, edible gold.',
         pl: 'Uprzejmie informujemy, że doliczamy serwis kelnerski w wysokości 10% do rachunku końcowego.<br><br>Zgodnie z recepturą mogą zawierać: ogórka, oshinko, kampyo, awokado, mango, melona, sałatę, sezam, serek philadelphia, majonez, sosy, **gluten**, złoto jadalne.'
     };
-    
-    // Функция для проверки состояния прокрутки и применения тени (для Sticky Lang Bar)
-    function checkStickyState() {
-        // Убрали проверку прокрутки, чтобы не было ошибок на мобильных устройствах, если нет overflow
-        // Но оставили для возможного будущего скроллинга
-        const scrollElement = wrap.scrollHeight > wrap.clientHeight ? wrap : document.documentElement;
-        if (scrollElement.scrollTop > 0) {
-            stickyLangBar.classList.add('scrolled');
-        } else {
-            stickyLangBar.classList.remove('scrolled');
-        }
-    }
-    
-    wrap.addEventListener('scroll', checkStickyState);
-    window.addEventListener('load', checkStickyState);
 
-
-    function createNav(){
-      nav.innerHTML = '';
-      MENU.forEach(sec=>{
-        const chip = document.createElement('button');
-        chip.className='nav-chip';
-        chip.textContent = sec.title[LANG];
-        chip.onclick = ()=>{ 
-            const targetElement = document.getElementById(sec.id);
-            if (targetElement) {
-                targetElement.scrollIntoView({behavior:'smooth', block:'start'});
-            }
-        };
-        nav.appendChild(chip);
-      });
-    }
-
-    // Упрощенная функция renderMenu (БЕЗ ФОТО)
     function renderMenu(){
       menuArea.innerHTML = '';
       
-      MENU.forEach(sec=>{
-        // Игнорируем галерею, если она случайно осталась
-        if (sec.isGallery) return; 
+      MENU.forEach((sec, index)=>{
+        // Создаем Секцию
+        const sectionDiv = document.createElement('div');
+        sectionDiv.className = 'section';
+        // Первую секцию можно сделать открытой по умолчанию, если хотите (sectionDiv.classList.add('open'))
+        
+        // --- ЗАГОЛОВОК (HEADER) ---
+        const headerDiv = document.createElement('div');
+        headerDiv.className = 'section-header';
+        headerDiv.onclick = () => {
+             // Логика "Аккордеона": переключаем класс 'open'
+             sectionDiv.classList.toggle('open');
+        };
 
-        const s = document.createElement('section');
-        s.className='section';
-        s.id = sec.id;
-        const h2 = document.createElement('h2');
-        h2.textContent = sec.title[LANG];
-        s.appendChild(h2);
+        const h3 = document.createElement('h3');
+        h3.className = 'section-title';
+        h3.textContent = sec.title[LANG];
 
-        const container = document.createElement('div');
-        container.className='items';
+        const icon = document.createElement('div');
+        icon.className = 'icon-chevron';
+        icon.innerHTML = '▼'; // Простая стрелочка
+
+        headerDiv.appendChild(h3);
+        headerDiv.appendChild(icon);
+
+        // --- ТЕЛО (BODY) ---
+        const bodyDiv = document.createElement('div');
+        bodyDiv.className = 'section-body';
+        
+        const wrapperDiv = document.createElement('div');
+        wrapperDiv.className = 'items-wrapper';
+
+        const contentDiv = document.createElement('div');
+        contentDiv.className = 'items-content';
 
         sec.items.forEach(it=>{
-            const div = document.createElement('div');
-            div.className='item';
+            const itemDiv = document.createElement('div');
+            itemDiv.className = 'item';
 
-            // Создаем пустой thumb, чтобы сохранить CSS-структуру
-            const thumb = document.createElement('div');
-            thumb.className = 'thumb';
+            const infoDiv = document.createElement('div');
+            infoDiv.className = 'item-info';
 
-            const meta = document.createElement('div');
-            meta.className='meta';
-            const name = document.createElement('div');
-            name.className='name';
-            name.textContent = (LANG==='en'?it.enName:it.plName);
-            const desc = document.createElement('div');
-            desc.className='desc';
-            desc.innerHTML = (LANG==='en' ? it.descEN : it.descPL) || ''; 
-            const price = document.createElement('div');
-            price.className='price';
-            price.textContent = it.price || '';
+            const nameDiv = document.createElement('div');
+            nameDiv.className = 'name';
+            nameDiv.textContent = (LANG==='en'?it.enName:it.plName);
 
-            // Добавляем пустой thumb (важно для правильного расположения текста)
-            div.appendChild(thumb);
-            
-            meta.appendChild(name);
-            if(desc.innerHTML) meta.appendChild(desc);
-            meta.appendChild(price);
+            const descDiv = document.createElement('div');
+            descDiv.className = 'desc';
+            descDiv.innerHTML = (LANG==='en' ? it.descEN : it.descPL) || '';
 
-            div.appendChild(meta);
-            container.appendChild(div);
+            const priceDiv = document.createElement('div');
+            priceDiv.className = 'price';
+            priceDiv.textContent = it.price || '';
+
+            infoDiv.appendChild(nameDiv);
+            if(descDiv.innerHTML) infoDiv.appendChild(descDiv);
+
+            itemDiv.appendChild(infoDiv);
+            itemDiv.appendChild(priceDiv);
+            contentDiv.appendChild(itemDiv);
         });
 
-        s.appendChild(container);
-        menuArea.appendChild(s);
+        wrapperDiv.appendChild(contentDiv);
+        bodyDiv.appendChild(wrapperDiv);
+
+        sectionDiv.appendChild(headerDiv);
+        sectionDiv.appendChild(bodyDiv);
+        
+        menuArea.appendChild(sectionDiv);
       });
     }
 
     function updateTexts(){
-      document.getElementById('title').textContent = 'Księstwo Sushi';
       document.getElementById('subtitle').textContent = (LANG==='en') ? 'Fine sushi — Menu' : 'Wyborne sushi — Menu';
       document.getElementById('notice-title').textContent = (LANG==='en') ? 'Notice' : 'Uwaga';
-      document.getElementById('footer-left').textContent = 'Księstwo Sushi';
-      document.getElementById('footer-right').textContent = (LANG==='en') ? 'Menu — web version' : 'Menu — wersja online';
-      
       document.getElementById('notice-text').innerHTML = NOTICE_TEXTS[LANG];
+      document.getElementById('footer-text').textContent = 'Księstwo Sushi © 2025';
     }
 
-    // language buttons
     langBtns.forEach(b=>{
       b.addEventListener('click', ()=>{
         langBtns.forEach(x=>x.classList.remove('active'));
         b.classList.add('active');
         LANG = b.dataset.lang;
-        createNav();
         renderMenu(); 
         updateTexts();
       });
     });
 
-    // init
-    createNav();
+    // START
     renderMenu();
     updateTexts();
+
   </script>
 </body>
 </html>
