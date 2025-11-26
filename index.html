@@ -1,38 +1,41 @@
 <!DOCTYPE html>
 <html lang="pl"> <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
   <title>Księstwo Sushi — Menu</title>
   <style>
     :root{
-      --bg:#f8f6f4;
+      --bg:#fbfbfb; /* Очень светлый, чистый фон */
       --card:#ffffff;
       --muted:#888;
-      --accent:#d88b6a; /* Теплый лососевый цвет */
-      --text:#222;
-      --radius:16px;
-      --shadow: 0 10px 25px rgba(0,0,0,0.06);
+      --accent:#9c27b0; /* Глубокий, богатый фиолетовый акцент */
+      --text:#1a1a1a;
+      --radius:18px;
+      --shadow-base: 0 4px 15px rgba(0,0,0,0.05);
+      --shadow-card: 0 15px 35px rgba(0,0,0,0.08);
     }
     *{box-sizing:border-box}
     
+    /* Сброс стилей для мобильных устройств */
     body{
       margin:0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Georgia, serif; /* Более современный шрифт */
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
       background: var(--bg);
       color:var(--text);
       -webkit-font-smoothing:antialiased;
-      padding:20px;
+      padding: 0; 
       display:flex;
       justify-content:center;
+      min-height: 100vh;
     }
 
     .wrap{
       width:100%;
-      max-width:800px; /* Немного уже для "мобильного" вида */
+      max-width:800px; 
       background: var(--card);
-      border-radius: 24px;
-      padding: 30px 20px 100px 20px; /* Большой отступ снизу для футера */
-      box-shadow: var(--shadow);
+      border-radius: 0; /* Убираем скругление по краям для мобильного full-width */
+      box-shadow: none;
+      padding: 30px 20px 100px 20px;
       position: relative;
     }
 
@@ -43,7 +46,7 @@
     }
     .logo-text {
         font-family: "Georgia", serif;
-        font-size: 28px;
+        font-size: 32px;
         font-weight: 700;
         color: var(--text);
         letter-spacing: -0.5px;
@@ -51,19 +54,20 @@
     }
     .sub{color:var(--muted); font-size:14px; text-transform: uppercase; letter-spacing: 1px;}
 
-    /* --- ЯЗЫКОВОЙ ПЕРЕКЛЮЧАТЕЛЬ --- */
+    /* --- ЯЗЫКОВОЙ ПЕРЕКЛЮЧАТЕЛЬ (ИСПРАВЛЕНО) --- */
     .lang-widget {
       position: absolute;
-      top: 20px;
+      top: 30px; 
       right: 20px;
       z-index: 100;
     }
     .lang-row {
-      background: #f2f0eb;
+      display: flex; /* Горизонтально по умолчанию */
+      flex-direction: column; /* Вертикально на мобильных, но не нужно, пусть остается горизонтально для компактности */
+      gap: 4px;
+      background: #eeeef0;
       padding: 4px;
       border-radius: 12px;
-      display: flex;
-      gap: 4px;
     }
     .lang-btn {
       border: none;
@@ -72,9 +76,9 @@
       border-radius: 8px;
       cursor: pointer;
       font-weight: 700;
-      font-size: 12px;
+      font-size: 13px;
       color: var(--muted);
-      transition: all 0.2s;
+      transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
     }
     .lang-btn.active {
       background: #fff;
@@ -87,157 +91,210 @@
       display:flex;
       gap:10px;
       overflow-x: auto;
-      padding-bottom: 10px;
-      margin-bottom: 20px;
-      scrollbar-width: none; /* Firefox */
+      padding: 0 5px 10px 5px;
+      margin: 0 -5px 25px -5px; /* Выводим за пределы padding, чтобы тени не обрезались */
+      scrollbar-width: none;
+      position: relative;
     }
-    nav::-webkit-scrollbar { display: none; } /* Chrome */
+    nav::-webkit-scrollbar { display: none; } 
+    
+    /* Индикатор прокрутки (тени) */
+    .nav-shadow-container {
+      position: relative;
+    }
+    .nav-shadow-container::before, .nav-shadow-container::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom: 10px;
+      width: 25px;
+      pointer-events: none;
+      transition: opacity 0.3s;
+    }
+    .nav-shadow-container::before {
+      left: 0;
+      background: linear-gradient(to right, var(--card), rgba(255,255,255,0));
+      opacity: 1; /* Всегда видна слева */
+    }
+    .nav-shadow-container::after {
+      right: 0;
+      background: linear-gradient(to left, var(--card), rgba(255,255,255,0));
+      opacity: 1; /* Будет управляться JS */
+    }
     
     .nav-chip{
-      background: #fff;
+      flex-shrink: 0;
+      background: var(--card);
       border: 1px solid #eee;
       padding: 10px 18px;
       border-radius: 30px;
       font-weight: 600;
-      font-size: 13px;
+      font-size: 14px;
       color: var(--text);
       cursor: pointer;
       white-space: nowrap;
-      transition: all 0.2s;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+      transition: all 0.3s;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.03);
     }
     .nav-chip:hover {
         border-color: var(--accent);
         color: var(--accent);
+        box-shadow: var(--shadow-base);
     }
 
     /* --- СЕКЦИИ МЕНЮ --- */
     .menu-section {
-        margin-bottom: 30px;
+        margin-bottom: 40px;
         scroll-margin-top: 20px;
     }
 
-    /* Карточка с фото (Intro Card) */
+    /* Intro Card (Картинка + Заголовок) */
     .intro-card {
         position: relative;
         border-radius: var(--radius);
         overflow: hidden;
-        margin-bottom: 15px;
-        box-shadow: var(--shadow);
+        margin-bottom: 20px;
+        box-shadow: var(--shadow-card);
         cursor: pointer;
+        transition: transform 0.3s ease;
     }
+    .intro-card:hover { transform: translateY(-3px); }
 
     .intro-card img {
         width: 100%;
-        height: 220px;
+        height: 250px;
         object-fit: cover;
         display: block;
         transition: transform 0.3s;
     }
     
-    /* Градиент поверх фото для читаемости текста */
     .intro-overlay {
         position: absolute;
         bottom: 0;
         left: 0;
         width: 100%;
-        background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
-        padding: 60px 20px 20px 20px;
+        background: linear-gradient(to top, rgba(0,0,0,0.85), transparent);
+        padding: 80px 20px 20px 20px;
         color: white;
     }
     
     .intro-title {
-        font-size: 22px;
+        font-size: 26px;
         font-weight: 700;
         margin: 0 0 5px 0;
-        text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        text-shadow: 0 2px 10px rgba(0,0,0,0.5);
     }
     
     .intro-desc {
-        font-size: 13px;
+        font-size: 14px;
         opacity: 0.9;
-        line-height: 1.4;
+        line-height: 1.5;
         max-width: 90%;
     }
 
-    /* --- СПИСОК ПОЗИЦИЙ (ACCORDION) --- */
-    details {
-        background: #fff;
+    /* --- ACCORDION (ПЛАВНАЯ АНИМАЦИЯ) --- */
+    .accordion-container {
+        background: var(--card);
         border-radius: var(--radius);
-        border: 1px solid #f0f0f0;
-        overflow: hidden;
+        box-shadow: var(--shadow-base);
+        border: 1px solid #eee;
     }
     
-    summary {
-        list-style: none;
-        padding: 15px 20px;
-        font-weight: 600;
-        font-size: 14px;
-        color: var(--accent);
-        cursor: pointer;
+    .section-header {
+        padding: 18px 20px;
         display: flex;
         justify-content: space-between;
         align-items: center;
+        cursor: pointer;
+        user-select: none;
         transition: background 0.2s;
+        border-bottom: 1px solid transparent;
+        font-size: 16px;
+        font-weight: 600;
     }
-    summary:hover { background: #fafafa; }
-    summary::-webkit-details-marker { display: none; }
+    .section-header:hover { background: #fcfcfc; }
     
-    summary::after {
-        content: '▼';
+    .accordion-toggle {
         font-size: 10px;
-        transition: transform 0.2s;
+        color: var(--accent);
+        transition: transform 0.3s ease;
+        margin-left: 10px;
     }
-    details[open] summary::after { transform: rotate(180deg); }
-    details[open] summary { border-bottom: 1px solid #f0f0f0; }
+    
+    .section-header.open {
+        border-bottom: 1px solid #f0f0f0;
+        color: var(--accent);
+    }
+    .section-header.open .accordion-toggle {
+        transform: rotate(180deg);
+    }
 
-    /* Анимация открытия */
+    /* Анимация открытия списка */
+    .section-body {
+        display: grid;
+        grid-template-rows: 0fr;
+        transition: grid-template-rows 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .section-header.open + .section-body {
+        grid-template-rows: 1fr;
+    }
+    
     .items-wrapper {
-        padding: 0 20px;
-        max-height: 0;
         overflow: hidden;
-        opacity: 0;
-        transition: all 0.3s ease;
     }
-    details[open] .items-wrapper {
-        max-height: 2000px; /* Достаточно большое число */
-        opacity: 1;
-        padding-top: 15px;
-        padding-bottom: 15px;
+    
+    .items-content {
+        padding: 15px 20px;
     }
-
+    
     .item {
         display: flex;
         justify-content: space-between;
         align-items: flex-start;
-        padding: 10px 0;
+        padding: 12px 0;
         border-bottom: 1px solid #f7f7f7;
     }
     .item:last-child { border-bottom: none; }
     
     .item-meta { flex: 1; padding-right: 15px; }
-    .item-name { font-weight: 700; font-size: 15px; margin-bottom: 4px; color: #333; }
+    .item-name { font-weight: 700; font-size: 16px; margin-bottom: 4px; color: var(--text); }
     .item-desc { font-size: 13px; color: var(--muted); line-height: 1.3; }
-    .item-price { font-weight: 700; color: var(--text); font-size: 15px; white-space: nowrap; }
+    .item-price { 
+        font-weight: 700; 
+        color: var(--accent); 
+        font-size: 16px; 
+        white-space: nowrap; 
+        padding-top: 2px;
+    }
 
-    /* Две колонки для Uramaki */
+    /* Две колонки (Uramaki) */
     .cols-2 {
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 20px;
     }
     .col-title {
-        font-size: 12px;
+        font-size: 13px;
         text-transform: uppercase;
-        color: var(--accent);
-        font-weight: 800;
+        color: var(--muted);
+        font-weight: 700;
         margin-bottom: 10px;
-        border-bottom: 2px solid #f0f0f0;
+        border-bottom: 1px solid #f0f0f0;
         padding-bottom: 5px;
     }
-    @media(max-width: 600px){ .cols-2 { grid-template-columns: 1fr; } }
-
-    /* --- КОНТАКТЫ (ИКОНКИ) --- */
+    @media(max-width: 600px){ 
+        .cols-2 { grid-template-columns: 1fr; } 
+        .wrap { padding-left: 15px; padding-right: 15px; }
+        .lang-widget { top: 20px; right: 15px; }
+    }
+    
+    /* --- АНИМАЦИЯ СМЕНЫ ЯЗЫКА (Fade) --- */
+    #menu-area {
+        transition: opacity 0.3s ease-in-out;
+        opacity: 1;
+    }
+    
+    /* --- ФУТЕР / КОНТАКТЫ --- */
     .footer-section {
         margin-top: 40px;
         text-align: center;
@@ -248,26 +305,29 @@
     .contact-icons {
         display: flex;
         justify-content: center;
-        gap: 25px;
-        margin-bottom: 20px;
+        gap: 30px;
+        margin-bottom: 25px;
     }
     
     .icon-link {
         display: block;
-        width: 50px;
-        height: 50px;
+        width: 55px;
+        height: 55px;
         transition: transform 0.2s;
+        border-radius: 50%;
+        padding: 5px;
+        background: #fff;
     }
     .icon-link img {
         width: 100%;
         height: 100%;
         object-fit: contain;
-        filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
+        filter: drop-shadow(0 5px 8px rgba(0,0,0,0.1));
     }
-    .icon-link:hover { transform: scale(1.1); }
+    .icon-link:hover { transform: scale(1.05); }
 
-    .footer-text { font-size: 12px; color: var(--muted); }
-
+    .footer-text { font-size: 13px; color: var(--muted); }
+    
     /* --- LIGHTBOX --- */
     .lightbox {
       display: none; 
@@ -275,14 +335,13 @@
       z-index: 1000;
       left: 0; top: 0;
       width: 100%; height: 100%;
-      background: rgba(0,0,0,0.95); 
+      background: rgba(0,0,0,0.9); 
       align-items: center; justify-content: center;
       opacity: 0; transition: opacity 0.3s;
     }
     .lightbox.open { display: flex; opacity: 1; }
     .lightbox img { max-width: 90%; max-height: 80vh; border-radius: 8px; box-shadow: 0 0 50px rgba(0,0,0,0.5); }
-    .lightbox-close { position: absolute; top: 20px; right: 20px; color: #fff; font-size: 40px; cursor: pointer; }
-
+    .lightbox-close { position: absolute; top: 20px; right: 20px; color: #fff; font-size: 40px; cursor: pointer; text-shadow: 0 0 10px rgba(0,0,0,0.5); }
   </style>
 </head>
 <body>
@@ -301,7 +360,9 @@
       <div class="sub" id="subtitle">Fine sushi — Menu</div>
     </header>
 
-    <nav id="nav"></nav>
+    <div class="nav-shadow-container">
+        <nav id="nav"></nav>
+    </div>
 
     <div id="menu-area"></div>
 
@@ -322,12 +383,11 @@
   </div>
 
   <script>
-    /* --- ДАННЫЕ МЕНЮ (ОБНОВЛЕНЫ ФОТО) --- */
+    /* --- ДАННЫЕ МЕНЮ (ФОТО) --- */
     const MENU = [
       {
         id:'starters',
         title:{en:'Starters', pl:'Przystawki'},
-        // Используем 'wakame.jpg' как обложку, но можно поставить 'ebiten.jpg'
         img: 'images/wakame.jpg', 
         descEN: 'Light and fresh starters: Wakame, Ebiten, Tataki.',
         descPL: 'Lekkie i świeże przystawki: Wakame, Ebiten, Tataki.',
@@ -380,12 +440,10 @@
       {
         id:'uramaki-combined',
         title:{en:'Uramaki & Tempura', pl:'Uramaki & Tempura'},
-        // Используем tempura.jpg так как это визуально привлекательно
         img: 'images/tempura.jpg', 
         descEN: 'Inside-out rolls (8 pcs) and crispy Tempura rolls.',
         descPL: 'Rolki "odwrócone" (8 szt.) oraz chrupiące rolki w Tempurze.',
         
-        // Два списка внутри одной секции
         isSplit: true,
         itemsLeft: [
           {enName:'Gold California', plName:'Gold California', descEN:'surimi wrapped in salmon', descPL:'surimi owijane łososiem', price:'40 zł'},
@@ -427,10 +485,34 @@
 
     const menuArea = document.getElementById('menu-area');
     const nav = document.getElementById('nav');
+    const navContainer = document.querySelector('.nav-shadow-container');
     const langBtns = document.querySelectorAll('.lang-btn');
     let LANG = 'pl';
 
-    /* --- ГЕНЕРАЦИЯ МЕНЮ --- */
+    /* --- ПОМОЩНИКИ --- */
+    function createItemEl(item) {
+        const el = document.createElement('div');
+        el.className = 'item';
+        el.innerHTML = `
+            <div class="item-meta">
+                <div class="item-name">${LANG==='en' ? item.enName : item.plName}</div>
+                <div class="item-desc">${LANG==='en' ? item.descEN : item.descPL}</div>
+            </div>
+            <div class="item-price">${item.price}</div>
+        `;
+        return el;
+    }
+
+    // Обработчик для анимации аккордеона
+    function handleAccordionClick(e) {
+        const header = e.currentTarget;
+        const body = header.nextElementSibling;
+        
+        // Переключаем класс open
+        header.classList.toggle('open');
+    }
+
+    /* --- ОСНОВНАЯ ФУНКЦИЯ РЕНДЕРИНГА --- */
     function render() {
       // 1. Навигация
       nav.innerHTML = '';
@@ -441,8 +523,8 @@
         chip.onclick = () => document.getElementById(sec.id).scrollIntoView({behavior:'smooth'});
         nav.appendChild(chip);
       });
-
-      // 2. Секции
+      
+      // 2. Секции Меню
       menuArea.innerHTML = '';
       MENU.forEach(sec => {
         const section = document.createElement('div');
@@ -463,61 +545,64 @@
         `;
         section.appendChild(card);
 
-        // Accordion Details
-        const details = document.createElement('details');
-        const summaryText = LANG==='en' ? 'Show Menu' : 'Pokaż Menu';
-        details.innerHTML = `<summary>${summaryText}</summary>`;
+        // Accordion Container
+        const accordion = document.createElement('div');
+        accordion.className = 'accordion-container';
+
+        // Accordion Header (Кнопка)
+        const header = document.createElement('div');
+        header.className = 'section-header';
+        header.innerHTML = `
+            ${LANG==='en' ? 'Show Full Menu' : 'Pokaż pełne menu'}
+            <span class="accordion-toggle">▼</span>
+        `;
+        header.onclick = handleAccordionClick;
+        accordion.appendChild(header);
+
+        // Accordion Body (Контент, который будет плавно открываться)
+        const body = document.createElement('div');
+        body.className = 'section-body';
         
         const wrapper = document.createElement('div');
         wrapper.className = 'items-wrapper';
 
-        // Логика для разделенных колонок (Uramaki) или обычного списка
+        const content = document.createElement('div');
+        content.className = 'items-content';
+
         if (sec.isSplit) {
+            // Две колонки для Uramaki
             const cols = document.createElement('div');
             cols.className = 'cols-2';
             
-            // Левая колонка
             const left = document.createElement('div');
-            left.innerHTML = `<div class="col-title">Standard</div>`;
+            left.innerHTML = `<div class="col-title">${LANG==='en' ? 'Uramaki Rolls' : 'Rolki Uramaki'}</div>`;
             sec.itemsLeft.forEach(item => left.appendChild(createItemEl(item)));
             cols.appendChild(left);
             
-            // Правая колонка
             const right = document.createElement('div');
-            right.innerHTML = `<div class="col-title">Tempura</div>`;
+            right.innerHTML = `<div class="col-title">${LANG==='en' ? 'Tempura Rolls' : 'Rolki w Tempurze'}</div>`;
             sec.itemsRight.forEach(item => right.appendChild(createItemEl(item)));
             cols.appendChild(right);
             
-            wrapper.appendChild(cols);
+            content.appendChild(cols);
         } else {
             // Обычный список
-            sec.items.forEach(item => wrapper.appendChild(createItemEl(item)));
+            sec.items.forEach(item => content.appendChild(createItemEl(item)));
         }
 
-        details.appendChild(wrapper);
-        section.appendChild(details);
+        wrapper.appendChild(content);
+        body.appendChild(wrapper);
+        accordion.appendChild(body);
+        section.appendChild(accordion);
         menuArea.appendChild(section);
       });
       
       updateStaticText();
     }
 
-    function createItemEl(item) {
-        const el = document.createElement('div');
-        el.className = 'item';
-        el.innerHTML = `
-            <div class="item-meta">
-                <div class="item-name">${LANG==='en' ? item.enName : item.plName}</div>
-                <div class="item-desc">${LANG==='en' ? item.descEN : item.descPL}</div>
-            </div>
-            <div class="item-price">${item.price}</div>
-        `;
-        return el;
-    }
-
     function updateStaticText() {
         document.getElementById('subtitle').textContent = LANG==='en' ? 'Fine sushi — Menu' : 'Wyborne sushi — Menu';
-        document.getElementById('open-web').textContent = LANG==='en' ? 'Menu — open web version' : 'Menu — wersja online';
+        document.getElementById('open-web').textContent = LANG==='en' ? 'Menu — web version' : 'Menu — wersja online';
         
         // Обновление иконок контактов
         const contacts = document.getElementById('contacts-area');
@@ -528,23 +613,66 @@
             <a href="https://www.instagram.com/ksiestwosushi" target="_blank" class="icon-link">
                 <img src="images/instagram.png" alt="Instagram">
             </a>
-            <a href="https://maps.google.com/?q=Krupówki+38A,+Zakopane" target="_blank" class="icon-link">
+            <a href="https://maps.app.goo.gl/0" target="_blank" class="icon-link">
                 <img src="images/google_maps.png" alt="Maps">
             </a>
         `;
     }
 
-    /* --- ЛОГИКА --- */
+    // --- ЛОГИКА АНИМАЦИИ СМЕНЫ ЯЗЫКА ---
     langBtns.forEach(btn => {
         btn.addEventListener('click', () => {
-            langBtns.forEach(b => b.classList.remove('active'));
+            // Игнорируем клик, если язык уже активен
+            if (btn.classList.contains('active')) return;
+
+            // 1. Установка нового активного класса
+            langBtns.forEach(x => x.classList.remove('active'));
             btn.classList.add('active');
-            LANG = btn.dataset.lang;
-            render();
+            const newLANG = btn.dataset.lang;
+            
+            // 2. Плавное скрытие контента (Fade-out)
+            menuArea.style.opacity = '0'; 
+
+            // 3. Ждем завершения анимации скрытия (300 мс)
+            setTimeout(() => {
+                LANG = newLANG;
+                
+                // 4. Обновление содержимого (происходит, пока контент не виден)
+                render(); 
+                
+                // 5. Плавное появление контента (Fade-in)
+                menuArea.offsetHeight; // Запуск reflow
+                menuArea.style.opacity = '1';
+            }, 300); 
         });
     });
+    
+    // --- ЛОГИКА ИНДИКАТОРА ПРОКРУТКИ НАВИГАЦИИ ---
+    function updateNavScrollShadows() {
+        const maxScroll = nav.scrollWidth - nav.clientWidth;
+        const currentScroll = nav.scrollLeft;
+        const tolerance = 5; // Допуск для округления
 
-    // Lightbox
+        // Тень слева
+        navContainer.classList.toggle('scroll-start', currentScroll < maxScroll - tolerance);
+        navContainer.querySelector('::before').style.opacity = currentScroll > tolerance ? '1' : '0';
+
+        // Тень справа
+        navContainer.querySelector('::after').style.opacity = currentScroll < maxScroll - tolerance ? '1' : '0';
+    }
+    
+    // Привязываем обработчик к прокрутке
+    nav.addEventListener('scroll', updateNavScrollShadows);
+    
+    // Изначальное обновление при загрузке
+    window.addEventListener('load', () => {
+        // Добавляем классы теней
+        navContainer.className = 'nav-shadow-container';
+        // Обновляем тени после рендеринга
+        setTimeout(updateNavScrollShadows, 100);
+    });
+
+    // --- LIGHTBOX ---
     const lb = document.getElementById('myLightbox');
     const lbImg = document.getElementById('lightbox-img');
     const lbClose = document.querySelector('.lightbox-close');
@@ -554,7 +682,7 @@
         lb.classList.add('open');
     }
     lbClose.onclick = () => lb.classList.remove('open');
-    lb.onclick = (e) => { if(e.target === lb) lb.classList.remove('open'); }
+    lb.onclick = (e) => { if(e.target === lb || e.target === lbImg) lb.classList.remove('open'); }
 
     // Start
     render();
