@@ -440,22 +440,20 @@
         transform: translateY(-50%) rotate(180deg);
     }
     
+    /* ANIMATION CSS - REFINED */
     details .items {
-        padding-top: 10px;
-        padding-bottom: 10px;
+        /* Start state for close */
+        height: 0;
+        opacity: 0;
+        padding-top: 0;
+        padding-bottom: 0;
         border-top: 1px solid rgba(0,0,0,0.05); 
         overflow: hidden;
-        max-height: 0;
-        opacity: 0;
-        will-change: max-height, opacity, padding;
-        transition: max-height 0.4s ease-in-out, opacity 0.4s ease-in-out, padding 0.4s ease-in-out;
-    }
-    
-    details[open] .items.open-animation {
-        padding-top: 10px;
-        padding-bottom: 10px;
-        border-top: 1px solid rgba(0,0,0,0.05); 
-        opacity: 1;
+        /* Super smooth cubic bezier: starts fast, lands very soft */
+        transition: height 0.5s cubic-bezier(0.33, 1, 0.68, 1),
+                    opacity 0.5s cubic-bezier(0.33, 1, 0.68, 1),
+                    padding 0.5s cubic-bezier(0.33, 1, 0.68, 1);
+        will-change: height, opacity, padding;
     }
 
     /* URAMAKI COLS */
@@ -873,48 +871,90 @@
             details.appendChild(container);
             s.appendChild(details); 
             
+            // --- NEW SMOOTH ANIMATION LOGIC ---
             summary.addEventListener('click', (e) => {
                 e.preventDefault(); 
                 const content = details.querySelector('.items');
+                if (content.classList.contains('animating')) return; // ignore clicks during animation
+
                 if (details.open) {
-                    content.style.maxHeight = content.scrollHeight + 'px';
+                    // CLOSE
+                    content.classList.add('animating');
+                    
+                    // 1. Lock height
+                    const startHeight = content.scrollHeight;
+                    content.style.height = startHeight + 'px';
                     content.style.opacity = '1';
                     content.style.paddingTop = '10px';
                     content.style.paddingBottom = '10px';
-                    content.classList.add('open-animation'); 
+
+                    // 2. Force reflow
                     requestAnimationFrame(() => {
-                        content.style.maxHeight = '0px';
+                        // 3. Animate to 0
+                        content.style.height = '0px';
                         content.style.opacity = '0';
                         content.style.paddingTop = '0px';
                         content.style.paddingBottom = '0px';
-                        content.classList.remove('open-animation');
                     });
-                    setTimeout(() => {
+
+                    // 4. Wait for transition end
+                    content.addEventListener('transitionend', function onEnd() {
                         details.open = false;
-                        content.style.maxHeight = ''; 
+                        content.classList.remove('animating');
+                        // Clean up
+                        content.style.height = ''; 
                         content.style.opacity = '';
                         content.style.paddingTop = '';
                         content.style.paddingBottom = '';
-                    }, 300); 
+                        content.removeEventListener('transitionend', onEnd);
+                    });
+
                 } else {
+                    // OPEN
                     details.open = true;
-                    content.classList.add('open-animation');
-                    const targetHeight = content.scrollHeight; 
-                    content.style.maxHeight = '0px';
+                    content.classList.add('animating');
+                    
+                    // 1. Initial state
+                    content.style.height = '0px';
                     content.style.opacity = '0';
                     content.style.paddingTop = '0px';
                     content.style.paddingBottom = '0px';
+                    
+                    // 2. Animate to full
+                    // We need to know full height including padding (10+10=20)
+                    // content.scrollHeight gives height of content. 
+                    // But since we set padding=0 just above, scrollHeight might be 'content only'.
+                    // Let's set padding first? No, that causes jump.
+                    
+                    // Correct: we need to guess or measure.
+                    // Let's rely on auto height after animation, but for animation target we need pixels.
+                    
+                    // Hack to get true height: 
+                    // Temporarily set to auto/block but hidden? No, flickers.
+                    // We can assume scrollHeight + 20px is close enough if we set box-sizing border-box?
+                    // Actually, if we just set padding 10px in the animation target, the scrollHeight (content) + 20px (padding) is the target height property?
+                    // Wait, if box-sizing is border-box, height includes padding. 
+                    // So we need: content.scrollHeight (at state with padding).
+                    
+                    // To do this perfectly: 
+                    // We can just animate to a large max-height? No, easing is bad.
+                    // We will set padding in requestAnimationFrame.
+                    
+                    const approximateContentHeight = content.scrollHeight; 
+                    
                     requestAnimationFrame(() => {
-                         content.style.maxHeight = targetHeight + 'px';
+                         // We add 20px for the padding that will be added
+                         content.style.height = (approximateContentHeight + 20) + 'px';
                          content.style.opacity = '1';
                          content.style.paddingTop = '10px';
                          content.style.paddingBottom = '10px';
                     });
-                    setTimeout(() => {
-                        content.style.maxHeight = 'none'; 
-                        content.style.paddingTop = '';
-                        content.style.paddingBottom = '';
-                    }, 300);
+                    
+                    content.addEventListener('transitionend', function onEnd() {
+                        content.classList.remove('animating');
+                        content.style.height = 'auto'; // release
+                        content.removeEventListener('transitionend', onEnd);
+                    });
                 }
             });
         } 
@@ -934,7 +974,6 @@
       
       const contacts = document.getElementById('contacts');
       
-      // UPDATED GOOGLE MAPS LINK
       const contactsContent = `
         <a href="tel:+48502525544" class="contact-btn">
           <img src="images/phone.png" alt="phone">
