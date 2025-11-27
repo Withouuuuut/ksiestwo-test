@@ -335,6 +335,38 @@
         white-space: nowrap;
     }
 
+    /* --- ALLERGY INFO --- */
+    .allergy-box {
+        background: #fff;
+        border-radius: var(--radius);
+        padding: 24px;
+        margin-top: 24px;
+        box-shadow: var(--shadow);
+        border: 1px solid rgba(0,0,0,0.02);
+        font-size: 13px;
+        line-height: 1.6;
+        color: var(--muted);
+        position: relative;
+        overflow: hidden;
+    }
+    .allergy-box::before {
+        content: '';
+        position: absolute;
+        left: 0; top: 0; bottom: 0;
+        width: 4px;
+        background: var(--accent);
+    }
+    .allergy-title {
+        font-weight: 700;
+        color: var(--text);
+        margin-bottom: 8px;
+        display: block;
+        font-size: 14px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    .allergy-box p { margin: 0; }
+
     /* --- URAMAKI GRID --- */
     .cols-2 {
         display: grid;
@@ -607,6 +639,14 @@
       }
     ];
 
+    const ALLERGIES = {
+       title: { en: 'Allergy information', pl: 'Informacja o alergenach' },
+       text: {
+         en: 'According to the recipe, dishes may contain: gluten, cucumber, oshinko, kampyo, avocado, mango, melon, lettuce, sesame seeds, philadelphia cream cheese, mayonnaise, sauces, edible gold.',
+         pl: 'Zgodnie z recepturą mogą zawierać: gluten, ogórek, oshinko, kampyo, awokado, mango, melon, sałatę, sezam, serek philadelphia, majonez, sosy, złoto jadalne.'
+       }
+    };
+
     let LANG = 'pl';
     let lastFocusedElement = null;
 
@@ -659,7 +699,7 @@
 
       // Menu
       const container = document.getElementById('menu-container');
-      container.innerHTML = DATA.map(section => {
+      const menuHtml = DATA.map(section => {
         const title = LANG==='en'?section.title.en:section.title.pl;
         const desc = LANG==='en'?section.desc.en:section.desc.pl;
         
@@ -722,6 +762,16 @@
         </section>
         `;
       }).join('');
+
+      // Allergy Info
+      const allergyHtml = `
+        <div class="allergy-box" role="note" aria-labelledby="allergy-heading">
+            <span id="allergy-heading" class="allergy-title">${LANG==='en'?ALLERGIES.title.en:ALLERGIES.title.pl}</span>
+            <p>${LANG==='en'?ALLERGIES.text.en:ALLERGIES.text.pl}</p>
+        </div>
+      `;
+
+      container.innerHTML = menuHtml + allergyHtml;
 
       // Contacts - using alt="" for decorative icons
       document.getElementById('contacts-list').innerHTML = `
