@@ -298,7 +298,11 @@
       transition: transform 0.2s;
     }
     .contact-btn:hover { transform: translateY(-2px); }
-    .contact-btn span { font-size: 18px; }
+    .icon-img {
+      width: 24px;
+      height: 24px;
+      object-fit: contain;
+    }
 
     /* Footer */
     footer {
@@ -391,13 +395,16 @@
         <div class="contact-card">
           <h2 id="contact-title" style="margin-top:0; margin-bottom:16px; font-size:18px;">Kontakt</h2>
           <a href="tel:+48502525544" class="contact-btn">
-            <span>📞</span> <b>+48 502 525 544</b>
+            <img src="phone.png" alt="Phone" class="icon-img">
+            <b>+48 502 525 544</b>
           </a>
           <a href="https://www.instagram.com/ksiestwosushi" target="_blank" class="contact-btn">
-            <span>📸</span> <b>@ksiestwosushi</b>
+            <img src="instagram.png" alt="Instagram" class="icon-img">
+            <b>@ksiestwosushi</b>
           </a>
           <a href="https://maps.app.goo.gl/1WmFXGEPnDcBiz3p9" target="_blank" class="contact-btn">
-            <span>📍</span> <b>Zakopane, Krupówki 38A</b>
+            <img src="google_maps.png" alt="Maps" class="icon-img">
+            <b>Zakopane, Krupówki 38A</b>
           </a>
         </div>
       </aside>
@@ -424,7 +431,7 @@
         title: { en: 'Sushi Sets', pl: 'Zestawy Sushi' },
         introDescEN: 'Curated combinations of our finest rolls, perfect for experiencing a variety of flavors.',
         introDescPL: 'Starannie dobrane kompozycje naszych najlepszych rolek, idealne do poznania różnorodności smaków.',
-        introPhoto: 'https://picsum.photos/id/431/800/600',
+        introPhoto: 'zestawy.jpg',
         items: [
           {
             enName: 'Ki Iro (14 pc)',
@@ -455,9 +462,10 @@
         introDescEN: 'A selection of light and fresh starters to begin your sushi experience.',
         introDescPL: 'Wybór lekkich i świeżych przystawek na rozpoczęcie przygody z sushi.',
         introPhotos: [
-          { src: 'https://picsum.photos/id/292/800/600', nameEN: 'Goma Wakame', namePL: 'Goma Wakame' },
-          { src: 'https://picsum.photos/id/493/800/600', nameEN: 'Ebiten (3 pcs)', namePL: 'Ebiten (3 szt.)' },
-          { src: 'https://picsum.photos/id/429/800/600', nameEN: 'Sake & Maguro Tataki', namePL: 'Sake & Maguro Tataki' },
+          { src: 'wakame.jpg', nameEN: 'Goma Wakame', namePL: 'Goma Wakame' },
+          { src: 'ebiten.jpg', nameEN: 'Ebiten (3 pcs)', namePL: 'Ebiten (3 szt.)' },
+          { src: 'sake-tataki.jpg', nameEN: 'Sake Tataki', namePL: 'Sake Tataki' },
+          { src: 'MAGURO.jpg', nameEN: 'Maguro Tataki', namePL: 'Maguro Tataki' },
         ],
         items: [
           { enName: 'Goma Wakame', plName: 'Goma Wakame', descEN: 'wakame salad', descPL: 'sałatka wakame', price: '20 zł' },
@@ -469,7 +477,7 @@
       {
         id: 'soups',
         title: { en: 'Soups', pl: 'Zupy' },
-        introPhoto: 'https://picsum.photos/id/693/800/600',
+        introPhoto: 'ramen-zupa.jpg',
         introDescEN: 'Traditional Japanese soups, including rich Ramen bowls with various fillings.',
         introDescPL: 'Tradycyjne japońskie zupy, w tym bogate miski Ramenu z różnymi dodatkami.',
         smallNoteEN: 'The Ramen portion is 800ml, recommended for sharing (2 people).',
@@ -482,7 +490,7 @@
       {
         id: 'nigiri',
         title: { en: 'Nigiri (2 pc)', pl: 'Nigiri (2 szt.)' },
-        introPhoto: 'https://picsum.photos/id/225/800/600',
+        introPhoto: 'nigiri1.jpg',
         introDescEN: 'Hand-pressed rice topped with fresh fish or seafood.',
         introDescPL: 'Ręcznie formowany ryż z plastrem świeżej ryby lub owoców morza.',
         items: [
@@ -499,7 +507,7 @@
       {
         id: 'futomaki',
         title: { en: 'Futomaki (6 pc)', pl: 'Futomaki (6 szt.)' },
-        introPhoto: 'https://picsum.photos/id/1080/800/600',
+        introPhoto: 'futomaki.jpg',
         introDescEN: 'Thick, traditional rolls with nori on the outside.',
         introDescPL: 'Grube, tradycyjne rolki z nori na zewnątrz.',
         items: [
@@ -516,7 +524,7 @@
       {
         id: 'uramaki-combined',
         title: { en: 'Uramaki & Tempura (8 pc)', pl: 'Uramaki & Tempura (8 szt.)' },
-        introPhoto: 'https://picsum.photos/id/835/800/600',
+        introPhoto: 'tempura.jpg',
         introDescEN: 'Our selection of Uramaki (inside-out rolls) and crispy Tempura Uramaki.',
         introDescPL: 'Nasz wybór Uramaki (rolek ryżem na zewnątrz) oraz chrupiących Uramaki w Tempurze.',
         items_uramaki: [
@@ -546,7 +554,7 @@
       {
         id: 'oyakomaki',
         title: { en: 'Oyakomaki (2 pc)', pl: 'Oyakomaki (2 szt.)' },
-        introPhoto: 'https://picsum.photos/id/402/800/600',
+        introPhoto: 'oyakomaki.jpg',
         introDescEN: 'Our specialty rolls, often wrapped in fish or avocado instead of nori.',
         introDescPL: 'Nasze specjalne rolki, często zawijane w rybę lub awokado zamiast nori.',
         items: [
@@ -558,7 +566,7 @@
       {
         id: 'sashimi',
         title: { en: 'Sashimi (9 pc)', pl: 'Sashimi (9 szt.)' },
-        introPhoto: 'https://picsum.photos/id/113/800/600',
+        introPhoto: 'sashimi.jpg',
         introDescEN: 'Thinly sliced raw fish and seafood, served without rice.',
         introDescPL: 'Cienko krojone plastry surowej ryby i owoców morza, podawane bez ryżu.',
         items: [
