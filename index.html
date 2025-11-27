@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html lang="pl">
   <head>
@@ -36,6 +34,7 @@
             animation: {
               'fade-in': 'fadeIn 0.5s ease-out forwards',
               'fade-in-up': 'fadeInUp 0.7s ease-out forwards',
+              'slide-up-fade': 'slideUpFade 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards',
             },
             keyframes: {
               fadeIn: {
@@ -44,6 +43,10 @@
               },
               fadeInUp: {
                 '0%': { opacity: '0', transform: 'translateY(20px)' },
+                '100%': { opacity: '1', transform: 'translateY(0)' },
+              },
+              slideUpFade: {
+                '0%': { opacity: '0', transform: 'translateY(15px)' },
                 '100%': { opacity: '1', transform: 'translateY(0)' },
               }
             }
@@ -183,22 +186,22 @@
             { 
               enName: 'Ki Iro 14 pc.', 
               plName: 'Ki Iro 14 szt.', 
-              descEN: '3x hosomaki salmon, 3x hosomaki calabash, 4x rainbow, 4x futomaki ohio yaki', 
-              descPL: '3x hosomaki łosoś, 3x hosomaki tykwa, 4x rainbow, 4x futomaki ohio yaki', 
+              descEN: '3x hosomaki salmon (raw fish), 3x hosomaki calabash (marinated pumpkin shoots), 4x rainbow (surimi wrapped in variety of raw fish), 4x futomaki ohio yaki (baked butterfish)', 
+              descPL: '3x hosomaki łosoś (surowa ryba), 3x hosomaki tykwa (marynowane pędy dyni), 4x rainbow (surimi owijane wachlarzem surowych ryb), 4x futomaki ohio yaki (pieczona ryba maślana)', 
               price: '70 zł' 
             },
             { 
               enName: 'Orenji 16 pc.', 
               plName: 'Orenji 16 szt.', 
-              descEN: '4x ebi ten, 4x gold california, 4x avocado kani, 4x ohio yaki', 
-              descPL: '4x ebi ten, 4x gold california, 4x awokado kani, 4x ohio yaki', 
+              descEN: '4x ebi ten (shrimp tempura), 4x gold california (surimi wrapped in raw salmon), 4x avocado kani (surimi wrapped in avocado), 4x ohio yaki (baked butterfish covered in sesame)', 
+              descPL: '4x ebi ten (krewetka w tempurze), 4x gold california (surimi owijane surowym łososiem), 4x awokado kani (surimi owijane awokado), 4x ohio yaki (pieczona ryba maślana obtoczona w sezamie)', 
               price: '90 zł' 
             },
             { 
               enName: 'Aka 24 pc.', 
               plName: 'Aka 24 szt.', 
-              descEN: '4x gold california, 4x ebi ten, 4x mango sake, 4x avocado kani, 6x futomaki ohio ten', 
-              descPL: '4x gold california, 4x ebi ten, 4x mango sake, 4x awokado kani, 6x futomaki ohio ten', 
+              descEN: '4x gold california (surimi wrapped in raw salmon), 4x ebi ten (shrimp tempura), 4x mango sake (raw salmon wrapped in a mango), 4x avocado kani (surimi wrapped in avocado), 6x futomaki ohio ten (butterfish tempura)', 
+              descPL: '4x gold california (surimi owijane surowym łososiem), 4x ebi ten (krewetka w tempurze), 4x mango sake (surowy łosoś owijany mango), 4x awokado kani (surimi owijane awokado), 6x futomaki ohio ten (ryba maślana w tempurze)', 
               price: '130 zł' 
             }
           ]
@@ -411,14 +414,22 @@
         let itemsHTML = '';
 
         if (section.items) {
-          itemsHTML = `<div class="grid grid-cols-1 gap-1">${section.items.map(item => createItemHTML(item)).join('')}</div>`;
+          itemsHTML = `<div class="grid grid-cols-1 gap-1">${section.items.map((item, idx) => `
+             <div class="opacity-0 animate-slide-up-fade" style="animation-delay: ${idx * 40}ms">
+               ${createItemHTML(item)}
+             </div>
+          `).join('')}</div>`;
         } else if (section.subSections) {
           itemsHTML = `<div class="grid grid-cols-1 md:grid-cols-2 gap-12">
-            ${section.subSections.map(sub => `
+            ${section.subSections.map((sub, subIdx) => `
               <div class="flex flex-col">
                 <h3 class="font-serif text-2xl text-brand-dark mb-6 pb-2 border-b border-brand-gold/30">${LANG === 'en' ? sub.titleEN : sub.titlePL}</h3>
                 <div class="grid grid-cols-1 gap-1">
-                  ${sub.items.map(item => createItemHTML(item)).join('')}
+                  ${sub.items.map((item, itemIdx) => `
+                    <div class="opacity-0 animate-slide-up-fade" style="animation-delay: ${(subIdx * 100) + (itemIdx * 40)}ms">
+                        ${createItemHTML(item)}
+                    </div>
+                  `).join('')}
                 </div>
               </div>
             `).join('')}
