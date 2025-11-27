@@ -1,768 +1,415 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Księstwo Sushi — Menu</title>
-  <style>
-    /* --- VARIABLES & RESET --- */
-    :root {
-      --bg: #f8f6f4;
-      --card: #ffffff;
-      --text-main: #111827;
-      --text-muted: #6b7280;
-      --accent: #d88b6a;
-      --accent-dark: #c27a5b;
-      --accent-light: #f3c9b3;
-      --border: #f3f4f6;
-      --radius: 16px;
-      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
-      --font-serif: Georgia, 'Times New Roman', Times, serif;
-      --font-sans: system-ui, -apple-system, sans-serif;
-    }
-
-    * { box-sizing: border-box; }
-    
-    body {
-      margin: 0;
-      background-color: var(--bg);
-      font-family: var(--font-serif);
-      color: var(--text-main);
-      -webkit-font-smoothing: antialiased;
-      line-height: 1.5;
-      padding-bottom: 40px;
-    }
-
-    /* --- LAYOUT --- */
-    .app-container {
-      max-width: 1000px;
-      margin: 0 auto;
-      padding: 24px 16px;
-      position: relative;
-    }
-
-    .main-grid {
-      display: flex;
-      flex-direction: column;
-      gap: 32px;
-    }
-    
-    @media (min-width: 900px) {
-      .main-grid {
-        flex-direction: row;
-        align-items: flex-start;
-      }
-      .content-area { flex: 1; }
-      .sidebar-area { width: 320px; flex-shrink: 0; position: sticky; top: 24px; }
-    }
-
-    /* --- COMPONENTS --- */
-    
-    /* Header */
-    header {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      margin-bottom: 32px;
-      margin-top: 40px; /* Space for fixed widget */
-    }
-    .logo-box {
-      width: 64px;
-      height: 64px;
-      border-radius: 12px;
-      background: linear-gradient(135deg, var(--accent), var(--accent-light));
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      font-weight: bold;
-      font-size: 24px;
-      box-shadow: 0 10px 15px -3px rgba(216, 139, 106, 0.4);
-    }
-    .title-box h1 {
-      margin: 0;
-      font-size: 24px;
-      letter-spacing: 0.025em;
-    }
-    .title-box p {
-      margin: 0;
-      color: var(--text-muted);
-      font-size: 14px;
-    }
-
-    /* Fixed Language Widget */
-    .lang-widget {
-      position: fixed;
-      top: 16px;
-      right: 16px;
-      background: white;
-      padding: 6px;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      display: flex;
-      gap: 6px;
-      z-index: 100;
-    }
-    .lang-btn {
-      border: none;
-      background: transparent;
-      padding: 6px 12px;
-      border-radius: 8px;
-      font-weight: bold;
-      font-size: 14px;
-      cursor: pointer;
-      color: var(--text-muted);
-      transition: 0.2s;
-    }
-    .lang-btn.active {
-      background: var(--accent);
-      color: white;
-    }
-
-    /* Nav Chips */
-    .nav-scroll {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-bottom: 32px;
-    }
-    .nav-chip {
-      background: white;
-      border: 1px solid var(--border);
-      padding: 8px 16px;
-      border-radius: 999px;
-      font-size: 14px;
-      font-weight: bold;
-      color: #374151;
-      cursor: pointer;
-      font-family: var(--font-sans);
-      transition: 0.2s;
-    }
-    .nav-chip:hover { background: #f9fafb; border-color: #d1d5db; }
-
-    /* Cards & Sections */
-    section {
-      scroll-margin-top: 100px;
-      margin-bottom: 32px;
-    }
-
-    .card {
-      background: var(--card);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      border: 1px solid var(--border);
-      overflow: hidden;
-      margin-bottom: 12px;
-    }
-
-    .section-title {
-      background: white;
-      padding: 16px;
-      border-radius: var(--radius);
-      border: 1px solid var(--border);
-      box-shadow: var(--shadow);
-      margin-bottom: 12px;
-      font-size: 20px;
-      font-weight: 600;
-    }
-
-    /* Images */
-    .img-stack {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      padding: 8px;
-    }
-    .img-cover {
-      width: 100%;
-      height: 200px;
-      object-fit: cover;
-      cursor: pointer;
-    }
-    .img-rounded {
-      border-radius: 8px;
-      height: 160px;
-    }
-    
-    .card-desc {
-      padding: 16px;
-      color: var(--text-muted);
-      font-size: 14px;
-    }
-    .small-note {
-      background: #f9fafb;
-      padding: 12px 16px;
-      font-size: 12px;
-      color: #9ca3af;
-      border-top: 1px solid var(--border);
-    }
-
-    /* Accordion / Items */
-    .accordion-btn {
-      width: 100%;
-      text-align: left;
-      background: none;
-      border: none;
-      padding: 16px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      cursor: pointer;
-      border-bottom: 1px solid transparent;
-      transition: background 0.2s;
-    }
-    .accordion-btn:hover { background: #f9fafb; }
-    .accordion-text { font-weight: bold; color: var(--accent); }
-    .arrow { transition: transform 0.3s; font-size: 12px; }
-    .accordion-btn.open .arrow { transform: rotate(180deg); }
-    
-    .items-container {
-      max-height: 0;
-      overflow: hidden;
-      transition: max-height 0.3s ease-out;
-      opacity: 0;
-      transition: opacity 0.3s, max-height 0.3s;
-    }
-    .items-container.open {
-      opacity: 1;
-      /* Max-height set via JS */
-    }
-    .items-inner {
-      padding: 0 16px 16px 16px;
-    }
-
-    .menu-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      padding: 12px 0;
-      border-bottom: 1px solid var(--border);
-    }
-    .menu-item:last-child { border-bottom: none; }
-    
-    .item-info { padding-right: 16px; flex: 1; }
-    .item-name { font-weight: bold; font-family: var(--font-serif); margin-bottom: 4px; }
-    .item-desc { 
-      font-size: 13px; 
-      color: var(--text-muted); 
-      white-space: pre-line; /* Важно для переноса строк */
-      font-family: var(--font-sans);
-    }
-    .item-price {
-      font-weight: 800;
-      color: var(--accent);
-      white-space: nowrap;
-      font-family: var(--font-sans);
-    }
-
-    /* 2 Column Grid for Uramaki */
-    .grid-2-col {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 24px;
-    }
-    @media (min-width: 600px) {
-      .grid-2-col { grid-template-columns: 1fr 1fr; }
-    }
-    .col-title {
-      font-size: 14px;
-      font-weight: bold;
-      color: var(--accent);
-      text-transform: uppercase;
-      border-bottom: 1px solid var(--accent);
-      padding-bottom: 4px;
-      margin-bottom: 12px;
-      margin-top: 0;
-    }
-
-    /* Sidebar / Contacts */
-    .contact-card {
-      background: white;
-      border-radius: var(--radius);
-      border: 1px solid var(--border);
-      padding: 24px;
-      box-shadow: var(--shadow);
-    }
-    
-    /* СТИЛИЗАЦИЯ КНОПОК КОНТАКТОВ: Прозрачный фон с тонкой рамкой, черная иконка */
-    .contact-btn {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      background: transparent; /* Прозрачный фон */
-      color: var(--text-main); /* Черный/темный текст */
-      text-decoration: none;
-      padding: 12px 16px;
-      border-radius: 999px;
-      margin-bottom: 12px;
-      font-family: var(--font-sans);
-      font-size: 14px;
-      transition: transform 0.2s, background 0.2s, border-color 0.2s;
-      border: 1px solid var(--border); /* Тонкая рамка */
-    }
-    .contact-btn:hover { 
-      transform: translateY(-2px); 
-      background: #f9fafb; /* Легкий фон при наведении */
-      border-color: #d1d5db;
-    }
-    .icon-img {
-      width: 20px; /* Немного меньше */
-      height: 20px;
-      object-fit: contain;
-    }
-
-    /* Footer */
-    footer {
-      margin-top: 40px;
-      padding-top: 20px;
-      border-top: 1px solid #e5e7eb;
-      color: #9ca3af;
-      font-size: 13px;
-      display: flex;
-      justify-content: space-between;
-    }
-
-    /* Lightbox */
-    .lightbox {
-      display: none;
-      position: fixed;
-      top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0,0,0,0.9);
-      z-index: 1000;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-    }
-    .lightbox.active { display: flex; animation: fadeIn 0.2s; }
-    .lightbox img {
-      max-width: 100%;
-      max-height: 90vh;
-      border-radius: 8px;
-      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-    }
-    .lightbox-close {
-      position: absolute;
-      top: 20px; right: 30px;
-      color: white;
-      font-size: 40px;
-      cursor: pointer;
-    }
-    
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-    /* Fade transition for language switch */
-    #content-wrapper {
-      transition: opacity 0.3s;
-    }
-    .faded { opacity: 0; }
-
-  </style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Księstwo Sushi — Menu</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* Custom Styles */
+    .contact-btn {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      background-color: #222;
+      color: white;
+      border-radius: 9999px;
+      transition: transform 0.2s, opacity 0.2s;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      text-decoration: none;
+    }
+    .contact-btn:hover {
+      transform: translateY(-2px);
+      opacity: 0.9;
+    }
+    .accordion-content {
+      transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out;
+      max-height: 0;
+      opacity: 0;
+      overflow: hidden;
+    }
+    .accordion-content.open {
+      opacity: 1;
+    }
+    .rotate-180 {
+      transform: rotate(180deg);
+    }
+    .fade-in {
+      animation: fadeIn 0.3s ease-in-out;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+  </style>
 <script type="importmap">
 {
-  "imports": {
-    "react": "https://aistudiocdn.com/react@^19.2.0",
-    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
-    "react/": "https://aistudiocdn.com/react@^19.2.0/"
-  }
+  "imports": {
+    "react": "https://aistudiocdn.com/react@^19.2.0",
+    "react/": "https://aistudiocdn.com/react@^19.2.0/"
+  }
 }
 </script>
 </head>
-<body>
+<body class="bg-[#f8f6f4] antialiased">
+  
+  <!-- Main Container -->
+  <div class="flex justify-center min-h-screen py-6 px-4 sm:px-6">
+    <div class="w-full max-w-[1000px] bg-white/90 rounded-2xl shadow-xl p-4 sm:p-6 pt-[70px] relative backdrop-blur-md">
+      
+      <!-- Language Widget -->
+      <div class="fixed top-6 right-6 z-40 bg-white p-1.5 rounded-xl shadow-lg border border-gray-100 flex gap-1.5">
+        <button id="btn-pl" onclick="setLanguage('pl')" class="px-3 py-1.5 rounded-lg text-sm font-bold transition-colors bg-[#d88b6a] text-white">
+          PL
+        </button>
+        <button id="btn-en" onclick="setLanguage('en')" class="px-3 py-1.5 rounded-lg text-sm font-bold transition-colors text-gray-600 hover:bg-gray-100">
+          EN
+        </button>
+      </div>
 
-  <div class="app-container">
-    
-        <div class="lang-widget">
-      <button class="lang-btn active" data-lang="pl" onclick="setLang('pl')">PL</button>
-      <button class="lang-btn" data-lang="en" onclick="setLang('en')">EN</button>
-    </div>
+      <!-- Header -->
+      <header class="flex items-center gap-4 mb-6">
+        <div class="w-16 h-16 rounded-xl bg-gradient-to-br from-[#d88b6a] to-[#f3c9b3] flex items-center justify-center text-white text-xl font-serif font-bold shadow-lg shadow-[#d88b6a]/30">
+          KS
+        </div>
+        <div>
+          <h1 class="text-2xl font-serif text-gray-900 tracking-wide">Księstwo Sushi</h1>
+          <div id="header-subtitle" class="text-sm text-gray-500 font-light">
+            Wyborne sushi — Menu
+          </div>
+        </div>
+      </header>
 
-        <header>
-      <div class="logo-box">KS</div>
-      <div class="title-box">
-        <h1>Księstwo Sushi</h1>
-        <p id="subtitle">Wyborne sushi — Menu</p>
-      </div>
-    </header>
+      <!-- Navigation Chips -->
+      <nav id="nav-container" class="flex flex-wrap gap-2 mb-8">
+        <!-- Generated by JS -->
+      </nav>
 
-        <nav id="nav-container" class="nav-scroll"></nav>
+      <!-- Main Layout -->
+      <div class="flex flex-col lg:flex-row gap-8 items-start">
+        
+        <!-- Menu Items Area -->
+        <main id="menu-container" class="flex-1 w-full transition-opacity duration-300">
+          <!-- Generated by JS -->
+        </main>
 
-    <div class="main-grid">
-            <div class="content-area">
-        <div id="content-wrapper">
-                  </div>
-      </div>
+        <!-- Aside / Contacts -->
+        <aside class="w-full lg:w-80 flex-shrink-0 space-y-4">
+          <div class="bg-white rounded-xl p-4 border border-gray-100 shadow-sm sticky top-24">
+            <h2 id="contact-title" class="text-lg font-serif mb-4 pb-2 border-b border-gray-100">
+              Kontakt
+            </h2>
+            <div class="flex flex-col gap-3">
+              <a href="tel:+48502525544" class="contact-btn group">
+                <span class="text-lg">📞</span> <span class="font-semibold">+48 502 525 544</span>
+              </a>
+              <a href="https://www.instagram.com/ksiestwosushi" target="_blank" rel="noreferrer" class="contact-btn group">
+                <span class="text-lg">📸</span> <span class="font-semibold">@ksiestwosushi</span>
+              </a>
+              <a href="https://maps.app.goo.gl/1WmFXGEPnDcBiz3p9" target="_blank" rel="noreferrer" class="contact-btn group">
+                <span class="text-lg">📍</span> <span class="font-semibold">Zakopane, Krupówki 38A</span>
+              </a>
+            </div>
+          </div>
+        </aside>
 
-            <aside class="sidebar-area">
-        <div class="contact-card">
-          <h2 id="contact-title" style="margin-top:0; margin-bottom:16px; font-size:18px;">Kontakt</h2>
-                    <a href="tel:+48502525544" class="contact-btn">
-            <img src="uploaded:image_4f3996.png-22ed9b55-3e5a-418f-a837-d55b4fc3163b" alt="Phone" class="icon-img">
-            <b>+48 502 525 544</b>
-          </a>
-                    <a href="https://www.instagram.com/ksiestwosushi" target="_blank" class="contact-btn">
-            <img src="uploaded:image_4ed7fa.png-4bdbe9ba-ef53-49d8-97d5-6200d3d96d4e" alt="Instagram" class="icon-img">
-            <b>@ksiestwosushi</b>
-          </a>
-                    <a href="https://maps.app.goo.gl/1WmFXGEPnDcBiz3p9" target="_blank" class="contact-btn">
-            <img src="uploaded:image_4e587b.png-79523c87-9350-4c12-90d7-bcb28bce0a96" alt="Maps" class="icon-img">
-            <b>Zakopane, Krupówki 38A</b>
-          </a>
-        </div>
-      </aside>
-    </div>
+      </div>
 
-    <footer>
-      <div>Księstwo Sushi © 2024</div>
-      <div id="footer-note">Menu — wersja online</div>
-    </footer>
+      <!-- Footer -->
+      <footer class="mt-12 pt-6 border-t border-gray-200 flex flex-wrap justify-between items-center gap-4 text-sm text-gray-400">
+        <div>Księstwo Sushi &copy; <span id="year"></span></div>
+        <div id="footer-note">Menu — wersja online</div>
+      </footer>
 
-  </div>
+    </div>
+  </div>
 
-    <div id="lightbox" class="lightbox" onclick="closeLightbox()">
-    <span class="lightbox-close">×</span>
-    <img id="lightbox-img" src="" onclick="event.stopPropagation()">
-  </div>
+  <!-- Lightbox -->
+  <div id="lightbox" class="hidden fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4 backdrop-blur-sm fade-in" onclick="closeLightbox()">
+    <button class="absolute top-4 right-6 text-white text-4xl font-light hover:text-gray-300 transition-colors" onclick="closeLightbox()">&times;</button>
+    <img id="lightbox-img" src="" alt="Full size" class="max-w-full max-h-[90vh] rounded-lg shadow-2xl object-contain" onclick="event.stopPropagation()" />
+  </div>
 
-  <script>
-    // --- DATA ---
-    const MENU_DATA = [
-      {
-        id: 'sets',
-        title: { en: 'Sushi Sets', pl: 'Zestawy Sushi' },
-        introDescEN: 'Curated combinations of our finest rolls, perfect for experiencing a variety of flavors.',
-        introDescPL: 'Starannie dobrane kompozycje naszych najlepszych rolek, idealne do poznania różnorodności smaków.',
-        // ВИПРАВЛЕНЕ ФОТО ДЛЯ ZESTAWY
-        introPhoto: 'uploaded:image_62a833.png-28c0cbaa-8f45-45cf-8076-67301b04d163', 
-        items: [
-          {
-            enName: 'Ki Iro (14 pc)',
-            plName: 'Ki Iro (14 szt.)',
-            descEN: '3x hosomaki salmon\n3x hosomaki calabash\n4x rainbow (surimi wrapped in variety of fish)\n4x futomaki ohio yaki (baked butterfish)',
-            descPL: '3x hosomaki łosoś\n3x hosomaki tykwa\n4x rainbow (surimi owijane wachlarzem surowych ryb)\n4x futomaki ohio yaki (pieczona ryba maślana)',
-            price: '70 zł'
-          },
-          {
-            enName: 'Orenji (16 pc)',
-            plName: 'Orenji (16 szt.)',
-            descEN: '4x ebi ten (shrimp tempura)\n4x gold california (surimi wrapped in salmon)\n4x avocado kani\n4x ohio yaki (baked butterfish in sesame)',
-            descPL: '4x ebi ten (krewetka w tempurze)\n4x gold california (surimi owijane surowym łososiem)\n4x awokado kani (surimi owijane awokado)\n4x ohio yaki (pieczona ryba maślana obtoczona w sezamie)',
-            price: '90 zł'
-          },
-          {
-            enName: 'Aka (24 pc)',
-            plName: 'Aka (24 szt.)',
-            descEN: '4x gold california (surimi wrapped in salmon)\n4x ebi ten\n4x mango sake (salmon wrapped in mango)\n4x avocado kani\n6x futomaki ohio ten (butterfish tempura)',
-            descPL: '4x gold california (surimi owijane surowym łososiem)\n4x ebi ten (krewetka w tempurze)\n4x mango sake (surowy łosoś owijany mango)\n4x awokado kani (surimi owijane awokado)\n6x futomaki ohio ten (ryba maślana w tempurze)',
-            price: '130 zł'
-          }
-        ]
-      },
-      {
-        id: 'starters',
-        title: { en: 'Starters', pl: 'Przystawki' },
-        introDescEN: 'A selection of light and fresh starters to begin your sushi experience.',
-        introDescPL: 'Wybór lekkich i świeżych przystawek na rozpoczęcie przygody z sushi.',
-        introPhotos: [
-          // ВИПРАВЛЕНІ ФОТО ДЛЯ STARTERS (Wakame, Ebiten, Sake Tataki, Maguro Tataki)
-          { src: 'uploaded:image_61c00e.png-f27b6adf-3cab-4b88-b6d1-da05ff986016', nameEN: 'Goma Wakame', namePL: 'Goma Wakame' },
-          { src: 'uploaded:image_6211cb.png-c3de168d-ad90-4573-a34b-5ead96a8dcb6', nameEN: 'Ebiten (3 pcs)', namePL: 'Ebiten (3 szt.)' },
-          { src: 'uploaded:image_621204.png-0dbefeb1-330e-4da6-8f25-ac2750c3ddbb', nameEN: 'Sake Tataki', namePL: 'Sake Tataki' },
-          { src: 'uploaded:image_61c028.png-f5547c8a-fbd0-4758-8ee7-176704f9055e', nameEN: 'Maguro Tataki', namePL: 'Maguro Tataki' },
-        ],
-        items: [
-          { enName: 'Goma Wakame', plName: 'Goma Wakame', descEN: 'wakame salad', descPL: 'sałatka wakame', price: '20 zł' },
-          { enName: 'Ebiten (3 pcs)', plName: 'Ebiten (3 szt.)', descEN: 'shrimp tempura served with ponzu sauce', descPL: 'krewetka tempura z sosem ponzu', price: '30 zł' },
-          { enName: 'Sake Tataki', plName: 'Sake Tataki', descEN: 'salmon tartare', descPL: 'tatar z łososia', price: '50 zł' },
-          { enName: 'Maguro Tataki', plName: 'Maguro Tataki', descEN: 'tuna tartare', descPL: 'tatar z tuńczyка', price: '55 zł' }
-        ]
-      },
-      {
-        id: 'soups',
-        title: { en: 'Soups', pl: 'Zupy' },
-        // ВИПРАВЛЕНЕ ФОТО ДЛЯ ZUPY
-        introPhoto: 'uploaded:image_62fec6.jpg-b1a18b7f-24e4-4e5c-b6eb-a50d8e972a25', 
-        introDescEN: 'Traditional Japanese soups, including rich Ramen bowls with various fillings.',
-        introDescPL: 'Tradycyjne japońskie zupy, w tym bogate miski Ramenu z różnymi dodatkami.',
-        smallNoteEN: 'The Ramen portion is 800ml, recommended for sharing (2 people).',
-        smallNotePL: 'Uwaga: Porcja Ramenu to 800ml, polecamy do podziału (dla 2 osób).',
-        items: [
-          { enName: 'Ramen Chicken', plName: 'Ramen Chicken', descEN: 'flavorful broth with chicken, vegetables, and ramen noodles', descPL: 'bulion z warzywami, mięsem i makaronem ramen', price: '48 zł' },
-          { enName: 'Ramen Beef', plName: 'Ramen Beef', descEN: 'beef ramen', descPL: 'ramen wołowy', price: '55 zł' }
-        ]
-      },
-      {
-        id: 'nigiri',
-        title: { en: 'Nigiri (2 pc)', pl: 'Nigiri (2 szt.)' },
-        // ВИПРАВЛЕНЕ ФОТО ДЛЯ NIGIRI
-        introPhoto: 'uploaded:image_63150a.jpg-b42eae1a-608e-4c61-8555-ff2ca44a920a', 
-        introDescEN: 'Hand-pressed rice topped with fresh fish or seafood.',
-        introDescPL: 'Ręcznie formowany ryż z plastrem świeżej ryby lub owoców morza.',
-        items: [
-          { enName: 'Sake', plName: 'Sake', descEN: 'salmon', descPL: 'łosoś', price: '26 zł' },
-          { enName: 'Ohio', plName: 'Ohio', descEN: 'butterfish', descPL: 'ryba maślana', price: '25 zł' },
-          { enName: 'Maguro', plName: 'Maguro', descEN: 'tuna', descPL: 'tuńczyk', price: '30 zł' },
-          { enName: 'Unagi', plName: 'Unagi', descEN: 'eel', descPL: 'węgorz', price: '30 zł' },
-          { enName: 'Hotate', plName: 'Hotate', descEN: 'scallops', descPL: 'małże św. Jakuba', price: '32 zł' },
-          { enName: 'Tako', plName: 'Tako', descEN: 'octopus', descPL: 'ośmiornica', price: '30 zł' },
-          { enName: 'Ika', plName: 'Ika', descEN: 'squid', descPL: 'kalmar', price: '30 zł' },
-          { enName: 'Ebi', plName: 'Ebi', descEN: 'shrimp', descPL: 'krewetka', price: '30 zł' }
-        ]
-      },
-      {
-        id: 'futomaki',
-        title: { en: 'Futomaki (6 pc)', pl: 'Futomaki (6 szt.)' },
-        // ВИПРАВЛЕНЕ ФОТО ДЛЯ FUTOMAKI
-        introPhoto: 'uploaded:image_64583c.jpg-a8cbbaf0-176c-4cb3-8c1a-9ed641fc8455', 
-        introDescEN: 'Thick, traditional rolls with nori on the outside.',
-        introDescPL: 'Grube, tradycyjne rolki z nori na zewnątrz.',
-        items: [
-          { enName: 'Sake Philadelphia', plName: 'Sake Philadelphia', descEN: 'salmon with philadelphia cream cheese', descPL: 'łosoś z serkiem philadelphia', price: '38 zł' },
-          { enName: 'Maguro Negi Togarashi', plName: 'Maguro Negi Togarashi', descEN: 'tuna with spicy leek', descPL: 'tuńczyk z ostrą dymką', price: '42 zł' },
-          { enName: 'Ohio Spice Mango', plName: 'Ohio Spice Mango', descEN: 'spicy butterfish with mango', descPL: 'pikantna ryba maślana z mango', price: '40 zł' },
-          { enName: 'Ebi Spicy', plName: 'Ebi Spicy', descEN: 'spicy shrimp', descPL: 'pikantna krewetka', price: '40 zł' },
-          { enName: 'Ebi Tempura', plName: 'Ebi Tempura', descEN: 'shrimp tempura', descPL: 'krewetka w tempurze', price: '40 zł' },
-          { enName: 'Unagi Kabayaki', plName: 'Unagi Kabayaki', descEN: 'grilled eel with kabayaki sauce', descPL: 'grillowany węgorz w sosie kabayaki', price: '45 zł' },
-          { enName: 'Ika Tempura', plName: 'Ika Tempura', descEN: 'squid tempura', descPL: 'kalmar w tempurze', price: '48 zł' },
-          { enName: 'Veggie', plName: 'Veggie', descEN: 'vegetables', descPL: 'warzywa', price: '36 zł' }
-        ]
-      },
-      {
-        id: 'uramaki-combined',
-        title: { en: 'Uramaki & Tempura (8 pc)', pl: 'Uramaki & Tempura (8 szt.)' },
-        // ВИПРАВЛЕНЕ ФОТО ДЛЯ URAMAKI & TEMPURA
-        introPhoto: 'uploaded:image_6311e9.png-58cb18e6-57d2-4ea9-ba96-98343ee9fb1f', 
-        introDescEN: 'Our selection of Uramaki (inside-out rolls) and crispy Tempura Uramaki.',
-        introDescPL: 'Nasz wybór Uramaki (rolek ryżem na zewnątrz) oraz chrupiących Uramaki w Tempurze.',
-        items_uramaki: [
-          { enName: 'Sake Philadelphia', plName: 'Sake Philadelphia', descEN: 'salmon with philadelphia cream cheese', descPL: 'łosoś z serkiem philadelphia', price: '38 zł' },
-          { enName: 'Awokado Sake', plName: 'Awokado Sake', descEN: 'salmon wrapped in avocado', descPL: 'łosoś owijany awokado', price: '42 zł' },
-          { enName: 'Mango Sake', plName: 'Mango Sake', descEN: 'salmon wrapped in mango', descPL: 'łosoś owijany mango', price: '42 zł' },
-          { enName: 'Maguro Orange Pepper', plName: 'Maguro Orange Pepper', descEN: 'tuna with chopped leek and orange pepper', descPL: 'tuńczyk z siekanym porem i orange pepper', price: '45 zł' },
-          { enName: 'Ebi Ten Mamemori', plName: 'Ebi Ten Mamemori', descEN: 'shrimp tempura wrapped in soy paper', descPL: 'krewetka w tempurze zawijana w papier sojowy', price: '42 zł' },
-          { enName: 'Gold California', plName: 'Gold California', descEN: 'surimi wrapped in salmon', descPL: 'surimi owijane łososiem', price: '40 zł' },
-          { enName: 'Rainbow', plName: 'Rainbow', descEN: 'surimi wrapped in assorted fish', descPL: 'surimi owijane wachlarzem ryb', price: '48 zł' },
-          { enName: 'Ohio Spice Sake', plName: 'Ohio Spice Sake', descEN: 'salmon wrapped in butterfish', descPL: 'łosoś owijany opalaną maślaną', price: '42 zł' },
-          { enName: 'Maguro Spicy Ebi Ten', plName: 'Maguro Spicy Ebi Ten', descEN: 'shrimp tempura wrapped in seared tuna', descPL: 'krewetka w tempurze owijana opalanym tuńczykiem', price: '45 zł' },
-          { enName: 'Kegon', plName: 'Kegon', descEN: 'salmon wrapped in grilled eel', descPL: 'łosoś owijany grillowanym węgorzem', price: '45 zł' },
-          { enName: 'Sake Aburi', plName: 'Sake Aburi', descEN: 'salmon wrapped in seared spicy salmon', descPL: 'łosoś owijany opalanym pikantnym łososiem', price: '45 zł' },
-          { enName: 'Tobiko Ohio Ten', plName: 'Tobiko Ohio Ten', descEN: 'butterfish in tempura coated with caviar', descPL: 'maślana w tempurze obtoczona kawiorem z latająчої ryby', price: '48 zł' },
-          { enName: 'Nashi Sake', plName: 'Nashi Sake', descEN: 'salmon wrapped in Japanese pear', descPL: 'łosoś owijany japońską gruszką', price: '45 zł' },
-          { enName: 'Sake Tataki Ebiten', plName: 'Sake Tataki Ebiten', descEN: 'shrimp tempura wrapped in salmon tartare', descPL: 'krewetka w tempurze obtoczona tatarem z łososia', price: '48 zł' }
-        ],
-        items_tempura: [
-          { enName: 'Tempura Sake', plName: 'Tempura Sake', descEN: 'salmon', descPL: 'łosoś', price: '38 zł' },
-          { enName: 'Tempura Ohio', plName: 'Tempura Ohio', descEN: 'butterfish', descPL: 'maślana', price: '38 zł' },
-          { enName: 'Tempura Maguro', plName: 'Tempura Maguro', descEN: 'tuna', descPL: 'tuńczyk', price: '42 zł' },
-          { enName: 'Tempura Ebi', plName: 'Tempura Ebi', descEN: 'steamed shrimp', descPL: 'parzona krewetka', price: '40 zł' },
-          { enName: 'Tempura Unagi Kabayaki', plName: 'Tempura Unagi Kabayaki', descEN: 'grilled eel', descPL: 'grillowany węgorz', price: '45 zł' }
-        ]
-      },
-      {
-        id: 'oyakomaki',
-        title: { en: 'Oyakomaki (2 pc)', pl: 'Oyakomaki (2 szt.)' },
-        // ВИПРАВЛЕНЕ ФОТО ДЛЯ OYAKOMAKI
-        introPhoto: 'uploaded:image_4f35f6.png-5771ae28-84e8-41e2-b8f1-9aca402ea04f', 
-        introDescEN: 'Our specialty rolls, often wrapped in fish or avocado instead of nori.',
-        introDescPL: 'Nasze specjalne rolki, często zawijane w rybę lub awokado zamiast nori.',
-        items: [
-          { enName: 'Sake Ebi Tataki', plName: 'Sake Ebi Tataki', descEN: 'chopped shrimp wrapped in salmon', descPL: 'siekana krewetka owijana w łososia', price: '36 zł' },
-          { enName: 'Sake Ikura', plName: 'Sake Ikura', descEN: 'caviar with salmon wrapped in tuna', descPL: 'kawior z łososia owijany tuńczykiem', price: '42 zł' },
-          { enName: 'Maguro Sake Tataki', plName: 'Maguro Sake Tataki', descEN: 'chopped salmon wrapped in tuna', descPL: 'siekany łosoś owijany tuńczykiem', price: '45 zł' }
-        ]
-      },
-      {
-        id: 'sashimi',
-        title: { en: 'Sashimi (9 pc)', pl: 'Sashimi (9 szt.)' },
-        // ВИПРАВЛЕНЕ ФОТО ДЛЯ SASHIMI
-        introPhoto: 'uploaded:image_6211cb.png-c3de168d-ad90-4573-a34b-5ead96a8dcb6', 
-        introDescEN: 'Thinly sliced raw fish and seafood, served without rice.',
-        introDescPL: 'Cienko krojone plastry surowej ryby i owoców morza, podawane bez ryżu.',
-        items: [
-          { enName: 'Mizu', plName: 'Mizu', descEN: 'slices of raw fish — salmon, tuna, butterfish', descPL: 'plastry surowej ryby — łosoś, tuńczyk, maślana', price: '95 zł' }
-        ]
-      }
-    ];
+  <script>
+    // --- Data ---
+    const MENU_DATA = [
+      {
+        id: 'sets',
+        title: { en: 'Sushi Sets', pl: 'Zestawy Sushi' },
+        introDescEN: 'Curated combinations of our finest rolls, perfect for experiencing a variety of flavors.',
+        introDescPL: 'Starannie dobrane kompozycje naszych najlepszych rolek, idealne do poznania różnorodności smaków.',
+        introPhoto: 'https://images.unsplash.com/photo-1553621042-f6e147245754?auto=format&fit=crop&w=800&q=80',
+        items: [
+          {
+            enName: 'Ki Iro (Yellow)',
+            plName: 'Ki Iro (Żółty)',
+            descEN: '12 pcs: 6x Salmon Maki, 6x Avocado Maki',
+            descPL: '12 szt: 6x Maki z łososiem, 6x Maki z awokado',
+            price: '42 PLN'
+          },
+          {
+            enName: 'Aka (Red)',
+            plName: 'Aka (Czerwony)',
+            descEN: '12 pcs: 6x Tuna Maki, 6x Cucumber Maki',
+            descPL: '12 szt: 6x Maki z tuńczykiem, 6x Maki z ogórkiem',
+            price: '48 PLN'
+          }
+        ]
+      },
+      {
+        id: 'uramaki-combined',
+        title: { en: 'Uramaki & Tempura', pl: 'Uramaki i Tempura' },
+        introDescEN: 'Our special inside-out rolls, available fresh or fried in crispy tempura.',
+        introDescPL: 'Nasze specjalne rolki odwrócone, dostępne na świeżo lub smażone w chrupiącej tempurze.',
+        introPhoto: 'https://images.unsplash.com/photo-1611143669185-af224c5e3252?auto=format&fit=crop&w=800&q=80',
+        items_uramaki: [
+          {
+            enName: 'California Gold',
+            plName: 'California Gold',
+            descEN: 'Crab stick, avocado, cucumber, sesame',
+            descPL: 'Paluszek krabowy, awokado, ogórek, sezam',
+            price: '32 PLN'
+          },
+          {
+            enName: 'Philadelphia Classic',
+            plName: 'Philadelphia Klasyczna',
+            descEN: 'Salmon, cream cheese, cucumber',
+            descPL: 'Łosoś, serek philadelphia, ogórek',
+            price: '36 PLN'
+          }
+        ],
+        items_tempura: [
+          {
+            enName: 'Ebi Tempura Roll',
+            plName: 'Rolka Ebi Tempura',
+            descEN: 'Shrimp tempura, spicy mayo, lettuce',
+            descPL: 'Krewetka w tempurze, ostry majonez, sałata',
+            price: '39 PLN'
+          },
+          {
+            enName: 'Salmon Tempura Roll',
+            plName: 'Rolka Łosoś Tempura',
+            descEN: 'Salmon tempura, cream cheese, cucumber',
+            descPL: 'Łosoś w tempurze, serek, ogórek',
+            price: '38 PLN'
+          }
+        ]
+      }
+    ];
 
-    // --- STATE & LOGIC ---
-    let currentLang = 'pl';
+    // --- State ---
+    let currentLang = 'pl';
 
-    function init() {
-      renderNav();
-      renderContent();
-    }
+    // --- Init ---
+    document.getElementById('year').textContent = new Date().getFullYear();
+    renderApp();
 
-    function setLang(lang) {
-      if (currentLang === lang) return;
-      
-      // Update Buttons
-      document.querySelectorAll('.lang-btn').forEach(btn => {
-        btn.classList.toggle('active', btn.dataset.lang === lang);
-      });
+    // --- Functions ---
 
-      // Animate Switch
-      const wrapper = document.getElementById('content-wrapper');
-      wrapper.classList.add('faded');
-      
-      setTimeout(() => {
-        currentLang = lang;
-        updateStaticText();
-        renderNav();
-        renderContent();
-        wrapper.classList.remove('faded');
-      }, 300);
-    }
+    function setLanguage(lang) {
+      if (currentLang === lang) return;
+      currentLang = lang;
+      
+      // Update Buttons
+      const btnPl = document.getElementById('btn-pl');
+      const btnEn = document.getElementById('btn-en');
+      
+      if (lang === 'pl') {
+        btnPl.className = "px-3 py-1.5 rounded-lg text-sm font-bold transition-colors bg-[#d88b6a] text-white";
+        btnEn.className = "px-3 py-1.5 rounded-lg text-sm font-bold transition-colors text-gray-600 hover:bg-gray-100";
+      } else {
+        btnPl.className = "px-3 py-1.5 rounded-lg text-sm font-bold transition-colors text-gray-600 hover:bg-gray-100";
+        btnEn.className = "px-3 py-1.5 rounded-lg text-sm font-bold transition-colors bg-[#d88b6a] text-white";
+      }
 
-    function updateStaticText() {
-      const isEn = currentLang === 'en';
-      document.getElementById('subtitle').textContent = isEn ? 'Fine sushi — Menu' : 'Wyborne sushi — Menu';
-      document.getElementById('contact-title').textContent = isEn ? 'Contacts' : 'Kontakt';
-      document.getElementById('footer-note').textContent = isEn ? 'Menu — open web version' : 'Menu — wersja online';
-    }
+      // Animate transition
+      const main = document.getElementById('menu-container');
+      main.style.opacity = '0';
+      
+      setTimeout(() => {
+        renderApp();
+        main.style.opacity = '1';
+      }, 200);
+    }
 
-    function renderNav() {
-      const nav = document.getElementById('nav-container');
-      nav.innerHTML = MENU_DATA.map(section => `
-        <button class="nav-chip" onclick="scrollToSection('${section.id}')">
-          ${section.title[currentLang]}
-        </button>
-      `).join('');
-    }
+    function renderApp() {
+      // 1. Static Text Updates
+      document.getElementById('header-subtitle').textContent = currentLang === 'en' ? 'Fine sushi — Menu' : 'Wyborne sushi — Menu';
+      document.getElementById('contact-title').textContent = currentLang === 'en' ? 'Contacts' : 'Kontakt';
+      document.getElementById('footer-note').textContent = currentLang === 'en' ? 'Menu — open web version' : 'Menu — wersja online';
 
-    function scrollToSection(id) {
-      const el = document.getElementById(id);
-      if(el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
+      // 2. Render Navigation
+      const navContainer = document.getElementById('nav-container');
+      navContainer.innerHTML = MENU_DATA.map(section => `
+        <button
+          onclick="scrollToSection('${section.id}')"
+          class="px-4 py-2 bg-white border border-gray-200 rounded-full text-sm font-bold text-gray-700 hover:bg-gray-50 hover:border-gray-300 transition-all active:scale-95"
+        >
+          ${section.title[currentLang]}
+        </button>
+      `).join('');
 
-    function renderContent() {
-      const wrapper = document.getElementById('content-wrapper');
-      wrapper.innerHTML = MENU_DATA.map(section => createSectionHTML(section)).join('');
-    }
+      // 3. Render Sections
+      const menuContainer = document.getElementById('menu-container');
+      menuContainer.innerHTML = MENU_DATA.map(section => createSectionHTML(section)).join('');
+    }
 
-    function createSectionHTML(section) {
-      const isEn = currentLang === 'en';
-      const title = section.title[currentLang];
-      const desc = isEn ? section.introDescEN : section.introDescPL;
-      const smallNote = isEn ? section.smallNoteEN : section.smallNotePL;
-      
-      // Images Logic
-      let imagesHTML = '';
-      if (section.introPhotos && section.introPhotos.length > 0) {
-        imagesHTML = `<div class="img-stack">
-          ${section.introPhotos.map(p => 
-            `<img src="${p.src}" class="img-cover img-rounded" onclick="openLightbox('${p.src}')" alt="${isEn ? p.nameEN : p.namePL}">`
-          ).join('')}
-        </div>`;
-      } else if (section.introPhoto) {
-        imagesHTML = `<img src="${section.introPhoto}" class="img-cover" onclick="openLightbox('${section.introPhoto}')" alt="${title}">`;
-      }
+    function createSectionHTML(data) {
+      // Helper for intro photos
+      let photosHTML = '';
+      if (data.introPhotos && data.introPhotos.length > 0) {
+        photosHTML = `
+          <div class="flex flex-col gap-2 p-2">
+            ${data.introPhotos.map(p => `
+              <img src="${p.src}" class="w-full h-40 object-cover rounded-lg cursor-pointer hover:opacity-95 transition-opacity" onclick="openLightbox('${p.src}')" />
+            `).join('')}
+          </div>
+        `;
+      } else if (data.introPhoto) {
+        photosHTML = `
+          <img src="${data.introPhoto}" class="w-full h-64 object-cover cursor-pointer hover:opacity-95 transition-opacity" onclick="openLightbox('${data.introPhoto}')" />
+        `;
+      }
 
-      // Small Note
-      const noteHTML = smallNote ? `<div class="small-note">${smallNote}</div>` : '';
+      // Helper for Item Rows
+      const renderItem = (item) => `
+        <div class="flex justify-between items-start py-3 border-b border-gray-100 last:border-0 hover:bg-gray-50/50 transition-colors rounded-lg px-2 -mx-2">
+          <div class="flex-1 pr-4">
+            <div class="font-bold text-gray-900 leading-tight">
+              ${currentLang === 'en' ? item.enName : item.plName}
+            </div>
+            ${(currentLang === 'en' ? item.descEN : item.descPL) ? `
+              <div class="text-sm text-gray-500 mt-1 leading-relaxed whitespace-pre-line">
+                ${currentLang === 'en' ? item.descEN : item.descPL}
+              </div>
+            ` : ''}
+          </div>
+          <div class="font-extrabold text-[#d88b6a] whitespace-nowrap pt-0.5">
+            ${item.price}
+          </div>
+        </div>
+      `;
 
-      // Items Logic
-      let itemsHTML = '';
-      if (section.id === 'uramaki-combined') {
-        itemsHTML = `
-          <div class="grid-2-col">
-            <div>
-              <h3 class="col-title">Uramaki</h3>
-              ${section.items_uramaki.map(item => createItemRow(item)).join('')}
-            </div>
-            <div>
-              <h3 class="col-title">${isEn ? 'Uramaki in Tempura' : 'Uramaki w Tempurze'}</h3>
-              ${section.items_tempura.map(item => createItemRow(item)).join('')}
-            </div>
-          </div>
-        `;
-      } else {
-        itemsHTML = section.items.map(item => createItemRow(item)).join('');
-      }
+      // Content inside Accordion
+      let itemsContent = '';
+      if (data.id === 'uramaki-combined') {
+        itemsContent = `
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div>
+              <h3 class="text-sm font-bold text-[#d88b6a] border-b border-[#d88b6a] pb-1 mb-2 uppercase tracking-wider">
+                Uramaki
+              </h3>
+              ${data.items_uramaki.map(renderItem).join('')}
+            </div>
+            <div>
+              <h3 class="text-sm font-bold text-[#d88b6a] border-b border-[#d88b6a] pb-1 mb-2 uppercase tracking-wider">
+                ${currentLang === 'en' ? 'Uramaki in Tempura' : 'Uramaki w Tempurze'}
+              </h3>
+              ${data.items_tempura.map(renderItem).join('')}
+            </div>
+          </div>
+        `;
+      } else {
+        itemsContent = `
+          <div>
+            ${data.items.map(renderItem).join('')}
+          </div>
+        `;
+      }
 
-      const btnText = isEn ? 'View available items' : 'Pokaż dostępne pozycje';
+      // Small Note
+      const noteHTML = (data.smallNoteEN || data.smallNotePL) ? `
+        <div class="px-4 pb-4 pt-2 text-xs text-gray-400 border-t border-gray-50 bg-gray-50/30">
+          ${currentLang === 'en' ? data.smallNoteEN : data.smallNotePL}
+        </div>
+      ` : '';
 
-      return `
-        <section id="${section.id}">
-          <div class="section-title">${title}</div>
-          
-          <div class="card">
-            ${imagesHTML}
-            <div class="card-desc">${desc}</div>
-            ${noteHTML}
-          </div>
+      return `
+        <section id="${data.id}" class="mb-6 scroll-mt-24">
+          <!-- Title -->
+          <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-3">
+            <h2 class="text-xl tracking-wide font-serif text-gray-800">
+              ${data.title[currentLang]}
+            </h2>
+          </div>
 
-          <div class="card">
-            <button class="accordion-btn" onclick="toggleAccordion(this)">
-              <span class="accordion-text">${btnText}</span>
-              <span class="arrow">▼</span>
-            </button>
-            <div class="items-container">
-              <div class="items-inner">
-                ${itemsHTML}
-              </div>
-            </div>
-          </div>
-        </section>
-      `;
-    }
+          <!-- Intro Card -->
+          <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden mb-3">
+            ${photosHTML}
+            <div class="p-4">
+              <p class="text-sm text-gray-500 leading-relaxed">
+                ${currentLang === 'en' ? data.introDescEN : data.introDescPL}
+              </p>
+            </div>
+            ${noteHTML}
+          </div>
 
-    function createItemRow(item) {
-      const isEn = currentLang === 'en';
-      const name = isEn ? item.enName : item.plName;
-      const desc = isEn ? item.descEN : item.descPL;
-      const price = item.price;
+          <!-- Accordion -->
+          <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+            <button
+              onclick="toggleAccordion('${data.id}-content', this)"
+              class="w-full flex justify-between items-center p-4 text-left hover:bg-gray-50 transition-colors focus:outline-none"
+            >
+              <span class="font-bold text-[#d88b6a]">
+                ${currentLang === 'en' ? 'View available items' : 'Pokaż dostępne pozycje'}
+              </span>
+              <span class="arrow text-xs text-gray-800 transform transition-transform duration-300">
+                ▼
+              </span>
+            </button>
 
-      // Handle multiline descriptions properly by just inserting them
-      // CSS `white-space: pre-line` handles the \n
-      const descHTML = desc ? `<div class="item-desc">${desc}</div>` : '';
+            <div
+              id="${data.id}-content"
+              class="accordion-content"
+            >
+              <div class="p-4 pt-0">
+                ${itemsContent}
+              </div>
+            </div>
+          </div>
+        </section>
+      `;
+    }
 
-      return `
-        <div class="menu-item">
-          <div class="item-info">
-            <div class="item-name">${name}</div>
-            ${descHTML}
-          </div>
-          <div class="item-price">${price}</div>
-        </div>
-      `;
-    }
+    // --- UI Interactions ---
 
-    function toggleAccordion(btn) {
-      const container = btn.nextElementSibling;
-      const isOpen = btn.classList.contains('open');
+    function scrollToSection(id) {
+      const el = document.getElementById(id);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
 
-      // Закриття
-      if (isOpen) {
-        btn.classList.remove('open');
-        container.style.maxHeight = '0px';
-        container.classList.remove('open');
-      } else {
-        // Відкриття
-        // Спочатку встановлюємо висоту, потім додаємо клас 'open'
-        container.style.maxHeight = container.scrollHeight + 'px';
-        btn.classList.add('open');
-        container.classList.add('open');
-      }
-    }
+    function toggleAccordion(contentId, btn) {
+      const content = document.getElementById(contentId);
+      const arrow = btn.querySelector('.arrow');
+      
+      const isOpen = content.style.maxHeight && content.style.maxHeight !== '0px';
 
-    // --- LIGHTBOX ---
-    function openLightbox(src) {
-      const lb = document.getElementById('lightbox');
-      const img = document.getElementById('lightbox-img');
-      img.src = src;
-      lb.classList.add('active');
-    }
+      if (isOpen) {
+        content.style.maxHeight = '0px';
+        content.classList.remove('open');
+        arrow.classList.remove('rotate-180');
+      } else {
+        content.style.maxHeight = content.scrollHeight + "px";
+        content.classList.add('open');
+        arrow.classList.add('rotate-180');
+      }
+    }
 
-    function closeLightbox() {
-      const lb = document.getElementById('lightbox');
-      lb.classList.remove('active');
-      setTimeout(() => {
-        document.getElementById('lightbox-img').src = '';
-      }, 200);
-    }
+    function openLightbox(src) {
+      const lightbox = document.getElementById('lightbox');
+      const img = document.getElementById('lightbox-img');
+      img.src = src;
+      lightbox.classList.remove('hidden');
+    }
 
-    // Initialize
-    init();
-
-  </script>
+    function closeLightbox() {
+      const lightbox = document.getElementById('lightbox');
+      lightbox.classList.add('hidden');
+      document.getElementById('lightbox-img').src = "";
+    }
+  </script>
 </body>
 </html>
