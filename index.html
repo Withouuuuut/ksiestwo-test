@@ -35,6 +35,15 @@
       padding:22px;
       box-shadow: 0 10px 30px rgba(0,0,0,0.08);
       padding-top: 70px; 
+      
+      /* Entry Animation */
+      animation: fadeUpMain 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      opacity: 0;
+      transform: translateY(20px);
+    }
+
+    @keyframes fadeUpMain {
+      to { opacity: 1; transform: translateY(0); }
     }
 
     header{
@@ -124,6 +133,11 @@
       border:1px solid rgba(0,0,0,0.03);
       cursor:pointer;
       font-size:14px;
+      transition: transform 0.2s, background 0.2s;
+    }
+    .nav-chip:hover {
+      background: #fff5f0;
+      transform: translateY(-1px);
     }
 
     .content{
@@ -171,7 +185,7 @@
     .item-content {
         display: flex;
         justify-content: space-between;
-        align-items: flex-start; /* Изменено с center на flex-start для многострочных описаний */
+        align-items: flex-start;
         width: 100%;
         gap: 15px;
     }
@@ -196,7 +210,7 @@
     .contact-btn {
       display: flex;
       align-items: center;
-      justify-content: flex-start; /* Выравнивание по левому краю */
+      justify-content: flex-start;
       gap: 12px;
       padding: 12px 20px;
       background-color: var(--dark-btn);
@@ -205,21 +219,20 @@
       border-radius: 999px;
       font-weight: 600;
       font-size: 14px;
-      transition: transform 0.2s, opacity 0.2s;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
       box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     }
     .contact-btn img {
       width: 20px;
       height: 20px;
       object-fit: contain;
-      filter: brightness(0) invert(1); /* Делаем иконки белыми, если они черные */
+      filter: brightness(0) invert(1);
     }
 
     .contact-btn:hover {
-      transform: translateY(-2px);
-      opacity: 0.9;
-      color: #fff;
-      text-decoration: none;
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+      opacity: 1;
     }
 
     @media (max-width: 600px) {
@@ -258,10 +271,13 @@
       background-color: rgba(0, 0, 0, 0.9); 
       align-items: center;
       justify-content: center;
+      opacity: 0;
       transition: opacity 0.3s ease;
+      backdrop-filter: blur(5px);
     }
     .lightbox.open {
       display: flex; 
+      opacity: 1;
     }
     .lightbox-content {
       margin: auto;
@@ -271,6 +287,11 @@
       border-radius: var(--radius);
       box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
       cursor: pointer; 
+      transform: scale(0.95);
+      transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .lightbox.open .lightbox-content {
+      transform: scale(1);
     }
     .lightbox-close {
       position: absolute;
@@ -286,6 +307,7 @@
     .lightbox-close:focus {
       color: #bbb;
       text-decoration: none;
+      transform: scale(1.1);
     }
     
     /* --- MENU SECTIONS --- */
@@ -320,7 +342,9 @@
         border-radius: var(--radius);
         border: 1px solid rgba(0,0,0,0.03);
         overflow: hidden; 
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
+    /* Effect on Card Hover if desired, or just image */
     
     /* STACK PHOTOS */
     .intro-image-stack {
@@ -338,6 +362,11 @@
         display: block;
         cursor: pointer;
         margin-bottom: 0 !important;
+        transition: transform 0.4s ease, filter 0.3s ease;
+    }
+    .intro-image-stack img:hover {
+        transform: scale(1.02);
+        filter: brightness(1.05);
     }
     
     /* SINGLE PHOTO */
@@ -349,6 +378,11 @@
         border-radius: var(--radius) var(--radius) 0 0;
         cursor: pointer;
         margin-bottom: 0;
+        transition: transform 0.4s ease, filter 0.3s ease;
+    }
+    .intro-card > img:hover {
+        transform: scale(1.02);
+        filter: brightness(1.05);
     }
     
     .intro-card p {
@@ -375,6 +409,10 @@
         border: 1px solid rgba(0,0,0,0.03);
         margin-bottom: 14px;
         padding: 0 14px;
+        transition: background 0.2s;
+    }
+    details:hover {
+        background: #fcfcfc;
     }
     summary {
         font-weight: bold;
@@ -394,7 +432,7 @@
         right: 0;
         top: 50%;
         transform: translateY(-50%);
-        transition: transform 0.2s;
+        transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         font-size: 10px;
         color: var(--text);
     }
@@ -410,7 +448,7 @@
         max-height: 0;
         opacity: 0;
         will-change: max-height, opacity, padding;
-        transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out, padding 0.3s ease-in-out;
+        transition: max-height 0.4s ease-in-out, opacity 0.4s ease-in-out, padding 0.4s ease-in-out;
     }
     
     details[open] .items.open-animation {
@@ -453,6 +491,17 @@
         grid-template-columns: 1fr;
         gap: 20px 0; 
       }
+    }
+
+    /* SCROLL ANIMATION CLASS */
+    .scroll-hidden {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.6s ease-out, transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+    .scroll-visible {
+      opacity: 1;
+      transform: translateY(0);
     }
   </style>
 <script type="importmap">
@@ -545,10 +594,10 @@
         title:{en:'Starters', pl:'Przystawki'},
         introDescEN: 'A selection of light and fresh starters to begin your sushi experience.',
         introDescPL: 'Wybór lekkich i świeżych przystawek na rozpoczęcie przygody z sushi.',
+        // UPDATED: Reduced to 3 photos as requested
         introPhotos: [ 
             {src: 'images/wakame.jpg', nameEN: 'Goma Wakame', namePL: 'Goma Wakame'},
             {src: 'images/ebiten.jpg', nameEN: 'Ebiten (3 pcs)', namePL: 'Ebiten (3 szt.)'},
-            {src: 'images/sake-tataki.jpg', nameEN: 'Sake Tataki', namePL: 'Sake Tataki'},
             {src: 'images/MAGURO.jpg', nameEN: 'Maguro Tataki', namePL: 'Maguro Tataki'},
         ],
         items:[
@@ -665,6 +714,24 @@
     const menuArea = document.getElementById('menu-area');
     const langBtns = document.querySelectorAll('.fixed-widget .lang-btn'); 
     let LANG = 'pl'; 
+
+    // SCROLL ANIMATION OBSERVER
+    const scrollObserver = new IntersectionObserver((entries, observer) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('scroll-visible');
+          observer.unobserve(entry.target); // Animate once
+        }
+      });
+    }, { threshold: 0.1 });
+
+    function observeElements() {
+      const elements = document.querySelectorAll('.section, .intro-card, .item, footer, .contact-btn');
+      elements.forEach(el => {
+        el.classList.add('scroll-hidden');
+        scrollObserver.observe(el);
+      });
+    }
 
     function createNav(){
       nav.innerHTML = '';
@@ -853,6 +920,9 @@
         } 
         menuArea.appendChild(s);
       });
+      
+      // Init observer after rendering
+      setTimeout(observeElements, 50);
     }
 
     function updateTexts(){
@@ -864,6 +934,7 @@
       
       const contacts = document.getElementById('contacts');
       
+      // UPDATED GOOGLE MAPS LINK
       const contactsContent = `
         <a href="tel:+48502525544" class="contact-btn">
           <img src="images/phone.png" alt="phone">
@@ -873,7 +944,7 @@
           <img src="images/instagram.png" alt="instagram">
           <span>@ksiestwosushi</span>
         </a>
-        <a href="https://maps.app.goo.gl/1WmFXGEPnDcBiz3p9" target="_blank" class="contact-btn">
+        <a href="https://maps.app.goo.gl/ZT1PfgScLAJkTbhx7" target="_blank" class="contact-btn">
           <img src="images/google_maps.png" alt="maps">
           <span>Krupówki 38A, Zakopane</span>
         </a>
