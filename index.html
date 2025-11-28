@@ -176,10 +176,9 @@
     /* --- IMAGES --- */
     .intro-media {
         width: 100%;
-        padding: 0 8px 10px 8px; /* Reduced side padding for wider look */
+        padding: 0 8px 10px 8px; 
     }
     
-    /* Single Image Style */
     .single-img {
         width: 100%;
         height: 240px;
@@ -190,7 +189,6 @@
     }
     .single-img:hover { transform: scale(1.02); }
 
-    /* Vertical Stack Grid for Starters */
     .stack-grid {
         display: flex;
         flex-direction: column;
@@ -198,7 +196,7 @@
     }
     .stack-img {
         width: 100%;
-        height: 160px; /* Reduced height slightly for better stack proportions */
+        height: 160px; 
         object-fit: cover;
         border-radius: 12px;
         cursor: pointer;
@@ -211,7 +209,7 @@
     }
 
     .intro-text {
-        padding: 0 20px 20px 20px;
+        padding: 0 20px 6px 20px; /* Reduced bottom padding */
         color: var(--muted);
         font-size: 15px;
         line-height: 1.5;
@@ -224,10 +222,10 @@
         border-top: 1px solid #eee;
     }
 
-    /* --- ULTRA SMOOTH ACCORDION (CSS GRID TRICK) --- */
+    /* --- ACCORDION --- */
     .accordion-trigger {
         width: 100%;
-        padding: 16px 20px;
+        padding: 12px 20px; /* Reduced vertical padding */
         background: #fdfdfd;
         border: none;
         border-top: 1px solid #f0f0f0;
@@ -251,10 +249,7 @@
         color: var(--muted);
         transition: transform 0.4s var(--ease);
     }
-    /* Rotate icon when active */
-    .accordion-wrapper.active .trigger-icon {
-        transform: rotate(180deg);
-    }
+    .accordion-wrapper.active .trigger-icon { transform: rotate(180deg); }
 
     .accordion-content {
         display: grid;
@@ -266,15 +261,8 @@
         grid-template-rows: 1fr;
         opacity: 1;
     }
-    
-    .min-h-0 {
-        overflow: hidden;
-    }
-    
-    .items-list {
-        padding: 20px;
-        background: #fff;
-    }
+    .min-h-0 { overflow: hidden; }
+    .items-list { padding: 20px; background: #fff; }
 
     /* --- MENU ITEMS --- */
     .item {
@@ -293,57 +281,85 @@
     .item-info { flex: 1; padding-right: 20px; }
     .item-name { font-weight: 700; font-size: 16px; margin-bottom: 4px; }
     .item-desc { 
-        font-size: 14px; 
-        color: var(--muted); 
-        line-height: 1.4;
-        white-space: pre-line;
+        font-size: 14px; color: var(--muted); line-height: 1.4; white-space: pre-line;
     }
     .item-price { 
-        font-weight: 700; 
-        color: var(--accent); 
-        font-size: 16px; 
-        white-space: nowrap;
+        font-weight: 700; color: var(--accent); font-size: 16px; white-space: nowrap;
     }
 
     /* --- URAMAKI GRID --- */
     .cols-2 {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 30px;
+        display: grid; grid-template-columns: 1fr 1fr; gap: 30px;
     }
     .col-title {
-        font-size: 14px;
-        font-weight: 700;
-        color: var(--accent);
-        text-transform: uppercase;
-        border-bottom: 2px solid #ffeadd;
-        padding-bottom: 8px;
-        margin-bottom: 16px;
+        font-size: 14px; font-weight: 700; color: var(--accent);
+        text-transform: uppercase; border-bottom: 2px solid #ffeadd;
+        padding-bottom: 8px; margin-bottom: 16px;
     }
     @media (max-width:700px) { .cols-2 { grid-template-columns: 1fr; gap: 20px; } }
 
-    /* --- ALLERGY INFO --- */
-    .allergy-box {
+    /* --- FLOATING ALLERGY BTN --- */
+    .allergy-btn {
+        position: fixed;
+        bottom: 30px; 
+        right: 30px;
+        width: 56px; height: 56px;
         background: #fff;
-        border-radius: var(--radius);
+        color: var(--accent);
+        border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 28px; font-weight: 800; font-family: sans-serif;
+        box-shadow: 0 8px 24px rgba(216, 139, 106, 0.4);
+        cursor: pointer;
+        z-index: 100;
+        border: 2px solid var(--accent);
+        transition: transform 0.3s var(--ease);
+        animation: pulse 2s infinite;
+    }
+    .allergy-btn:hover { animation: none; transform: scale(1.1); }
+    
+    @keyframes pulse {
+        0% { box-shadow: 0 0 0 0 rgba(216, 139, 106, 0.7); }
+        70% { box-shadow: 0 0 0 15px rgba(216, 139, 106, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(216, 139, 106, 0); }
+    }
+
+    /* --- INFO MODAL --- */
+    .info-modal {
+        position: fixed; inset: 0; z-index: 2000;
+        background: rgba(0,0,0,0.6);
+        backdrop-filter: blur(8px);
+        display: flex; justify-content: center; align-items: center;
+        opacity: 0; pointer-events: none;
+        transition: opacity 0.3s var(--ease);
         padding: 20px;
-        margin-bottom: 24px;
-        font-size: 13px;
-        color: var(--muted);
-        line-height: 1.6;
-        border-left: 4px solid var(--accent);
-        box-shadow: 0 4px 20px rgba(0,0,0,0.02);
     }
-    .allergy-title {
-        font-weight: 700;
-        color: var(--text);
-        margin-bottom: 8px;
-        display: block;
+    .info-modal.open { opacity: 1; pointer-events: auto; }
+    
+    .info-card {
+        background: #fff;
+        width: 100%; max-width: 450px;
+        padding: 30px;
+        border-radius: 20px;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        transform: scale(0.9); opacity: 0;
+        transition: all 0.4s var(--ease);
+        position: relative;
+        text-align: center;
     }
-    .service-note {
-        margin-top: 12px;
-        font-style: italic;
-        opacity: 0.8;
+    .info-modal.open .info-card { transform: scale(1); opacity: 1; }
+    
+    .info-close {
+        position: absolute; top: 15px; right: 20px;
+        font-size: 28px; color: var(--muted); cursor: pointer;
+        line-height: 1;
+    }
+    .info-icon { font-size: 40px; margin-bottom: 16px; display: block; }
+    .info-title { font-size: 20px; font-weight: 700; margin-bottom: 12px; color: var(--text); }
+    .info-text { font-size: 15px; line-height: 1.6; color: var(--muted); margin-bottom: 20px; }
+    .info-note { 
+        font-size: 13px; font-style: italic; color: #555; 
+        background: #f4f4f4; padding: 12px; border-radius: 12px; 
     }
 
     /* --- SIDEBAR & FOOTER --- */
@@ -428,6 +444,8 @@
       <button class="lang-btn" onclick="setLang('en')">EN</button>
     </div>
   </div>
+  
+  <div class="allergy-btn" onclick="openInfo()">!</div>
 
   <div class="wrap">
     <header>
@@ -461,9 +479,21 @@
     </footer>
   </div>
 
+  <!-- LIGHTBOX -->
   <div class="lightbox" id="lb" onclick="closeLb()">
     <span class="lb-close">&times;</span>
     <img src="" class="lb-img" id="lb-img">
+  </div>
+  
+  <!-- INFO MODAL -->
+  <div class="info-modal" id="info-modal" onclick="closeInfo(event)">
+    <div class="info-card">
+      <span class="info-close" onclick="closeInfo(event)">&times;</span>
+      <div class="info-icon">⚠️</div>
+      <div class="info-title" id="info-title"></div>
+      <div class="info-text" id="info-text"></div>
+      <div class="info-note" id="info-note"></div>
+    </div>
   </div>
 
   <script>
@@ -643,6 +673,11 @@
       document.getElementById('lbl-contacts').innerText = LANG==='en' ? 'Contacts' : 'Kontakt';
       document.getElementById('lbl-web').innerText = LANG==='en' ? 'Menu — open web version' : 'Menu — wersja online';
 
+      // Update Info Modal Content
+      document.getElementById('info-title').innerText = LANG==='en'?ALLERGIES.title.en:ALLERGIES.title.pl;
+      document.getElementById('info-text').innerText = LANG==='en'?ALLERGIES.text.en:ALLERGIES.text.pl;
+      document.getElementById('info-note').innerText = LANG==='en'?ALLERGIES.service.en:ALLERGIES.service.pl;
+
       // Nav
       const nav = document.getElementById('nav-container');
       nav.innerHTML = DATA.map(s => `
@@ -651,15 +686,15 @@
         </button>
       `).join('');
 
-      // Menu Content
-      let sectionsHtml = DATA.map(section => {
+      // Menu
+      const container = document.getElementById('menu-container');
+      container.innerHTML = DATA.map(section => {
         const title = LANG==='en'?section.title.en:section.title.pl;
         const desc = LANG==='en'?section.desc.en:section.desc.pl;
         
         // Image logic
         let mediaHtml = '';
         if(section.gallery) {
-            // UPDATED: Simple vertical stack of full-width images
             mediaHtml = `<div class="stack-grid">
                 ${section.gallery.map(g=> `<img src="${g.src}" class="stack-img" onclick="openLb('${g.src}')">`).join('')}
             </div>`;
@@ -714,19 +749,6 @@
         `;
       }).join('');
 
-      // Add Allergy Block at the end
-      const allergyHtml = `
-        <div class="allergy-box">
-            <span class="allergy-title">${LANG==='en'?ALLERGIES.title.en:ALLERGIES.title.pl}</span>
-            ${LANG==='en'?ALLERGIES.text.en:ALLERGIES.text.pl}
-            <div class="service-note">
-                ${LANG==='en'?ALLERGIES.service.en:ALLERGIES.service.pl}
-            </div>
-        </div>
-      `;
-
-      document.getElementById('menu-container').innerHTML = sectionsHtml + allergyHtml;
-
       // Contacts
       document.getElementById('contacts-list').innerHTML = `
         <a href="tel:+48502525544" class="c-btn">
@@ -744,6 +766,16 @@
     // --- ACCORDION LOGIC ---
     function toggleAcc(el) {
         el.classList.toggle('active');
+    }
+
+    // --- INFO MODAL ---
+    function openInfo() {
+        document.getElementById('info-modal').classList.add('open');
+    }
+    function closeInfo(e) {
+        if (e.target.id === 'info-modal' || e.target.classList.contains('info-close')) {
+             document.getElementById('info-modal').classList.remove('open');
+        }
     }
 
     // --- LIGHTBOX ---
