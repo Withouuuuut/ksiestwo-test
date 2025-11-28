@@ -81,7 +81,15 @@
       top: 24px;
       right: 24px;
       z-index: 200;
+      transition: transform 0.4s var(--ease), opacity 0.4s var(--ease);
     }
+    /* Hidden state for scroll */
+    .fixed-widget.hidden {
+        transform: translateY(-100px);
+        opacity: 0;
+        pointer-events: none;
+    }
+
     .lang-row {
       background: #fff;
       padding: 5px;
@@ -313,7 +321,7 @@
         cursor: pointer;
         z-index: 100;
         border: 2px solid var(--accent);
-        transition: transform 0.3s var(--ease);
+        transition: transform 0.3s var(--ease), opacity 0.3s var(--ease);
         animation: pulse 2s infinite;
     }
     .allergy-btn:hover { animation: none; transform: scale(1.1); }
@@ -497,6 +505,16 @@
   </div>
 
   <script>
+    // --- SCROLL LOGIC FOR LANG WIDGET ---
+    window.addEventListener('scroll', () => {
+        const widget = document.querySelector('.fixed-widget');
+        if (window.scrollY > 50) {
+            widget.classList.add('hidden');
+        } else {
+            widget.classList.remove('hidden');
+        }
+    });
+
     // --- ALLERGENS ---
     const ALLERGIES = {
         title: { en: 'Allergy Information', pl: 'Informacja o alergenach' },
@@ -688,7 +706,7 @@
 
       // Menu
       const container = document.getElementById('menu-container');
-      container.innerHTML = DATA.map(section => {
+      const menuHTML = DATA.map(section => {
         const title = LANG==='en'?section.title.en:section.title.pl;
         const desc = LANG==='en'?section.desc.en:section.desc.pl;
         
@@ -749,6 +767,23 @@
         `;
       }).join('');
 
+      // Add static allergy block at the bottom
+      const allergyHTML = `
+        <div class="menu-block" style="border:none; box-shadow:none; background:transparent;">
+            <div class="block-header" style="padding-bottom:10px; padding-left:0;">
+                <h2 style="font-size:18px; color:var(--muted);">${LANG==='en'?ALLERGIES.title.en:ALLERGIES.title.pl}</h2>
+            </div>
+            <div style="font-size:13px; color:var(--muted); line-height:1.6; background:#fff; padding:20px; border-radius:16px; border:1px solid rgba(0,0,0,0.04);">
+                ${LANG==='en'?ALLERGIES.text.en:ALLERGIES.text.pl}
+                <div style="margin-top:16px; font-style:italic; padding-top:16px; border-top:1px dashed #eee;">
+                    ${LANG==='en'?ALLERGIES.service.en:ALLERGIES.service.pl}
+                </div>
+            </div>
+        </div>
+      `;
+
+      container.innerHTML = menuHTML + allergyHTML;
+
       // Contacts
       document.getElementById('contacts-list').innerHTML = `
         <a href="tel:+48502525544" class="c-btn">
@@ -771,6 +806,12 @@
     // --- INFO MODAL ---
     function openInfo() {
         document.getElementById('info-modal').classList.add('open');
+        // Make button one-time use (hide it)
+        const btn = document.querySelector('.allergy-btn');
+        if(btn) {
+            btn.style.opacity = '0';
+            btn.style.pointerEvents = 'none';
+        }
     }
     function closeInfo(e) {
         if (e.target.id === 'info-modal' || e.target.classList.contains('info-close')) {
