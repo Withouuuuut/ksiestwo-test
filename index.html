@@ -17,14 +17,6 @@
       --ease: cubic-bezier(0.25, 1, 0.5, 1);
     }
     *{box-sizing:border-box}
-    
-    /* Accessibility: Focus outlines */
-    :focus-visible {
-      outline: 3px solid var(--accent);
-      outline-offset: 2px;
-      border-radius: 4px;
-    }
-
     body{
       margin:0;
       font-family: "Georgia", "Times New Roman", serif;
@@ -34,13 +26,6 @@
       padding:24px;
       display:flex;
       justify-content:center;
-    }
-
-    /* Mobile padding adjustments */
-    @media (max-width: 600px) {
-      body { padding: 6px; }
-      .wrap { padding: 12px 12px 20px 12px !important; padding-top: 70px !important; }
-      .intro-media { padding: 0 4px 10px 4px !important; }
     }
 
     .wrap{
@@ -116,7 +101,7 @@
       color: var(--muted);
       transition: all 0.2s var(--ease);
     }
-    .lang-btn[aria-pressed="true"] {
+    .lang-btn.active {
       background: var(--accent);
       color: white;
       box-shadow: 0 2px 8px rgba(216,139,106,0.3);
@@ -141,7 +126,7 @@
       transition: all 0.3s var(--ease);
       font-family: sans-serif;
     }
-    .nav-chip:hover, .nav-chip:focus {
+    .nav-chip:hover {
       background: #fff5f0;
       color: var(--accent);
       transform: translateY(-2px);
@@ -188,36 +173,22 @@
         color: var(--text);
     }
 
-    /* --- IMAGES & BUTTON WRAPPERS --- */
+    /* --- IMAGES --- */
     .intro-media {
         width: 100%;
         padding: 0 8px 10px 8px; /* Reduced side padding for wider look */
     }
     
-    /* Button reset for image triggers */
-    .img-btn {
-        display: block;
-        width: 100%;
-        padding: 0;
-        border: none;
-        background: none;
-        cursor: pointer;
-    }
-
     /* Single Image Style */
     .single-img {
         width: 100%;
         height: 240px;
         object-fit: cover;
         border-radius: 12px;
-        transition: transform 0.5s var(--ease), filter 0.5s var(--ease);
-        box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-        filter: saturate(1.05) brightness(1.02);
+        cursor: pointer;
+        transition: transform 0.5s var(--ease);
     }
-    .img-btn:hover .single-img, .img-btn:focus .single-img { 
-        transform: scale(1.02); 
-        box-shadow: 0 12px 30px rgba(0,0,0,0.15);
-    }
+    .single-img:hover { transform: scale(1.02); }
 
     /* Vertical Stack Grid for Starters */
     .stack-grid {
@@ -230,18 +201,17 @@
         height: 160px; /* Reduced height slightly for better stack proportions */
         object-fit: cover;
         border-radius: 12px;
-        transition: transform 0.4s var(--ease), box-shadow 0.4s var(--ease), filter 0.4s var(--ease);
-        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-        filter: saturate(1.05) brightness(1.02);
+        cursor: pointer;
+        transition: transform 0.4s var(--ease), box-shadow 0.4s var(--ease);
     }
-    .img-btn:hover .stack-img, .img-btn:focus .stack-img { 
+    .stack-img:hover { 
         transform: scale(1.02); 
-        box-shadow: 0 12px 25px rgba(0,0,0,0.15);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
         z-index: 2;
     }
 
     .intro-text {
-        padding: 0 20px 6px 20px; /* SIGNIFICANTLY REDUCED BOTTOM PADDING */
+        padding: 0 20px 20px 20px;
         color: var(--muted);
         font-size: 15px;
         line-height: 1.5;
@@ -257,7 +227,7 @@
     /* --- ULTRA SMOOTH ACCORDION (CSS GRID TRICK) --- */
     .accordion-trigger {
         width: 100%;
-        padding: 12px 20px; /* REDUCED PADDING */
+        padding: 16px 20px;
         background: #fdfdfd;
         border: none;
         border-top: 1px solid #f0f0f0;
@@ -267,7 +237,7 @@
         align-items: center;
         transition: background 0.2s;
     }
-    .accordion-trigger:hover, .accordion-trigger:focus { background: #f8f8f8; }
+    .accordion-trigger:hover { background: #f8f8f8; }
     
     .trigger-text {
         font-weight: 700;
@@ -282,7 +252,7 @@
         transition: transform 0.4s var(--ease);
     }
     /* Rotate icon when active */
-    .accordion-trigger[aria-expanded="true"] .trigger-icon {
+    .accordion-wrapper.active .trigger-icon {
         transform: rotate(180deg);
     }
 
@@ -292,7 +262,7 @@
         transition: grid-template-rows 0.6s var(--ease), opacity 0.6s var(--ease);
         opacity: 0.4;
     }
-    .accordion-trigger[aria-expanded="true"] + .accordion-content {
+    .accordion-wrapper.active .accordion-content {
         grid-template-rows: 1fr;
         opacity: 1;
     }
@@ -335,38 +305,6 @@
         white-space: nowrap;
     }
 
-    /* --- ALLERGY INFO --- */
-    .allergy-box {
-        background: #fff;
-        border-radius: var(--radius);
-        padding: 24px;
-        margin-top: 24px;
-        box-shadow: var(--shadow);
-        border: 1px solid rgba(0,0,0,0.02);
-        font-size: 13px;
-        line-height: 1.6;
-        color: var(--muted);
-        position: relative;
-        overflow: hidden;
-    }
-    .allergy-box::before {
-        content: '';
-        position: absolute;
-        left: 0; top: 0; bottom: 0;
-        width: 4px;
-        background: var(--accent);
-    }
-    .allergy-title {
-        font-weight: 700;
-        color: var(--text);
-        margin-bottom: 8px;
-        display: block;
-        font-size: 14px;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-    }
-    .allergy-box p { margin: 0; }
-
     /* --- URAMAKI GRID --- */
     .cols-2 {
         display: grid;
@@ -383,6 +321,30 @@
         margin-bottom: 16px;
     }
     @media (max-width:700px) { .cols-2 { grid-template-columns: 1fr; gap: 20px; } }
+
+    /* --- ALLERGY INFO --- */
+    .allergy-box {
+        background: #fff;
+        border-radius: var(--radius);
+        padding: 20px;
+        margin-bottom: 24px;
+        font-size: 13px;
+        color: var(--muted);
+        line-height: 1.6;
+        border-left: 4px solid var(--accent);
+        box-shadow: 0 4px 20px rgba(0,0,0,0.02);
+    }
+    .allergy-title {
+        font-weight: 700;
+        color: var(--text);
+        margin-bottom: 8px;
+        display: block;
+    }
+    .service-note {
+        margin-top: 12px;
+        font-style: italic;
+        opacity: 0.8;
+    }
 
     /* --- SIDEBAR & FOOTER --- */
     .contact-card {
@@ -408,7 +370,7 @@
         transition: transform 0.3s var(--ease), box-shadow 0.3s var(--ease);
     }
     .c-btn img { width: 20px; height: 20px; filter: invert(1); }
-    .c-btn:hover, .c-btn:focus {
+    .c-btn:hover {
         transform: translateY(-3px);
         box-shadow: 0 10px 20px rgba(0,0,0,0.15);
     }
@@ -441,15 +403,12 @@
         box-shadow: 0 0 50px rgba(0,0,0,0.5);
     }
     .lightbox.open .lb-img { transform: scale(1); }
-    
     .lb-close {
         position: absolute; top: 20px; right: 30px;
-        background: transparent; border: none;
         color: #fff; font-size: 40px; cursor: pointer;
         opacity: 0.7; transition: 0.2s;
-        line-height: 1;
     }
-    .lb-close:hover, .lb-close:focus { opacity: 1; transform: scale(1.1); outline: none; }
+    .lb-close:hover { opacity: 1; transform: scale(1.1); }
 
   </style>
 <script type="importmap">
@@ -463,17 +422,17 @@
 </head>
 <body>
 
-  <div class="fixed-widget" role="region" aria-label="Language Selector">
+  <div class="fixed-widget">
     <div class="lang-row">
-      <button class="lang-btn active" id="btn-pl" aria-pressed="true" onclick="setLang('pl')">PL</button>
-      <button class="lang-btn" id="btn-en" aria-pressed="false" onclick="setLang('en')">EN</button>
+      <button class="lang-btn active" onclick="setLang('pl')">PL</button>
+      <button class="lang-btn" onclick="setLang('en')">EN</button>
     </div>
   </div>
 
   <div class="wrap">
-    <header role="banner">
+    <header>
       <div class="brand">
-        <div class="logo" aria-hidden="true">KS</div>
+        <div class="logo">KS</div>
         <div>
           <h1>Księstwo Sushi</h1>
           <div class="sub" id="sub">Fine sushi — Menu</div>
@@ -481,34 +440,46 @@
       </div>
     </header>
 
-    <nav id="nav-container" role="navigation" aria-label="Menu Sections"></nav>
+    <nav id="nav-container"></nav>
 
-    <main class="content">
+    <div class="content">
       <div class="left" id="menu-container">
         <!-- Menu Items Render Here -->
       </div>
 
-      <aside class="right">
+      <div class="right">
         <div class="contact-card">
           <h3 id="lbl-contacts">Kontakt</h3>
           <div id="contacts-list"></div>
         </div>
-      </aside>
-    </main>
+      </div>
+    </div>
 
-    <footer role="contentinfo">
+    <footer>
       <span>Księstwo Sushi 2024</span>
       <span id="lbl-web">Menu — online version</span>
     </footer>
   </div>
 
-  <!-- Accessible Lightbox with Focus Trap -->
-  <div class="lightbox" id="lb" role="dialog" aria-modal="true" aria-label="Image View" onclick="closeLb()">
-    <button class="lb-close" id="lb-close-btn" aria-label="Close image">&times;</button>
-    <img src="" class="lb-img" id="lb-img" alt="Enlarged view">
+  <div class="lightbox" id="lb" onclick="closeLb()">
+    <span class="lb-close">&times;</span>
+    <img src="" class="lb-img" id="lb-img">
   </div>
 
   <script>
+    // --- ALLERGENS ---
+    const ALLERGIES = {
+        title: { en: 'Allergy Information', pl: 'Informacja o alergenach' },
+        text: {
+            en: 'According to the recipe, they may contain: gluten, cucumber, oshinko, kampyo, avocado, mango, melon, lettuce, sesame seeds, Philadelphia cream cheese, mayonnaise, sauces, edible gold.',
+            pl: 'Zgodnie z recepturą mogą zawierać: gluten, ogórek, oshinko, kampyo, awokado, mango, melon, sałatę, sezam, serek philadelphia, majonez, sosy, złoto jadalne.'
+        },
+        service: {
+            en: 'We kindly inform you that we add a waiter service of 10% to the final bill.',
+            pl: 'Uprzejmie informujemy, że doliczamy serwis kelnerski w wysokości 10% do rachunku końcowego.'
+        }
+    };
+
     // --- DATA ---
     const DATA = [
       {
@@ -532,9 +503,9 @@
         id:'starters',
         title:{en:'Starters', pl:'Przystawki'},
         gallery:[
-            {src:'images/wakame.jpg', altEN: 'Wakame Salad', altPL: 'Sałatka Wakame'},
-            {src:'images/ebiten.jpg', altEN: 'Ebiten Tempura', altPL: 'Ebiten Tempura'},
-            {src:'images/sake-tataki.jpg', altEN: 'Sake Tataki', altPL: 'Sake Tataki'}
+            {src:'images/wakame.jpg'},
+            {src:'images/ebiten.jpg'},
+            {src:'images/sake-tataki.jpg'}
         ], 
         desc:{en:'A selection of light and fresh starters to begin your sushi experience.', pl:'Wybór lekkich i świeżych przystawek na rozpoczęcie przygody z sushi.'},
         items:[
@@ -639,29 +610,12 @@
       }
     ];
 
-    const ALLERGIES = {
-       title: { en: 'Allergy information', pl: 'Informacja o alergenach' },
-       text: {
-         en: 'According to the recipe, dishes may contain: gluten, cucumber, oshinko, kampyo, avocado, mango, melon, lettuce, sesame seeds, philadelphia cream cheese, mayonnaise, sauces, edible gold.',
-         pl: 'Zgodnie z recepturą mogą zawierać: gluten, ogórek, oshinko, kampyo, awokado, mango, melon, sałatę, sezam, serek philadelphia, majonez, sosy, złoto jadalne.'
-       }
-    };
-
     let LANG = 'pl';
-    let lastFocusedElement = null;
 
     function setLang(l) {
       if(LANG===l) return;
       LANG = l;
-      
-      const btnPl = document.getElementById('btn-pl');
-      const btnEn = document.getElementById('btn-en');
-      
-      btnPl.classList.toggle('active', l === 'pl');
-      btnPl.setAttribute('aria-pressed', l === 'pl');
-      
-      btnEn.classList.toggle('active', l === 'en');
-      btnEn.setAttribute('aria-pressed', l === 'en');
+      document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.innerText.toLowerCase() === l));
       
       const content = document.querySelector('.left');
       content.style.opacity = '0';
@@ -697,23 +651,20 @@
         </button>
       `).join('');
 
-      // Menu
-      const container = document.getElementById('menu-container');
-      const menuHtml = DATA.map(section => {
+      // Menu Content
+      let sectionsHtml = DATA.map(section => {
         const title = LANG==='en'?section.title.en:section.title.pl;
         const desc = LANG==='en'?section.desc.en:section.desc.pl;
         
         // Image logic
         let mediaHtml = '';
         if(section.gallery) {
+            // UPDATED: Simple vertical stack of full-width images
             mediaHtml = `<div class="stack-grid">
-                ${section.gallery.map(g=> {
-                  const alt = LANG==='en' ? (g.altEN || title) : (g.altPL || title);
-                  return `<button class="img-btn" onclick="openLb('${g.src}')" aria-label="Zoom ${alt}"><img src="${g.src}" class="stack-img" alt="${alt}"></button>`
-                }).join('')}
+                ${section.gallery.map(g=> `<img src="${g.src}" class="stack-img" onclick="openLb('${g.src}')">`).join('')}
             </div>`;
         } else if(section.img) {
-            mediaHtml = `<button class="img-btn" onclick="openLb('${section.img}')" aria-label="Zoom ${title}"><img src="${section.img}" class="single-img" alt="${title}"></button>`;
+            mediaHtml = `<img src="${section.img}" class="single-img" onclick="openLb('${section.img}')">`;
         }
 
         // Note logic
@@ -740,18 +691,18 @@
         const btnText = LANG==='en'?'View items':'Pokaż pozycje';
 
         return `
-        <section class="menu-block" id="${section.id}">
-            <header class="block-header"><h2>${title}</h2></header>
+        <div class="menu-block" id="${section.id}">
+            <div class="block-header"><h2>${title}</h2></div>
             <div class="intro-media">${mediaHtml}</div>
             <div class="intro-text">${desc}</div>
             ${noteHtml}
             
-            <div class="accordion-wrapper">
-                <button class="accordion-trigger" aria-expanded="false" aria-controls="content-${section.id}" onclick="toggleAcc(this)">
+            <div class="accordion-wrapper" onclick="toggleAcc(this)">
+                <button class="accordion-trigger">
                     <span class="trigger-text">${btnText}</span>
-                    <span class="trigger-icon" aria-hidden="true">▼</span>
+                    <span class="trigger-icon">▼</span>
                 </button>
-                <div class="accordion-content" id="content-${section.id}" role="region">
+                <div class="accordion-content">
                     <div class="min-h-0">
                         <div class="items-list">
                             ${itemsHtml}
@@ -759,72 +710,50 @@
                     </div>
                 </div>
             </div>
-        </section>
+        </div>
         `;
       }).join('');
 
-      // Allergy Info
+      // Add Allergy Block at the end
       const allergyHtml = `
-        <div class="allergy-box" role="note" aria-labelledby="allergy-heading">
-            <span id="allergy-heading" class="allergy-title">${LANG==='en'?ALLERGIES.title.en:ALLERGIES.title.pl}</span>
-            <p>${LANG==='en'?ALLERGIES.text.en:ALLERGIES.text.pl}</p>
+        <div class="allergy-box">
+            <span class="allergy-title">${LANG==='en'?ALLERGIES.title.en:ALLERGIES.title.pl}</span>
+            ${LANG==='en'?ALLERGIES.text.en:ALLERGIES.text.pl}
+            <div class="service-note">
+                ${LANG==='en'?ALLERGIES.service.en:ALLERGIES.service.pl}
+            </div>
         </div>
       `;
 
-      container.innerHTML = menuHtml + allergyHtml;
+      document.getElementById('menu-container').innerHTML = sectionsHtml + allergyHtml;
 
-      // Contacts - using alt="" for decorative icons
+      // Contacts
       document.getElementById('contacts-list').innerHTML = `
         <a href="tel:+48502525544" class="c-btn">
-            <img src="images/phone.png" alt=""> <span>+48 502 525 544</span>
+            <img src="images/phone.png"> <span>+48 502 525 544</span>
         </a> 
         <a href="https://www.instagram.com/ksiestwosushi?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" class="c-btn">
-            <img src="images/instagram.png" alt=""> <span>@ksiestwosushi</span>
+            <img src="images/instagram.png"> <span>@ksiestwosushi</span>
         </a>
         <a href="https://maps.app.goo.gl/ZT1PfgScLAJkTbhx7" target="_blank" class="c-btn">
-            <img src="images/google_maps.png" alt=""> <span>Krupówki 38A</span>
+            <img src="images/google_maps.png"> <span>Krupówki 38A</span>
         </a>
       `;
     }
 
     // --- ACCORDION LOGIC ---
-    function toggleAcc(btn) {
-        const isExpanded = btn.getAttribute('aria-expanded') === 'true';
-        btn.setAttribute('aria-expanded', !isExpanded);
+    function toggleAcc(el) {
+        el.classList.toggle('active');
     }
 
     // --- LIGHTBOX ---
     function openLb(src) {
-        lastFocusedElement = document.activeElement;
         document.getElementById('lb-img').src = src;
-        const lb = document.getElementById('lb');
-        lb.classList.add('open');
-        lb.setAttribute('aria-hidden', 'false');
-        
-        // Focus trap logic: focus the close button immediately
-        setTimeout(() => document.getElementById('lb-close-btn').focus(), 50);
+        document.getElementById('lb').classList.add('open');
     }
-
     function closeLb() {
-        const lb = document.getElementById('lb');
-        lb.classList.remove('open');
-        lb.setAttribute('aria-hidden', 'true');
-        if (lastFocusedElement) {
-            lastFocusedElement.focus();
-        }
+        document.getElementById('lb').classList.remove('open');
     }
-
-    // Close lightbox on Escape key
-    document.addEventListener('keydown', function(event) {
-        if (event.key === "Escape" && document.getElementById('lb').classList.contains('open')) {
-            closeLb();
-        }
-    });
-
-    // Stop propagation on image click to prevent closing when clicking the image itself
-    document.getElementById('lb-img').addEventListener('click', function(e) {
-        e.stopPropagation();
-    });
 
     // INIT
     render();
