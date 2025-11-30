@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html lang="pl">
-<head>
+<html lang="pl"> <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Księstwo Sushi — Menu</title>
@@ -84,6 +83,7 @@
       z-index: 200;
       transition: transform 0.4s var(--ease), opacity 0.4s var(--ease);
     }
+    /* Hidden state for scroll */
     .fixed-widget.hidden {
         transform: translateY(-100px);
         opacity: 0;
@@ -217,7 +217,7 @@
     }
 
     .intro-text {
-        padding: 0 20px 6px 20px; 
+        padding: 0 20px 6px 20px; /* Reduced bottom padding */
         color: var(--muted);
         font-size: 15px;
         line-height: 1.5;
@@ -233,7 +233,7 @@
     /* --- ACCORDION --- */
     .accordion-trigger {
         width: 100%;
-        padding: 12px 20px;
+        padding: 12px 20px; /* Reduced vertical padding */
         background: #fdfdfd;
         border: none;
         border-top: 1px solid #f0f0f0;
@@ -439,12 +439,10 @@
 {
   "imports": {
     "react": "https://aistudiocdn.com/react@^19.2.0",
-    "react/": "https://aistudiocdn.com/react@^19.2.0/",
-    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/"
+    "react/": "https://aistudiocdn.com/react@^19.2.0/"
   }
 }
 </script>
-<link rel="stylesheet" href="/index.css">
 </head>
 <body>
 
@@ -538,31 +536,15 @@
         img: 'images/zestawy.jpg', 
         desc:{en:'Curated combinations of our finest rolls, perfect for experiencing a variety of flavors.', pl:'Starannie dobrane kompozycje naszych najlepszych rolek, idealne do poznania różnorodności smaków.'},
         items:[
-          { 
-            en:'OTO 16 pcs.', pl:'OTO 16 szt.', price:'90 zł',
-            descEN:'4x Gold California (surimi wrapped in salmon)\n4x Avocado Kani (surimi wrapped in avocado)\n4x Ohio Irygoma (butterfish in black sesame)\n4x Ebi Ten (shrimp tempura)',
-            descPL:'4x Gold California (surimi owijane łososiem)\n4x Awokado Kani (surimi owijane awokado)\n4x Ohio Irygoma (ryba maślana obtoczona w czarnym sezamie)\n4x Ebi Ten (krewetka w tempurze)'
-          },
-          { 
-            en:'AKA 22 pcs.', pl:'AKA 22 szt.', price:'130 zł',
-            descEN:'4x Rainbow (surimi wrapped in variety of fish)\n4x Mango Sake (salmon wrapped in mango)\n4x Ebi Ten (shrimp tempura)\n4x Avocado Kani (surimi wrapped in avocado)\n6x Futomaki Ohio Yaki (baked butterfish)',
-            descPL:'4x Rainbow (surimi owijane wachlarzem ryb)\n4x Mango Sake (łosoś owijany mango)\n4x Ebi Ten (krewetka w tempurze)\n4x Awokado Kani (surimi owijane awokado)\n6x Futomaki Ohio Yaki (pieczona maślana)'
-          },
-          { 
-            en:'AKASHI 38 pcs.', pl:'AKASHI 38 szt.', price:'210 zł',
-            descEN:'8x Rainbow (surimi wrapped in variety of fish)\n8x Goma Sake Yaki (baked salmon topped with wakame)\n4x Ebi Ten (shrimp tempura)\n6x Sake Philadelphia (salmon with cream cheese)\n6x Ohio Ten (butterfish in tempura)\n6x Maguro Spice (spicy tuna)',
-            descPL:'8x Rainbow (surimi owijane wachlarzem ryb)\n8x Goma Sake Yaki (pieczony łosoś obłożony wakame)\n4x Ebi Ten (krewetka w tempurze)\n6x Sake Philadelphia (łosoś z serkiem philadelphia)\n6x Ohio Ten (maślana w tempurze)\n6x Maguro Spice (pikantny tuńczyk)'
-          },
-          { 
-            en:'KUROISO 52 pcs.', pl:'KUROISO 52 szt.', price:'290 zł',
-            descEN:'8x Rainbow (surimi wrapped in variety of fish)\n8x Tempura Ohio (butterfish in tempura)\n8x Goma Yaki Sake (salmon topped with wakame)\n8x Kegon (salmon wrapped in eel)\n8x Ebi Ten Ohio Tataki (shrimp tempura topped with butterfish tartare)\n6x Sake Philadelphia (salmon with cream cheese)\n6x Suzuki Yaki (spicy zander)',
-            descPL:'8x Rainbow (surimi owijane wachlarzem ryb)\n8x Tempura Ohio (maślana w tempurze)\n8x Goma Yaki Sake (łosoś obłożony wakame)\n8x Kegon (łosoś owijany węgorzem)\n8x Ebi Ten Ohio Tataki (krewetka w tempurze obłożona tatarem z maślanej)\n6x Sake Philadelphia (łosoś z serkiem philadelphia)\n6x Suzuki Yaki (pikantny sandacz)'
-          },
-          {
-            en:'BIWA 60 pcs.', pl:'BIWA 60 szt.', price:'340 zł',
-            descEN:'8x Gold California (surimi wrapped in salmon)\n8x Ohio Ten Nashi (tempura butterfish wrapped in Japanese pear)\n8x Ebi Ten Avocado (tempura shrimp wrapped in avocado)\n8x Kegon (salmon wrapped in grilled eel)\n8x Tempura Cali Rae (spicy sea bream in tempura)\n6x Maguro Philadelphia (tuna with cream cheese)\n6x Ohio Spice Mango (spicy butterfish with mango)\n8x Nigiri (2x salmon, 2x tuna, 2x butterfish, 2x shrimp)',
-            descPL:'8x Gold California (surimi owijane łososiem)\n8x Ohio Ten Nashi (maślana w tempurze owijana japońską gruszką)\n8x Ebi Ten Avocado (krewetka w tempurze owijana awokado)\n8x Kegon (łosoś owijany węgorzem)\n8x Tempura Cali Rae (pikantna dorada cała w tempurze)\n6x Maguro Philadelphia (tuńczyk z serkiem philadelphia)\n6x Ohio Spice Mango (pikantna maślana z mango)\n8x Nigiri (2x łosoś, 2x tuńczyk, 2x maślana, 2x krewetka)'
-          }
+          { en:'Ki Iro 14 pc.', pl:'Ki Iro 14 szt.', price:'70 zł',
+            descEN:'3x hosomaki salmon (raw Fish)\n3x hosomaki calabash (marinated pumpkin shoots)\n4x rainbow (surimi wraped in variety of raw fish)\n4x futomaki Ohio yaki (baked butterfish)',
+            descPL:'3x hosomaki łosoś (surowa ryba)\n3x hosomaki tykwa (marynowane pędy dyni)\n4x rainbow (surimi owijane wachlarzem surowych ryb)\n4x futomaki ohioyaki (pieczona ryba maślana)' },
+          { en:'Orenji 16 pc.', pl:'Orenji 16 szt.', price:'90 zł',
+            descEN:'4x ebi ten (shrimp tempura)\n4x gold california (surimi wraped in raw salmon)\n4x avocado kani (surimi wraped in avocado)\n4x Ohio yaki (baked butterfish covered in seasame)',
+            descPL:'4x ebi ten (krewetka w tempurze)\n4x gold california (surimi owijane surowym łososiem)\n4x awokado kani (surimi owijane awokado)\n4x ohioyaki (pieczona ryba maślana obtoczona w sezamie)' },
+          { en:'Aka 24 pc.', pl:'Aka 24 szt.', price:'130 zł',
+            descEN:'4x gold california (surimi wraped in raw salmon)\n4x ebi ten (shrimp tempura)\n4x mango sake (raw salmon wraped in a mango)\n4x avocado kani (surimi wraped in avocado)\n6x futomaki ohio ten (butterfish tempura)',
+            descPL:'4x gold california (surimi owijane surowym łososiem)\n4x ebi ten (krewetka w tempurze)\n4x mango sake (surowy łosoś owijany mango)\n4x awokado kani (surimi owijane awokado)\n6x Futomaki ohio ten (ryba maślana w tempurze)' }
         ]
       },
       {
@@ -575,8 +557,8 @@
         ], 
         desc:{en:'A selection of light and fresh starters to begin your sushi experience.', pl:'Wybór lekkich i świeżych przystawek na rozpoczęcie przygody z sushi.'},
         items:[
-          {en:'Goma Wakame', pl:'Goma Wakame', price:'20 zł', descEN:'seaweed salad', descPL:'sałatka z wodorostów'},
-          {en:'Ebi Ten (3 pcs)', pl:'Ebi Ten (3 szt.)', price:'30 zł', descEN:'shrimp tempura served with ponzu sauce', descPL:'krewetki w tempurze z sosem ponzu'},
+          {en:'Goma Wakame', pl:'Goma Wakame', price:'20 zł', descEN:'wakame salad', descPL:'sałatka wakame'},
+          {en:'Ebiten (3 pcs)', pl:'Ebiten (3 szt.)', price:'30 zł', descEN:'shrimp tempura served with ponzu sauce', descPL:'krewetka tempura z sosem ponzu'},
           {en:'Sake Tataki', pl:'Sake Tataki', price:'50 zł', descEN:'salmon tartare', descPL:'tatar z łososia'},
           {en:'Maguro Tataki', pl:'Maguro Tataki', price:'55 zł', descEN:'tuna tartare', descPL:'tatar z tuńczyka'}
         ]
@@ -589,13 +571,12 @@
         note:{en:'The Ramen portion is 800ml, recommended for sharing (2 people).', pl:'Uwaga: Porcja Ramenu to 800ml, polecamy do podziału (dla 2 osób).'},
         items:[
           {en:'Ramen Chicken', pl:'Ramen Chicken', price:'48 zł', descEN:'flavorful broth with chicken, vegetables, and ramen noodles', descPL:'bulion z warzywami, mięsem i makaronem ramen'},
-          {en:'Ramen Beef', pl:'Ramen Beef', price:'55 zł', descEN:'beef ramen', descPL:'ramen wołowy'},
-          {en:'Seafood Udon', pl:'Seafood Udon', price:'58 zł', descEN:'Spicy seafood soup with vegetables and udon noodles', descPL:'Ostra zupa z owocami morza, warzywami i makaronem udon'}
+          {en:'Ramen Beef', pl:'Ramen Beef', price:'55 zł', descEN:'beef ramen', descPL:'ramen wołowy'}
         ]
       },
       {
         id:'nigiri',
-        title:{en:'Nigiri (2 pcs)', pl:'Nigiri (2 szt.)'},
+        title:{en:'Nigiri (2 pc)', pl:'Nigiri (2 szt.)'},
         img:'images/nigiri1.jpg',
         desc:{en:'Hand-pressed rice topped with fresh fish or seafood.', pl:'Ręcznie formowany ryż z plastrem świeżej ryby lub owoców morza.'},
         items:[
@@ -611,12 +592,12 @@
       },
       {
         id:'futomaki',
-        title:{en:'Futomaki (4 pcs)', pl:'Futomaki (4 szt.)'},
+        title:{en:'Futomaki (6 pc)', pl:'Futomaki (6 szt.)'},
         img:'images/futomaki.jpg',
         desc:{en:'Thick, traditional rolls with nori on the outside.', pl:'Grube, tradycyjne rolki z nori na zewnątrz.'},
         items:[
           {en:'Sake Philadelphia', pl:'Sake Philadelphia', price:'38 zł', descEN:'salmon with philadelphia cream cheese', descPL:'łosoś z serkiem philadelphia'},
-          {en:'Maguro Negi Togarashi', pl:'Maguro Negi Togarashi', price:'42 zł', descEN:'spicy tuna with leek', descPL:'tuńczyk z porem na ostro'},
+          {en:'Maguro Negi Togarashi', pl:'Maguro Negi Togarashi', price:'42 zł', descEN:'tuna with spicy leek', descPL:'tuńczyk z ostrą dymką'},
           {en:'Ohio Spice Mango', pl:'Ohio Spice Mango', price:'40 zł', descEN:'spicy butterfish with mango', descPL:'pikantna ryba maślana z mango'},
           {en:'Ebi Spicy', pl:'Ebi Spicy', price:'40 zł', descEN:'spicy shrimp', descPL:'pikantna krewetka'},
           {en:'Ebi Tempura', pl:'Ebi Tempura', price:'40 zł', descEN:'shrimp tempura', descPL:'krewetka w tempurze'},
@@ -627,7 +608,7 @@
       },
       {
         id:'uramaki',
-        title:{en:'Uramaki & Tempura (8 pcs)', pl:'Uramaki & Tempura (8 szt.)'},
+        title:{en:'Uramaki & Tempura (8 pc)', pl:'Uramaki & Tempura (8 szt.)'},
         img:'images/tempura.jpg',
         desc:{en:'Our selection of Uramaki (inside-out rolls) and crispy Tempura Uramaki.', pl:'Nasz wybór Uramaki (rolek ryżem na zewnątrz) oraz chrupiących Uramaki w Tempurze.'},
         isSplit: true,
@@ -645,7 +626,7 @@
           {en:'Sake Aburi', pl:'Sake Aburi', price:'45 zł', descEN:'salmon wrapped in seared spicy salmon', descPL:'łosoś owijany opalanym pikantnym łososiem'},
           {en:'Tobiko Ohio Ten', pl:'Tobiko Ohio Ten', price:'48 zł', descEN:'butterfish in tempura coated with caviar', descPL:'maślana w tempurze obtoczona kawiorem z latającej ryby'},
           {en:'Nashi Sake', pl:'Nashi Sake', price:'45 zł', descEN:'salmon wrapped in Japanese pear', descPL:'łosoś owijany japońską gruszką'},
-          {en:'Sake Tataki Ebiten', pl:'Sake Tataki Ebiten', price:'48 zł', descEN:'shrimp tempura wrapped in salmon tartare', descPL:'krewetka w tempurze obłożona tatarem z łososia'}
+          {en:'Sake Tataki Ebiten', pl:'Sake Tataki Ebiten', price:'48 zł', descEN:'shrimp tempura wrapped in salmon tartare', descPL:'krewetka w tempurze obtoczona tatarem z łososia'}
         ],
         itemsRight:[
           {en:'Tempura Sake', pl:'Tempura Sake', price:'38 zł', descEN:'salmon', descPL:'łosoś'},
@@ -657,22 +638,22 @@
       },
       {
         id:'oyakomaki',
-        title:{en:'Oyakomaki (2 pcs)', pl:'Oyakomaki (2 szt.)'},
+        title:{en:'Oyakomaki (2 pc)', pl:'Oyakomaki (2 szt.)'},
         img:'images/oyakomaki.jpg',
         desc:{en:'Our specialty rolls, often wrapped in fish or avocado instead of nori.', pl:'Nasze specjalne rolki, często zawijane w rybę lub awokado zamiast nori.'},
         items:[
           {en:'Sake Ebi Tataki', pl:'Sake Ebi Tataki', price:'36 zł', descEN:'chopped shrimp wrapped in salmon', descPL:'siekana krewetka owijana w łososia'},
           {en:'Sake Ikura', pl:'Sake Ikura', price:'42 zł', descEN:'caviar with salmon wrapped in tuna', descPL:'kawior z łososia owijany tuńczykiem'},
-          {en:'Maguro Sake Tataki', pl:'Maguro Sake Tataki', price:'45 zł', descEN:'chopped salmon wrapped in tuna', descPL:'siekany łosoś owijany tuńczykiem'}
+          {en:'Maguro Sake Tataki', pl:'Maguro Sake Tataki', price:'45 zł', descEN:'chopped salmon wrapped in tuna', descPL:'siekany łosoś owijany tuńczyком'}
         ]
       },
       {
         id:'sashimi',
-        title:{en:'Sashimi (9 pcs)', pl:'Sashimi (9 szt.)'},
+        title:{en:'Sashimi (9 pc)', pl:'Sashimi (9 szt.)'},
         img:'images/sashimi.jpg',
-        desc:{en:'Thinly sliced raw fish and seafood, served without rice.', pl:'Cienko krojone slajsy surowej ryby i owoców morza, podawane bez ryżu.'},
+        desc:{en:'Thinly sliced raw fish and seafood, served without rice.', pl:'Cienko krojone plastry surowej ryby i owoców morza, podawane bez ryżu.'},
         items:[
-          {en:'Mizu', pl:'Mizu', price:'95 zł', descEN:'slices of raw fish — salmon, tuna, butterfish', descPL:'slajsy surowej ryby — łosoś, tuńczyk, maślana'}
+          {en:'Mizu', pl:'Mizu', price:'95 zł', descEN:'slices of raw fish — salmon, tuna, butterfish', descPL:'plastry surowej ryby — łosoś, tuńczyk, maślana'}
         ]
       }
     ];
@@ -745,7 +726,6 @@
         // Items Logic (Split or Normal)
         let itemsHtml = '';
         if(section.isSplit) {
-            const tempuraNote = LANG==='en' ? '(whole roll in tempura batter)' : '(cała rolka w cieście tempura)';
             itemsHtml = `
             <div class="cols-2">
                 <div>
@@ -753,10 +733,7 @@
                     ${section.itemsLeft.map(renderItem).join('')}
                 </div>
                 <div>
-                    <div class="col-title">
-                        ${LANG==='en'?'Tempura':'W Tempurze'}
-                        <div style="font-size:10px; font-weight:400; text-transform:none; color:var(--muted); margin-top:2px;">${tempuraNote}</div>
-                    </div>
+                    <div class="col-title">${LANG==='en'?'Tempura':'W Tempurze'}</div>
                     ${section.itemsRight.map(renderItem).join('')}
                 </div>
             </div>`;
@@ -855,6 +832,5 @@
     render();
 
   </script>
-<script type="module" src="/index.tsx"></script>
 </body>
 </html>
