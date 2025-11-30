@@ -17,6 +17,13 @@
       --ease: cubic-bezier(0.25, 1, 0.5, 1);
     }
     *{box-sizing:border-box}
+    
+    /* Focus styles for accessibility */
+    :focus-visible {
+      outline: 3px solid var(--accent);
+      outline-offset: 2px;
+    }
+
     body{
       margin:0;
       font-family: "Georgia", "Times New Roman", serif;
@@ -133,7 +140,7 @@
       color: var(--muted);
       transition: all 0.3s var(--ease);
       font-family: sans-serif;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.03); /* Added shadow */
+      box-shadow: 0 2px 6px rgba(0,0,0,0.03);
     }
     .nav-chip:hover {
       background: #fff5f0;
@@ -174,7 +181,7 @@
     }
 
     .block-header {
-        padding: 20px 20px 0 20px; /* Removed bottom padding */
+        padding: 20px 20px 0 20px;
     }
     .block-header h2 {
         margin: 0 0 10px 0;
@@ -183,6 +190,18 @@
     }
 
     /* --- IMAGES --- */
+    /* Button wrapper for images to make them accessible */
+    .img-btn {
+      border: none;
+      background: none;
+      padding: 0;
+      margin: 0;
+      width: 100%;
+      display: block;
+      cursor: pointer;
+      text-align: left;
+    }
+
     .intro-media {
         width: 100%;
         padding: 0 8px 10px 8px; 
@@ -193,10 +212,10 @@
         height: 240px;
         object-fit: cover;
         border-radius: 12px;
-        cursor: pointer;
         transition: transform 0.5s var(--ease);
+        display: block;
     }
-    .single-img:hover { transform: scale(1.02); }
+    .img-btn:hover .single-img { transform: scale(1.02); }
 
     .stack-grid {
         display: flex;
@@ -208,10 +227,10 @@
         height: 160px; 
         object-fit: cover;
         border-radius: 12px;
-        cursor: pointer;
         transition: transform 0.4s var(--ease), box-shadow 0.4s var(--ease);
+        display: block;
     }
-    .stack-img:hover { 
+    .img-btn:hover .stack-img { 
         transform: scale(1.02); 
         box-shadow: 0 10px 20px rgba(0,0,0,0.1);
         z-index: 2;
@@ -234,16 +253,16 @@
     /* --- ACCORDION --- */
     .accordion-trigger {
         width: 100%;
-        padding: 15px 20px; /* Slightly taller */
-        background: #f7f7f7; /* Distinct light grey background */
+        padding: 15px 20px; 
+        background: #f7f7f7; 
         border: none;
-        border-top: 1px solid #e5e5e5; /* Slightly clearer border */
+        border-top: 1px solid #e5e5e5; 
         cursor: pointer;
         display: flex;
         justify-content: space-between;
         align-items: center;
         transition: all 0.2s;
-        box-shadow: 0 -4px 10px rgba(0,0,0,0.02); /* Shadow to separate from content */
+        box-shadow: 0 -4px 10px rgba(0,0,0,0.02); 
         position: relative;
         z-index: 10;
     }
@@ -261,17 +280,20 @@
         color: var(--muted);
         transition: transform 0.4s var(--ease);
     }
-    .accordion-wrapper.active .trigger-icon { transform: rotate(180deg); }
+    .accordion-trigger[aria-expanded="true"] .trigger-icon { transform: rotate(180deg); }
 
     .accordion-content {
         display: grid;
         grid-template-rows: 0fr;
         transition: grid-template-rows 0.6s var(--ease), opacity 0.6s var(--ease);
         opacity: 0.4;
+        visibility: hidden; /* Hide from screen readers when closed */
     }
-    .accordion-wrapper.active .accordion-content {
+    /* When expanded */
+    .accordion-trigger[aria-expanded="true"] + .accordion-content {
         grid-template-rows: 1fr;
         opacity: 1;
+        visibility: visible;
     }
     .min-h-0 { overflow: hidden; }
     .items-list { padding: 20px; background: #fff; }
@@ -318,17 +340,29 @@
         width: 56px; height: 56px;
         background: #fff;
         color: var(--accent);
+        border: 2px solid var(--accent);
         border-radius: 50%;
         display: flex; align-items: center; justify-content: center;
         font-size: 28px; font-weight: 800; font-family: sans-serif;
         box-shadow: 0 8px 24px rgba(216, 139, 106, 0.4);
         cursor: pointer;
         z-index: 100;
-        border: 2px solid var(--accent);
         transition: transform 0.3s var(--ease), opacity 0.3s var(--ease);
         animation: pulse 2s infinite;
     }
     .allergy-btn:hover { animation: none; transform: scale(1.1); }
+    /* Accessibility hidden class */
+    .visually-hidden {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+    }
     
     @keyframes pulse {
         0% { box-shadow: 0 0 0 0 rgba(216, 139, 106, 0.7); }
@@ -365,6 +399,7 @@
         position: absolute; top: 15px; right: 20px;
         font-size: 28px; color: var(--muted); cursor: pointer;
         line-height: 1;
+        background: none; border: none; padding: 0;
     }
     .info-icon { font-size: 40px; margin-bottom: 16px; display: block; }
     .info-title { font-size: 20px; font-weight: 700; margin-bottom: 12px; color: var(--text); }
@@ -434,6 +469,7 @@
     .lb-close {
         position: absolute; top: 20px; right: 30px;
         color: #fff; font-size: 40px; cursor: pointer;
+        background: none; border: none;
         opacity: 0.7; transition: 0.2s;
     }
     .lb-close:hover { opacity: 1; transform: scale(1.1); }
@@ -451,16 +487,16 @@
 <body>
 
   <div class="fixed-widget">
-    <div class="lang-row">
-      <button class="lang-btn active" onclick="setLang('pl')">PL</button>
-      <button class="lang-btn" onclick="setLang('en')">EN</button>
+    <div class="lang-row" role="group" aria-label="Language switcher">
+      <button class="lang-btn active" onclick="setLang('pl')" aria-pressed="true">PL</button>
+      <button class="lang-btn" onclick="setLang('en')" aria-pressed="false">EN</button>
     </div>
   </div>
   
-  <div class="allergy-btn" onclick="openInfo()">!</div>
+  <button class="allergy-btn" onclick="openInfo()" aria-label="Show allergy information">!</button>
 
   <div class="wrap">
-    <header>
+    <header role="banner">
       <div class="brand">
         <div class="logo">KS</div>
         <div>
@@ -470,38 +506,38 @@
       </div>
     </header>
 
-    <nav id="nav-container"></nav>
+    <nav id="nav-container" aria-label="Menu categories"></nav>
 
     <div class="content">
-      <div class="left" id="menu-container">
+      <main class="left" id="menu-container">
         <!-- Menu Items Render Here -->
-      </div>
+      </main>
 
-      <div class="right">
+      <aside class="right">
         <div class="contact-card">
           <h3 id="lbl-contacts">Kontakt</h3>
           <div id="contacts-list"></div>
         </div>
-      </div>
+      </aside>
     </div>
 
-    <footer>
+    <footer role="contentinfo">
       <span>Księstwo Sushi 2024</span>
       <span id="lbl-web">Menu — online version</span>
     </footer>
   </div>
 
   <!-- LIGHTBOX -->
-  <div class="lightbox" id="lb" onclick="closeLb()">
-    <span class="lb-close">&times;</span>
-    <img src="" class="lb-img" id="lb-img">
+  <div class="lightbox" id="lb" role="dialog" aria-modal="true" aria-label="Image view" onclick="closeLb()">
+    <button class="lb-close" onclick="closeLb()" aria-label="Close image">&times;</button>
+    <img src="" class="lb-img" id="lb-img" alt="Zoomed view">
   </div>
   
   <!-- INFO MODAL -->
-  <div class="info-modal" id="info-modal" onclick="closeInfo(event)">
+  <div class="info-modal" id="info-modal" role="dialog" aria-modal="true" aria-labelledby="info-title" onclick="closeInfo(event)">
     <div class="info-card">
-      <span class="info-close" onclick="closeInfo(event)">&times;</span>
-      <div class="info-icon">⚠️</div>
+      <button class="info-close" onclick="closeInfo(event)" aria-label="Close info">&times;</button>
+      <div class="info-icon" aria-hidden="true">⚠️</div>
       <div class="info-title" id="info-title"></div>
       <div class="info-text" id="info-text"></div>
       <div class="info-note" id="info-note"></div>
@@ -509,6 +545,38 @@
   </div>
 
   <script>
+    // --- FOCUS TRAP & A11Y HELPERS ---
+    let lastFocusedElement = null;
+
+    function trapFocus(element) {
+        const focusableElements = element.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+        const firstElement = focusableElements[0];
+        const lastElement = focusableElements[focusableElements.length - 1];
+
+        element.addEventListener('keydown', function(e) {
+            if (e.key === 'Tab') {
+                if (e.shiftKey) { /* shift + tab */
+                    if (document.activeElement === firstElement) {
+                        e.preventDefault();
+                        lastElement.focus();
+                    }
+                } else { /* tab */
+                    if (document.activeElement === lastElement) {
+                        e.preventDefault();
+                        firstElement.focus();
+                    }
+                }
+            }
+            if (e.key === 'Escape') {
+                if(element.id === 'lb') closeLb();
+                if(element.id === 'info-modal') closeInfo({target: element});
+            }
+        });
+        
+        // Focus first element
+        setTimeout(() => firstElement?.focus(), 50);
+    }
+
     // --- SCROLL LOGIC FOR LANG WIDGET ---
     window.addEventListener('scroll', () => {
         const widget = document.querySelector('.fixed-widget');
@@ -667,7 +735,15 @@
     function setLang(l) {
       if(LANG===l) return;
       LANG = l;
-      document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.innerText.toLowerCase() === l));
+      // Update HTML Lang attribute for A11y
+      document.documentElement.lang = l;
+      
+      const buttons = document.querySelectorAll('.lang-btn');
+      buttons.forEach(b => {
+          const isActive = b.innerText.toLowerCase() === l;
+          b.classList.toggle('active', isActive);
+          b.setAttribute('aria-pressed', isActive);
+      });
       
       const content = document.querySelector('.left');
       content.style.opacity = '0';
@@ -714,14 +790,22 @@
         const title = LANG==='en'?section.title.en:section.title.pl;
         const desc = LANG==='en'?section.desc.en:section.desc.pl;
         
-        // Image logic
+        // Image logic with A11y
         let mediaHtml = '';
         if(section.gallery) {
             mediaHtml = `<div class="stack-grid">
-                ${section.gallery.map(g=> `<img src="${g.src}" class="stack-img" onclick="openLb('${g.src}')">`).join('')}
+                ${section.gallery.map(g=> `
+                  <button type="button" class="img-btn" aria-label="Zoom image" onclick="openLb('${g.src}')">
+                    <img src="${g.src}" class="stack-img" alt="${title} gallery image">
+                  </button>
+                `).join('')}
             </div>`;
         } else if(section.img) {
-            mediaHtml = `<img src="${section.img}" class="single-img" onclick="openLb('${section.img}')">`;
+            mediaHtml = `
+              <button type="button" class="img-btn" aria-label="Zoom image" onclick="openLb('${section.img}')">
+                <img src="${section.img}" class="single-img" alt="${title} photo">
+              </button>
+            `;
         }
 
         // Note logic
@@ -746,20 +830,22 @@
         }
 
         const btnText = LANG==='en'?'View items':'Pokaż pozycje';
+        const sectionId = `sec-${section.id}`;
+        const contentId = `content-${section.id}`;
 
         return `
-        <div class="menu-block" id="${section.id}">
+        <div class="menu-block" id="${sectionId}">
             <div class="block-header"><h2>${title}</h2></div>
             <div class="intro-media">${mediaHtml}</div>
             <div class="intro-text">${desc}</div>
             ${noteHtml}
             
-            <div class="accordion-wrapper" onclick="toggleAcc(this)">
-                <button class="accordion-trigger">
+            <div class="accordion-wrapper">
+                <button class="accordion-trigger" aria-expanded="false" aria-controls="${contentId}" onclick="toggleAcc(this)">
                     <span class="trigger-text">${btnText}</span>
-                    <span class="trigger-icon">▼</span>
+                    <span class="trigger-icon" aria-hidden="true">▼</span>
                 </button>
-                <div class="accordion-content">
+                <div id="${contentId}" class="accordion-content">
                     <div class="min-h-0">
                         <div class="items-list">
                             ${itemsHtml}
@@ -790,46 +876,66 @@
 
       // Contacts
       document.getElementById('contacts-list').innerHTML = `
-        <a href="tel:+48502525544" class="c-btn">
-            <img src="images/phone.png"> <span>+48 502 525 544</span>
+        <a href="tel:+48502525544" class="c-btn" aria-label="Call +48 502 525 544">
+            <img src="images/phone.png" alt="" aria-hidden="true"> <span>+48 502 525 544</span>
         </a> 
-        <a href="https://www.instagram.com/ksiestwosushi?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" class="c-btn">
-            <img src="images/instagram.png"> <span>@ksiestwosushi</span>
+        <a href="https://www.instagram.com/ksiestwosushi?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" class="c-btn" aria-label="Visit Instagram">
+            <img src="images/instagram.png" alt="" aria-hidden="true"> <span>@ksiestwosushi</span>
         </a>
-        <a href="https://maps.app.goo.gl/ZT1PfgScLAJkTbhx7" target="_blank" class="c-btn">
-            <img src="images/google_maps.png"> <span>Krupówki 38A</span>
+        <a href="https://maps.app.goo.gl/ZT1PfgScLAJkTbhx7" target="_blank" class="c-btn" aria-label="Open Map">
+            <img src="images/google_maps.png" alt="" aria-hidden="true"> <span>Krupówki 38A</span>
         </a>
       `;
     }
 
     // --- ACCORDION LOGIC ---
-    function toggleAcc(el) {
-        el.classList.toggle('active');
+    function toggleAcc(btn) {
+        const expanded = btn.getAttribute('aria-expanded') === 'true';
+        btn.setAttribute('aria-expanded', !expanded);
+        
+        // The wrapper class toggle handles the CSS transition
+        // We need to traverse up to wrapper or find sibling content to apply visual class? 
+        // In previous CSS: .accordion-wrapper.active triggers styles.
+        // We changed onclick to button. Parent is .accordion-wrapper.
+        btn.parentElement.classList.toggle('active');
     }
 
     // --- INFO MODAL ---
     function openInfo() {
-        document.getElementById('info-modal').classList.add('open');
-        // Make button one-time use (hide it)
+        lastFocusedElement = document.activeElement;
+        const modal = document.getElementById('info-modal');
+        modal.classList.add('open');
+        
+        // Hide button
         const btn = document.querySelector('.allergy-btn');
         if(btn) {
             btn.style.opacity = '0';
             btn.style.pointerEvents = 'none';
+            btn.setAttribute('aria-hidden', 'true');
         }
+        
+        trapFocus(modal);
     }
+    
     function closeInfo(e) {
-        if (e.target.id === 'info-modal' || e.target.classList.contains('info-close')) {
+        if (e.target.id === 'info-modal' || e.target.classList.contains('info-close') || e.key === 'Escape') {
              document.getElementById('info-modal').classList.remove('open');
+             if(lastFocusedElement) lastFocusedElement.focus();
         }
     }
 
     // --- LIGHTBOX ---
     function openLb(src) {
+        lastFocusedElement = document.activeElement;
+        const lb = document.getElementById('lb');
         document.getElementById('lb-img').src = src;
-        document.getElementById('lb').classList.add('open');
+        lb.classList.add('open');
+        trapFocus(lb);
     }
+    
     function closeLb() {
         document.getElementById('lb').classList.remove('open');
+        if(lastFocusedElement) lastFocusedElement.focus();
     }
 
     // INIT
@@ -838,3 +944,4 @@
   </script>
 </body>
 </html>
+
