@@ -2,471 +2,904 @@
 <html lang="pl">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-  <title>Księstwo Sushi — Mobile Luxury</title>
-  
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Tenor+Sans&display=swap" rel="stylesheet">
-
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Księstwo Sushi — Menu</title>
   <style>
-    :root {
-      --bg: #000000;
-      --card-bg: #0a0a0a;
-      --gold: #c5a059;
-      --gold-light: #e5cfa0;
-      --text: #f0f0f0;
-      --muted: #888;
-      --glass: rgba(20, 20, 20, 0.6);
-      --border: rgba(197, 160, 89, 0.15);
-      --safe-area-bottom: env(safe-area-inset-bottom);
+    :root{
+      --bg:#f8f6f4;
+      --card:#ffffff;
+      --muted:#7b7b7b;
+      --accent:#d88b6a;
+      --text:#111;
+      --dark-btn:#222; 
+      --maxw:1000px;
+      --radius:16px;
+      /* Оновлена преміум тінь */
+      --shadow: 0 15px 40px -10px rgba(0,0,0,0.1);
+      --shadow-btn: 0 8px 20px -4px rgba(0,0,0,0.12); /* Тінь для кнопок */
+      --ease: cubic-bezier(0.23, 1, 0.32, 1);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: "Georgia", "Times New Roman", serif;
+      background: var(--bg);
+      color:var(--text);
+      -webkit-font-smoothing:antialiased;
+      padding:24px;
+      display:flex;
+      justify-content:center;
     }
 
-    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    .wrap{
+      width:100%;
+      max-width:var(--maxw);
+      background: rgba(255,255,255,0.92);
+      border-radius:24px;
+      padding:24px;
+      box-shadow: var(--shadow);
+      padding-top: 80px; 
+      backdrop-filter: blur(10px);
+      
+      opacity: 0;
+      animation: fadeIn 0.8s var(--ease) forwards;
+    }
     
-    body {
-      margin: 0;
-      background-color: var(--bg);
-      color: var(--text);
-      font-family: 'Tenor Sans', sans-serif; /* Clean, fashion sans-serif */
-      overflow-x: hidden;
-      padding-bottom: calc(100px + var(--safe-area-bottom)); /* Space for bottom nav */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
-    /* --- TYPOGRAPHY --- */
-    h1, h2, h3 { font-family: 'Cinzel', serif; font-weight: 400; margin: 0; letter-spacing: 0.05em; }
-    
-    /* --- LOADER --- */
-    .loader {
-      position: fixed; inset: 0; background: #000; z-index: 9999;
-      display: flex; align-items: center; justify-content: center;
-      transition: opacity 0.6s ease;
+    /* --- HEADER --- */
+    header{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      margin-bottom:20px;
     }
-    .loader.hidden { opacity: 0; pointer-events: none; }
-    .loader-text {
-      color: var(--gold); font-family: 'Cinzel', serif; font-size: 24px;
-      animation: pulse 2s infinite; letter-spacing: 4px;
+    .brand{
+      display:flex;
+      gap:16px;
+      align-items:center;
     }
+    .logo{
+      width:60px;
+      height:60px;
+      border-radius:12px;
+      background:linear-gradient(135deg,var(--accent),#f3c9b3);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-weight:700;
+      color:#fff;
+      font-size:20px;
+      box-shadow:0 8px 20px -6px rgba(216,139,106,0.6); /* Посилена тінь лого */
+    }
+    h1{margin:0;font-size:22px;letter-spacing:0.5px}
+    .sub{color:var(--muted); font-size:14px; font-style: italic;}
 
-    /* --- HEADER (Floating) --- */
-    .top-bar {
-      position: fixed; top: 0; left: 0; right: 0;
-      padding: 20px 24px;
-      display: flex; justify-content: space-between; align-items: center;
-      z-index: 100;
-      background: linear-gradient(to bottom, rgba(0,0,0,0.9), transparent);
-      pointer-events: none; /* Let clicks pass through except buttons */
-    }
-    .logo {
-      font-family: 'Cinzel', serif; color: var(--gold); font-size: 18px; 
-      pointer-events: auto; text-transform: uppercase; border: 1px solid var(--gold);
-      padding: 6px 12px;
-    }
-    .lang-toggle {
-      pointer-events: auto;
-      background: var(--glass); backdrop-filter: blur(10px);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 20px;
-      display: flex; overflow: hidden;
-    }
-    .l-btn {
-      border: none; background: transparent; color: var(--muted);
-      padding: 8px 14px; font-size: 11px; font-weight: 600;
-      transition: 0.3s;
-    }
-    .l-btn.active { color: #fff; background: rgba(255,255,255,0.1); }
-
-    /* --- HERO --- */
-    .hero {
-      height: 85vh;
-      display: flex; flex-direction: column; justify-content: flex-end;
-      padding: 30px;
-      position: relative;
-      background: radial-gradient(circle at 50% 30%, #1a1a1a 0%, #000 70%);
-    }
-    .hero::after {
-      content:''; position: absolute; inset: 0;
-      background: url('https://grainy-gradients.vercel.app/noise.svg');
-      opacity: 0.07; pointer-events: none;
-    }
-    .hero-big {
-      font-size: 42px; line-height: 1.1; color: #fff; margin-bottom: 10px;
-      background: linear-gradient(to right, #fff, #999);
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    }
-    .hero-sub {
-      color: var(--gold); font-size: 13px; text-transform: uppercase; letter-spacing: 3px;
-      margin-bottom: 40px; opacity: 0.8;
-    }
-
-    /* --- STICKY CATEGORY NAV --- */
-    .cat-nav-wrap {
-      position: sticky; top: 0; z-index: 90;
-      background: rgba(0,0,0,0.85);
-      backdrop-filter: blur(15px);
-      border-bottom: 1px solid rgba(255,255,255,0.05);
-      padding: 15px 0;
-      margin-bottom: 30px;
-    }
-    .cat-scroll {
-      display: flex; overflow-x: auto; gap: 20px;
-      padding: 0 24px;
-      scrollbar-width: none; /* Firefox */
-    }
-    .cat-scroll::-webkit-scrollbar { display: none; } /* Chrome */
-    
-    .cat-chip {
-      white-space: nowrap; color: var(--muted); font-size: 13px;
-      text-transform: uppercase; letter-spacing: 1px;
-      transition: color 0.3s; padding-bottom: 4px;
-      border-bottom: 2px solid transparent; flex-shrink: 0;
-    }
-    .cat-chip.active { color: var(--gold); border-color: var(--gold); }
-
-    /* --- MENU LIST --- */
-    .section-container {
-      padding: 0 20px;
-      margin-bottom: 60px;
-    }
-    .sec-title {
-      font-size: 24px; color: #fff; margin-bottom: 8px;
-    }
-    .sec-desc {
-      font-size: 13px; color: var(--muted); margin-bottom: 24px; font-style: italic;
-    }
-
-    .card {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      padding: 20px;
-      margin-bottom: 16px;
-      position: relative;
-      transition: transform 0.2s, background 0.2s;
-    }
-    .card:active { transform: scale(0.98); background: #111; }
-
-    .card-head {
-      display: flex; justify-content: space-between; align-items: flex-start;
-      margin-bottom: 10px;
-    }
-    .c-name { color: #fff; font-size: 16px; font-weight: 600; max-width: 75%; }
-    .c-price { color: var(--gold); font-family: 'Cinzel', serif; font-size: 16px; }
-    .c-desc { font-size: 12px; color: #777; line-height: 1.5; }
-
-    /* Split Grid for Uramaki */
-    .split-col { margin-bottom: 30px; }
-    .split-title { color: var(--gold); font-size: 12px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 15px; border-bottom: 1px solid #333; display: inline-block; padding-bottom: 5px;}
-
-    /* --- BOTTOM BAR (Floating Glass) --- */
-    .bottom-bar {
-      position: fixed; bottom: 20px; left: 20px; right: 20px;
-      background: rgba(30, 30, 30, 0.7);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 16px;
-      height: 64px;
-      display: flex; justify-content: space-around; align-items: center;
+    /* --- LANGUAGE SWITCHER --- */
+    .fixed-widget {
+      position: fixed;
+      top: 24px;
+      right: 24px;
       z-index: 200;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      transition: transform 0.4s var(--ease), opacity 0.4s var(--ease);
     }
-    .bb-item {
-      display: flex; flex-direction: column; align-items: center; gap: 4px;
-      color: #fff; text-decoration: none; font-size: 10px; text-transform: uppercase; letter-spacing: 1px;
-      opacity: 0.7; transition: opacity 0.2s;
+    .fixed-widget.hidden {
+        transform: translateY(-100px);
+        opacity: 0;
+        pointer-events: none;
     }
-    .bb-item.main {
-        background: var(--gold); color: #000;
-        width: 44px; height: 44px; border-radius: 50%;
-        display: flex; align-items: center; justify-content: center;
-        font-weight: bold; font-size: 18px; margin-top: -20px;
-        box-shadow: 0 5px 15px rgba(197, 160, 89, 0.4);
+
+    .lang-row {
+      background: #fff;
+      padding: 6px;
+      border-radius: 14px;
+      /* Глибока тінь для віджету */
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15); 
+      display: flex;
+      gap: 6px;
+    }
+    .lang-btn {
+      background: transparent;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 13px;
+      color: var(--muted);
+      transition: all 0.4s var(--ease);
+      position: relative;
+      overflow: hidden;
+    }
+    /* Активна кнопка мови з ефектом */
+    .lang-btn.active {
+      background: var(--accent);
+      color: white;
+      box-shadow: 0 4px 15px rgba(216,139,106,0.5);
+      transform: scale(1.05);
+    }
+    .lang-btn:not(.active):hover {
+      background: #fdfdfd;
+      color: var(--accent);
+    }
+
+    /* --- NAVIGATION --- */
+    nav{
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-bottom:30px;
+    }
+    .nav-chip{
+      background:#fff;
+      padding:12px 20px;
+      border-radius:100px;
+      font-weight:600;
+      border:none; /* Прибрали бордер для чистоти */
+      cursor:pointer;
+      font-size:14px;
+      color: var(--muted);
+      transition: all 0.4s var(--ease);
+      font-family: sans-serif;
+      /* Додана тінь */
+      box-shadow: var(--shadow-btn);
+    }
+    .nav-chip:hover {
+      background: #fff;
+      color: var(--accent);
+      transform: translateY(-3px);
+      box-shadow: 0 12px 24px rgba(0,0,0,0.15); /* Посилена тінь при наведенні */
+    }
+
+    /* --- LAYOUT --- */
+    .content{
+      display:flex;
+      gap:40px;
+      align-items:flex-start;
+    }
+    .left{
+      flex:1;
+      min-width:0; 
+      /* Преміум анімація зміни контенту */
+      transition: opacity 0.5s ease, filter 0.5s ease, transform 0.5s ease;
+      transform-origin: top center;
+    }
+    /* Клас для стану перемикання */
+    .left.switching {
+        opacity: 0;
+        filter: blur(8px);
+        transform: translateY(10px) scale(0.98);
+    }
+
+    .right{
+      width:300px;
+      flex-shrink: 0;
+    }
+
+    @media (max-width:900px){
+      .content{flex-direction:column-reverse; gap:30px;}
+      .right{width:100%}
+    }
+
+    /* --- SECTION STYLES --- */
+    .menu-block {
+        background: #fff;
+        border-radius: var(--radius);
+        margin-bottom: 24px;
+        box-shadow: 0 4px 25px rgba(0,0,0,0.03); /* Легка тінь блоку */
+        border: 1px solid rgba(0,0,0,0.02);
+        overflow: hidden;
+    }
+
+    .block-header {
+        padding: 20px;
+    }
+    .block-header h2 {
+        margin: 0 0 10px 0;
+        font-size: 20px;
+        color: var(--text);
+    }
+
+    /* --- IMAGES --- */
+    .intro-media {
+        width: 100%;
+        padding: 0 8px 10px 8px; 
+    }
+    
+    .single-img {
+        width: 100%;
+        height: 240px;
+        object-fit: cover;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: transform 0.5s var(--ease), box-shadow 0.5s var(--ease);
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    .single-img:hover { 
+        transform: scale(1.02); 
+        box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+    }
+
+    .stack-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+    .stack-img {
+        width: 100%;
+        height: 160px; 
+        object-fit: cover;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: transform 0.4s var(--ease), box-shadow 0.4s var(--ease);
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    .stack-img:hover { 
+        transform: scale(1.02); 
+        box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+        z-index: 2;
+    }
+
+    .intro-text {
+        padding: 0 20px 6px 20px; 
+        color: var(--muted);
+        font-size: 15px;
+        line-height: 1.5;
+    }
+    .note {
+        font-size: 13px;
+        color: var(--muted);
+        padding: 15px 20px;
+        background: #fafafa;
+        border-top: 1px solid #eee;
+    }
+
+    /* --- ACCORDION --- */
+    .accordion-trigger {
+        width: calc(100% - 40px); /* Відступи з боків для ефекту кнопки */
+        margin: 0 20px 20px 20px;
+        padding: 14px 24px;
+        background: #fdfdfd;
+        border: none;
+        border-radius: 12px; /* Закруглені кути */
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: all 0.3s var(--ease);
+        
+        /* Тінь для кнопки розгортання */
+        box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+        border: 1px solid rgba(0,0,0,0.02);
+    }
+    .accordion-trigger:hover { 
+        background: #fff; 
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    }
+    
+    .trigger-text {
+        font-weight: 700;
+        color: var(--accent);
+        font-size: 14px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    .trigger-icon {
+        font-size: 12px;
+        color: var(--muted);
+        transition: transform 0.4s var(--ease);
+    }
+    .accordion-wrapper.active .trigger-icon { transform: rotate(180deg); }
+
+    .accordion-content {
+        display: grid;
+        grid-template-rows: 0fr;
+        transition: grid-template-rows 0.6s var(--ease), opacity 0.6s var(--ease);
+        opacity: 0.4;
+    }
+    .accordion-wrapper.active .accordion-content {
+        grid-template-rows: 1fr;
         opacity: 1;
     }
-    .bb-item:active { opacity: 1; transform: scale(0.95); }
+    .min-h-0 { overflow: hidden; }
+    .items-list { padding: 0 20px 20px 20px; background: #fff; }
 
-    /* --- MODAL (Bottom Sheet) --- */
-    .sheet-overlay {
-      position: fixed; inset: 0; background: rgba(0,0,0,0.8);
-      z-index: 300; opacity: 0; pointer-events: none; transition: opacity 0.3s;
+    /* --- MENU ITEMS --- */
+    .item {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 16px;
+        padding-bottom: 16px;
+        border-bottom: 1px dashed #eee;
+        transition: transform 0.2s;
     }
-    .sheet-overlay.open { opacity: 1; pointer-events: auto; }
-    
-    .sheet {
-      position: fixed; bottom: 0; left: 0; right: 0;
-      background: #151515;
-      border-top-left-radius: 24px; border-top-right-radius: 24px;
-      padding: 30px 24px calc(30px + var(--safe-area-bottom));
-      transform: translateY(100%); transition: transform 0.4s cubic-bezier(0.1, 0.9, 0.2, 1);
-      z-index: 301;
-      border-top: 1px solid #333;
+    .item:last-child {
+        margin-bottom: 0;
+        padding-bottom: 0;
+        border-bottom: none;
     }
-    .sheet-overlay.open .sheet { transform: translateY(0); }
-    
-    .sheet-handle {
-      width: 40px; height: 4px; background: #333; border-radius: 2px;
-      margin: 0 auto 20px;
+    .item-info { flex: 1; padding-right: 20px; }
+    .item-name { font-weight: 700; font-size: 16px; margin-bottom: 4px; }
+    .item-desc { 
+        font-size: 14px; color: var(--muted); line-height: 1.4; white-space: pre-line;
     }
-    .sheet h3 { color: var(--gold); margin-bottom: 15px; font-size: 18px; }
-    .sheet p { color: #999; font-size: 13px; line-height: 1.6; margin: 0; }
+    .item-price { 
+        font-weight: 700; color: var(--accent); font-size: 16px; white-space: nowrap;
+    }
 
-    /* Helper Animation */
-    @keyframes pulse { 0% {opacity:0.6;} 50% {opacity:1;} 100% {opacity:0.6;} }
+    /* --- URAMAKI GRID --- */
+    .cols-2 {
+        display: grid; grid-template-columns: 1fr 1fr; gap: 30px;
+    }
+    .col-title {
+        font-size: 14px; font-weight: 700; color: var(--accent);
+        text-transform: uppercase; border-bottom: 2px solid #ffeadd;
+        padding-bottom: 8px; margin-bottom: 16px;
+    }
+    @media (max-width:700px) { .cols-2 { grid-template-columns: 1fr; gap: 20px; } }
+
+    /* --- FLOATING ALLERGY BTN --- */
+    .allergy-btn {
+        position: fixed;
+        bottom: 30px; 
+        right: 30px;
+        width: 56px; height: 56px;
+        background: #fff;
+        color: var(--accent);
+        border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 28px; font-weight: 800; font-family: sans-serif;
+        box-shadow: 0 8px 25px rgba(216, 139, 106, 0.5); /* Глибока тінь */
+        cursor: pointer;
+        z-index: 100;
+        border: 2px solid var(--accent);
+        transition: transform 0.3s var(--ease), box-shadow 0.3s var(--ease);
+        animation: pulse 2s infinite;
+    }
+    .allergy-btn:hover { 
+        animation: none; 
+        transform: scale(1.1) translateY(-2px);
+        box-shadow: 0 15px 35px rgba(216, 139, 106, 0.6);
+    }
+    
+    @keyframes pulse {
+        0% { box-shadow: 0 0 0 0 rgba(216, 139, 106, 0.7); }
+        70% { box-shadow: 0 0 0 15px rgba(216, 139, 106, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(216, 139, 106, 0); }
+    }
+
+    /* --- INFO MODAL --- */
+    .info-modal {
+        position: fixed; inset: 0; z-index: 2000;
+        background: rgba(0,0,0,0.6);
+        backdrop-filter: blur(8px);
+        display: flex; justify-content: center; align-items: center;
+        opacity: 0; pointer-events: none;
+        transition: opacity 0.3s var(--ease);
+        padding: 20px;
+    }
+    .info-modal.open { opacity: 1; pointer-events: auto; }
+    
+    .info-card {
+        background: #fff;
+        width: 100%; max-width: 450px;
+        padding: 30px;
+        border-radius: 20px;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        transform: scale(0.9); opacity: 0;
+        transition: all 0.4s var(--ease);
+        position: relative;
+        text-align: center;
+    }
+    .info-modal.open .info-card { transform: scale(1); opacity: 1; }
+    
+    .info-close {
+        position: absolute; top: 15px; right: 20px;
+        font-size: 28px; color: var(--muted); cursor: pointer;
+        line-height: 1;
+    }
+    .info-icon { font-size: 40px; margin-bottom: 16px; display: block; }
+    .info-title { font-size: 20px; font-weight: 700; margin-bottom: 12px; color: var(--text); }
+    .info-text { font-size: 15px; line-height: 1.6; color: var(--muted); margin-bottom: 20px; }
+    .info-note { 
+        font-size: 13px; font-style: italic; color: #555; 
+        background: #f4f4f4; padding: 12px; border-radius: 12px; 
+    }
+
+    /* --- SIDEBAR & FOOTER --- */
+    .contact-card {
+        background: #fff;
+        padding: 24px;
+        border-radius: var(--radius);
+        box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+        border: 1px solid rgba(0,0,0,0.02);
+    }
+    .contact-card h3 { margin: 0 0 20px 0; font-size: 18px; }
+    
+    .c-btn {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        background: #222;
+        color: #fff;
+        text-decoration: none;
+        padding: 14px 20px;
+        border-radius: 50px;
+        margin-bottom: 12px;
+        font-size: 14px;
+        font-weight: 600;
+        transition: all 0.3s var(--ease);
+        /* Тінь кнопок контактів */
+        box-shadow: 0 8px 20px rgba(0,0,0,0.2); 
+    }
+    .c-btn img { width: 20px; height: 20px; filter: invert(1); }
+    .c-btn:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 28px rgba(0,0,0,0.3);
+        background: var(--accent); /* Зміна кольору при наведенні для преміум ефекту */
+    }
+
+    footer {
+        margin-top: 40px;
+        padding-top: 20px;
+        border-top: 1px solid rgba(0,0,0,0.05);
+        display: flex;
+        justify-content: space-between;
+        color: var(--muted);
+        font-size: 13px;
+    }
+
+    /* --- LIGHTBOX --- */
+    .lightbox {
+        position: fixed; inset: 0; z-index: 999;
+        background: rgba(0,0,0,0.9);
+        display: flex; justify-content: center; align-items: center;
+        opacity: 0; pointer-events: none;
+        transition: opacity 0.3s var(--ease);
+        backdrop-filter: blur(5px);
+    }
+    .lightbox.open { opacity: 1; pointer-events: auto; }
+    .lb-img {
+        max-width: 90%; max-height: 90vh;
+        border-radius: 12px;
+        transform: scale(0.9);
+        transition: transform 0.4s var(--ease);
+        box-shadow: 0 0 50px rgba(0,0,0,0.5);
+    }
+    .lightbox.open .lb-img { transform: scale(1); }
+    .lb-close {
+        position: absolute; top: 20px; right: 30px;
+        color: #fff; font-size: 40px; cursor: pointer;
+        opacity: 0.7; transition: 0.2s;
+    }
+    .lb-close:hover { opacity: 1; transform: scale(1.1); }
 
   </style>
+<script type="importmap">
+{
+  "imports": {
+    "react": "https://aistudiocdn.com/react@^19.2.0",
+    "react/": "https://aistudiocdn.com/react@^19.2.0/",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
 </head>
 <body>
 
-  <div class="loader" id="loader">
-    <div class="loader-text">KS.</div>
-  </div>
-
-  <header class="top-bar">
-    <div class="logo">KS</div>
-    <div class="lang-toggle">
-      <button class="l-btn active" onclick="setLang('pl')">PL</button>
-      <button class="l-btn" onclick="setLang('en')">EN</button>
+  <div class="fixed-widget">
+    <div class="lang-row">
+      <button class="lang-btn active" onclick="setLang('pl')">PL</button>
+      <button class="lang-btn" onclick="setLang('en')">EN</button>
     </div>
-  </header>
-
-  <div class="hero">
-    <div class="hero-big">Premium <br> Sushi <br> Art</div>
-    <div class="hero-sub" id="hero-sub">Zakopane — Haute Cuisine</div>
   </div>
+  
+  <div class="allergy-btn" onclick="openInfo()">!</div>
 
-  <div class="cat-nav-wrap">
-    <div class="cat-scroll" id="nav-container">
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <div class="logo">KS</div>
+        <div>
+          <h1>Księstwo Sushi</h1>
+          <div class="sub" id="sub">Fine sushi — Menu</div>
+        </div>
       </div>
-  </div>
+    </header>
 
-  <div id="menu-container">
+    <nav id="nav-container"></nav>
+
+    <div class="content">
+      <div class="left" id="menu-container">
+        </div>
+
+      <div class="right">
+        <div class="contact-card">
+          <h3 id="lbl-contacts">Kontakt</h3>
+          <div id="contacts-list"></div>
+        </div>
+      </div>
     </div>
 
-  <div class="bottom-bar">
-    <div class="bb-item" onclick="openSheet()">
-      <span>Info</span>
-    </div>
-    <a href="tel:+48502525544" class="bb-item main">
-      📞
-    </a>
-    <a href="https://instagram.com/ksiestwosushi" target="_blank" class="bb-item">
-      <span>Insta</span>
-    </a>
+    <footer>
+      <span>Księstwo Sushi 2024</span>
+      <span id="lbl-web">Menu — online version</span>
+    </footer>
   </div>
 
-  <div class="sheet-overlay" id="sheet-overlay" onclick="closeSheet()">
-    <div class="sheet" onclick="event.stopPropagation()">
-      <div class="sheet-handle"></div>
-      <h3 id="sheet-title">Alergeny</h3>
-      <p id="sheet-text">Tekst...</p>
+  <div class="lightbox" id="lb" onclick="closeLb()">
+    <span class="lb-close">×</span>
+    <img src="" class="lb-img" id="lb-img">
+  </div>
+  
+  <div class="info-modal" id="info-modal" onclick="closeInfo(event)">
+    <div class="info-card">
+      <span class="info-close" onclick="closeInfo(event)">×</span>
+      <div class="info-icon">⚠️</div>
+      <div class="info-title" id="info-title"></div>
+      <div class="info-text" id="info-text"></div>
+      <div class="info-note" id="info-note"></div>
     </div>
   </div>
 
   <script>
-    // --- DATA ---
-    const TEXTS = {
-        sub: { en: 'Zakopane — Haute Cuisine', pl: 'Zakopane — Haute Cuisine' },
-        allergyTitle: { en: 'Information', pl: 'Informacje' },
-        allergyText: {
-            en: 'Ingredients may include: gluten, sesame, seafood, spicy mayo, edible gold. \n\n We add a 10% service charge to the final bill.',
-            pl: 'Dania mogą zawierać: gluten, sezam, owoce morza, ostry majonez, złoto jadalne. \n\n Doliczamy 10% serwisu kelnerskiego.'
+    // --- SCROLL LOGIC FOR LANG WIDGET ---
+    window.addEventListener('scroll', () => {
+        const widget = document.querySelector('.fixed-widget');
+        if (window.scrollY > 50) {
+            widget.classList.add('hidden');
+        } else {
+            widget.classList.remove('hidden');
+        }
+    });
+
+    // --- ALLERGENS ---
+    const ALLERGIES = {
+        title: { en: 'Allergy Information', pl: 'Informacja o alergenach' },
+        text: {
+            en: 'According to the recipe, they may contain: gluten, cucumber, oshinko, kampyo, avocado, mango, melon, lettuce, sesame seeds, Philadelphia cream cheese, mayonnaise, sauces, edible gold.',
+            pl: 'Zgodnie z recepturą mogą zawierać: gluten, ogórek, oshinko, kampyo, awokado, mango, melon, sałatę, sezam, serek philadelphia, majonez, sosy, złoto jadalne.'
+        },
+        service: {
+            en: 'We kindly inform you that we add a waiter service of 10% to the final bill.',
+            pl: 'Uprzejmie informujemy, że doliczamy serwis kelnerski w wysokości 10% do rachunku końcowego.'
         }
     };
 
+    // --- DATA ---
     const DATA = [
       {
         id:'sets',
-        title:{en:'Sets', pl:'Zestawy'},
-        desc:{en:'The Collection', pl:'Kolekcja Smaków'},
+        title:{en:'Sushi Sets', pl:'Zestawy Sushi'},
+        img: 'images/zestawy.jpg', 
+        desc:{en:'Curated combinations of our finest rolls, perfect for experiencing a variety of flavors.', pl:'Starannie dobrane kompozycje naszych najlepszych rolek, idealne do poznania różnorodności smaków.'},
         items:[
-          { en:'OTO 16 pcs', pl:'OTO 16 szt.', price:'90 zł', descEN:'Gold California, Avocado Kani, Ohio Irygoma, Ebi Ten', descPL:'Gold California, Awokado Kani, Ohio Irygoma, Ebi Ten' },
-          { en:'AKA 22 pcs', pl:'AKA 22 szt.', price:'130 zł', descEN:'Rainbow, Mango Sake, Ebi Ten, Avocado Kani, Futomaki Ohio Yaki', descPL:'Rainbow, Mango Sake, Ebi Ten, Awokado Kani, Futomaki Ohio Yaki' },
-          { en:'AKASHI 38 pcs', pl:'AKASHI 38 szt.', price:'210 zł', descEN:'Rainbow, Goma Sake Yaki, Ebi Ten, Sake Philadelphia, Ohio Ten, Maguro Spice', descPL:'Rainbow, Goma Sake Yaki, Ebi Ten, Sake Philadelphia, Ohio Ten, Maguro Spice' },
-          { en:'KUROISO 52 pcs', pl:'KUROISO 52 szt.', price:'290 zł', descEN:'Rainbow, Tempura Ohio, Goma Yaki Sake, Kegon, Ebi Ten Ohio Tataki, Sake Philadelphia, Suzuki Yaki', descPL:'Rainbow, Tempura Ohio, Goma Yaki Sake, Kegon, Ebi Ten Ohio Tataki, Sake Philadelphia, Suzuki Yaki' },
-          { en:'BIWA 60 pcs', pl:'BIWA 60 szt.', price:'340 zł', descEN:'Exclusive set with Nigiri, Tempura & Rolls wrapped in gold standard ingredients.', descPL:'Ekskluzywny set z Nigiri, Tempurą i Rolkami w najlepszym wydaniu.' }
+          { 
+            en:'OTO 16 pcs.', pl:'OTO 16 szt.', price:'90 zł',
+            descEN:'4x Gold California (surimi wrapped in salmon)\n4x Avocado Kani (surimi wrapped in avocado)\n4x Ohio Irygoma (butterfish in black sesame)\n4x Ebi Ten (shrimp tempura)',
+            descPL:'4x Gold California (surimi owijane łososiem)\n4x Awokado Kani (surimi owijane awokado)\n4x Ohio Irygoma (ryba maślana obtoczona w czarnym sezamie)\n4x Ebi Ten (krewetka w tempurze)'
+          },
+          { 
+            en:'AKA 22 pcs.', pl:'AKA 22 szt.', price:'130 zł',
+            descEN:'4x Rainbow (surimi wrapped in variety of fish)\n4x Mango Sake (salmon wrapped in mango)\n4x Ebi Ten (shrimp tempura)\n4x Avocado Kani (surimi wrapped in avocado)\n6x Futomaki Ohio Yaki (baked butterfish)',
+            descPL:'4x Rainbow (surimi owijane wachlarzem ryb)\n4x Mango Sake (łosoś owijany mango)\n4x Ebi Ten (krewetka w tempurze)\n4x Awokado Kani (surimi owijane awokado)\n6x Futomaki Ohio Yaki (pieczona maślana)'
+          },
+          { 
+            en:'AKASHI 38 pcs.', pl:'AKASHI 38 szt.', price:'210 zł',
+            descEN:'8x Rainbow (surimi wrapped in variety of fish)\n8x Goma Sake Yaki (baked salmon topped with wakame)\n4x Ebi Ten (shrimp tempura)\n6x Sake Philadelphia (salmon with cream cheese)\n6x Ohio Ten (butterfish in tempura)\n6x Maguro Spice (spicy tuna)',
+            descPL:'8x Rainbow (surimi owijane wachlarzem ryb)\n8x Goma Sake Yaki (pieczony łosoś obłożony wakame)\n4x Ebi Ten (krewetka w tempurze)\n6x Sake Philadelphia (łosoś z serkiem philadelphia)\n6x Ohio Ten (maślana w tempurze)\n6x Maguro Spice (pikantny tuńczyk)'
+          },
+          { 
+            en:'KUROISO 52 pcs.', pl:'KUROISO 52 szt.', price:'290 zł',
+            descEN:'8x Rainbow (surimi wrapped in variety of fish)\n8x Tempura Ohio (butterfish in tempura)\n8x Goma Yaki Sake (salmon topped with wakame)\n8x Kegon (salmon wrapped in eel)\n8x Ebi Ten Ohio Tataki (shrimp tempura topped with butterfish tartare)\n6x Sake Philadelphia (salmon with cream cheese)\n6x Suzuki Yaki (spicy zander)',
+            descPL:'8x Rainbow (surimi owijane wachlarzem ryb)\n8x Tempura Ohio (maślana w tempurze)\n8x Goma Yaki Sake (łosoś obłożony wakame)\n8x Kegon (łosoś owijany węgorzem)\n8x Ebi Ten Ohio Tataki (krewetka w tempurze obłożona tatarem z maślanej)\n6x Sake Philadelphia (łosoś z serkiem philadelphia)\n6x Suzuki Yaki (pikantny sandacz)'
+          },
+          {
+            en:'BIWA 60 pcs.', pl:'BIWA 60 szt.', price:'340 zł',
+            descEN:'8x Gold California (surimi wrapped in salmon)\n8x Ohio Ten Nashi (tempura butterfish wrapped in Japanese pear)\n8x Ebi Ten Avocado (tempura shrimp wrapped in avocado)\n8x Kegon (salmon wrapped in grilled eel)\n8x Tempura Cali Rae (spicy sea bream in tempura)\n6x Maguro Philadelphia (tuna with cream cheese)\n6x Ohio Spice Mango (spicy butterfish with mango)\n8x Nigiri (2x salmon, 2x tuna, 2x butterfish, 2x shrimp)',
+            descPL:'8x Gold California (surimi owijane łososiem)\n8x Ohio Ten Nashi (maślana w tempurze owijana japońską gruszką)\n8x Ebi Ten Avocado (krewetka w tempurze owijana awokado)\n8x Kegon (łosoś owijany węgorzem)\n8x Tempura Cali Rae (pikantna dorada cała w tempurze)\n6x Maguro Philadelphia (tuńczyk z serkiem philadelphia)\n6x Ohio Spice Mango (pikantna maślana z mango)\n8x Nigiri (2x łosoś, 2x tuńczyk, 2x maślana, 2x krewetka)'
+          }
         ]
       },
       {
         id:'starters',
-        title:{en:'Starters', pl:'Start'},
-        desc:{en:'Appetizers', pl:'Przystawki'},
+        title:{en:'Starters', pl:'Przystawki'},
+        gallery:[
+            {src:'images/wakame.jpg'},
+            {src:'images/ebiten.jpg'},
+            {src:'images/sake-tataki.jpg'}
+        ], 
+        desc:{en:'A selection of light and fresh starters to begin your sushi experience.', pl:'Wybór lekkich i świeżych przystawek na rozpoczęcie przygody z sushi.'},
         items:[
-          {en:'Goma Wakame', pl:'Goma Wakame', price:'20 zł', descEN:'Seaweed salad', descPL:'Sałatka z wodorostów'},
-          {en:'Ebi Ten (3)', pl:'Ebi Ten (3)', price:'30 zł', descEN:'Shrimp tempura, ponzu', descPL:'Krewetki w tempurze, ponzu'},
-          {en:'Sake Tataki', pl:'Sake Tataki', price:'50 zł', descEN:'Salmon tartare', descPL:'Tatar z łososia'},
-          {en:'Maguro Tataki', pl:'Maguro Tataki', price:'55 zł', descEN:'Tuna tartare', descPL:'Tatar z tuńczyka'}
+          {en:'Goma Wakame', pl:'Goma Wakame', price:'20 zł', descEN:'seaweed salad', descPL:'sałatka z wodorostów'},
+          {en:'Ebi Ten (3 pcs)', pl:'Ebi Ten (3 szt.)', price:'30 zł', descEN:'shrimp tempura served with ponzu sauce', descPL:'krewetki w tempurze z sosem ponzu'},
+          {en:'Sake Tataki', pl:'Sake Tataki', price:'50 zł', descEN:'salmon tartare', descPL:'tatar z łososia'},
+          {en:'Maguro Tataki', pl:'Maguro Tataki', price:'55 zł', descEN:'tuna tartare', descPL:'tatar z tuńczyka'}
         ]
       },
       {
         id:'soups',
-        title:{en:'Bowls', pl:'Zupy'},
-        desc:{en:'Soups', pl:'Buliony'},
+        title:{en:'Soups', pl:'Zupy'},
+        img:'images/ramen-zupa.jpg',
+        desc:{en:'Traditional Japanese soups, including rich Ramen bowls with various fillings.', pl:'Tradycyjne japońskie zupy, w tym bogate miski Ramenu z różnymi dodatkami.'},
+        note:{en:'The Ramen portion is 800ml, recommended for sharing (2 people).', pl:'Uwaga: Porcja Ramenu to 800ml, polecamy do podziału (dla 2 osób).'},
         items:[
-          {en:'Ramen Chicken', pl:'Ramen Chicken', price:'48 zł', descEN:'800ml sharing portion', descPL:'800ml porcja dla dwojga'},
-          {en:'Ramen Beef', pl:'Ramen Beef', price:'55 zł', descEN:'800ml sharing portion', descPL:'800ml porcja dla dwojga'},
-          {en:'Seafood Udon', pl:'Seafood Udon', price:'58 zł', descEN:'Spicy seafood & vegetables', descPL:'Ostra z owocami morza'}
+          {en:'Ramen Chicken', pl:'Ramen Chicken', price:'48 zł', descEN:'flavorful broth with chicken, vegetables, and ramen noodles', descPL:'bulion z warzywami, mięsem i makaronem ramen'},
+          {en:'Ramen Beef', pl:'Ramen Beef', price:'55 zł', descEN:'beef ramen', descPL:'ramen wołowy'},
+          {en:'Seafood Udon', pl:'Seafood Udon', price:'58 zł', descEN:'Spicy seafood soup with vegetables and udon noodles', descPL:'Ostra zupa z owocami morza, warzywami i makaronem udon'}
         ]
       },
       {
         id:'nigiri',
-        title:{en:'Nigiri', pl:'Nigiri'},
-        desc:{en:'2 pieces', pl:'2 sztuki'},
+        title:{en:'Nigiri (2 pcs)', pl:'Nigiri (2 szt.)'},
+        img:'images/nigiri1.jpg',
+        desc:{en:'Hand-pressed rice topped with fresh fish or seafood.', pl:'Ręcznie formowany ryż z plastrem świeżej ryby lub owoców morza.'},
         items:[
-          {en:'Sake', pl:'Sake', price:'26 zł', descEN:'Salmon', descPL:'Łosoś'},
-          {en:'Maguro', pl:'Maguro', price:'30 zł', descEN:'Tuna', descPL:'Tuńczyk'},
-          {en:'Unagi', pl:'Unagi', price:'30 zł', descEN:'Eel', descPL:'Węgorz'},
-          {en:'Hotate', pl:'Hotate', price:'32 zł', descEN:'Scallops', descPL:'Małże św. Jakuba'},
-          {en:'Ebi', pl:'Ebi', price:'30 zł', descEN:'Shrimp', descPL:'Krewetka'}
+          {en:'Sake', pl:'Sake', price:'26 zł', descEN:'salmon', descPL:'łosoś'},
+          {en:'Ohio', pl:'Ohio', price:'25 zł', descEN:'butterfish', descPL:'ryba maślana'},
+          {en:'Maguro', pl:'Maguro', price:'30 zł', descEN:'tuna', descPL:'tuńczyk'},
+          {en:'Unagi', pl:'Unagi', price:'30 zł', descEN:'eel', descPL:'węgorz'},
+          {en:'Hotate', pl:'Hotate', price:'32 zł', descEN:'scallops', descPL:'małże św. Jakuba'},
+          {en:'Tako', pl:'Tako', price:'30 zł', descEN:'octopus', descPL:'ośmiornica'},
+          {en:'Ika', pl:'Ika', price:'30 zł', descEN:'squid', descPL:'kalmar'},
+          {en:'Ebi', pl:'Ebi', price:'30 zł', descEN:'shrimp', descPL:'krewetka'}
         ]
       },
       {
         id:'futomaki',
-        title:{en:'Futomaki', pl:'Futomaki'},
-        desc:{en:'Classic Rolls', pl:'Klasyczne Rolki'},
+        title:{en:'Futomaki (4 pcs)', pl:'Futomaki (4 szt.)'},
+        img:'images/futomaki.jpg',
+        desc:{en:'Thick, traditional rolls with nori on the outside.', pl:'Grube, tradycyjne rolki z nori na zewnątrz.'},
         items:[
-          {en:'Sake Philadelphia', pl:'Sake Philadelphia', price:'38 zł', descEN:'Salmon, cream cheese', descPL:'Łosoś, serek philadelphia'},
-          {en:'Maguro Negi Togarashi', pl:'Maguro Negi Togarashi', price:'42 zł', descEN:'Spicy tuna', descPL:'Tuńczyk na ostro'},
-          {en:'Ohio Spice Mango', pl:'Ohio Spice Mango', price:'40 zł', descEN:'Spicy butterfish, mango', descPL:'Pikantna maślana, mango'},
-          {en:'Unagi Kabayaki', pl:'Unagi Kabayaki', price:'45 zł', descEN:'Eel, kabayaki', descPL:'Węgorz, kabayaki'}
+          {en:'Sake Philadelphia', pl:'Sake Philadelphia', price:'38 zł', descEN:'salmon with philadelphia cream cheese', descPL:'łosoś z serkiem philadelphia'},
+          {en:'Maguro Negi Togarashi', pl:'Maguro Negi Togarashi', price:'42 zł', descEN:'spicy tuna with leek', descPL:'tuńczyk z porem na ostro'},
+          {en:'Ohio Spice Mango', pl:'Ohio Spice Mango', price:'40 zł', descEN:'spicy butterfish with mango', descPL:'pikantna ryba maślana z mango'},
+          {en:'Ebi Spicy', pl:'Ebi Spicy', price:'40 zł', descEN:'spicy shrimp', descPL:'pikantna krewetka'},
+          {en:'Ebi Tempura', pl:'Ebi Tempura', price:'40 zł', descEN:'shrimp tempura', descPL:'krewetka w tempurze'},
+          {en:'Unagi Kabayaki', pl:'Unagi Kabayaki', price:'45 zł', descEN:'grilled eel with kabayaki sauce', descPL:'grillowany węgorz w sosie kabayaki'},
+          {en:'Ika Tempura', pl:'Ika Tempura', price:'48 zł', descEN:'squid tempura', descPL:'kalmar w tempurze'},
+          {en:'Veggie', pl:'Veggie', price:'36 zł', descEN:'vegetables', descPL:'warzywa'}
         ]
       },
       {
         id:'uramaki',
-        title:{en:'Uramaki', pl:'Uramaki'},
-        desc:{en:'Inside Out & Tempura', pl:'Uramaki i Tempura'},
+        title:{en:'Uramaki & Tempura (8 pcs)', pl:'Uramaki & Tempura (8 szt.)'},
+        img:'images/tempura.jpg',
+        desc:{en:'Our selection of Uramaki (inside-out rolls) and crispy Tempura Uramaki.', pl:'Nasz wybór Uramaki (rolek ryżem na zewnątrz) oraz chrupiących Uramaki w Tempurze.'},
         isSplit: true,
         itemsLeft:[
-          {en:'Gold California', pl:'Gold California', price:'40 zł', descEN:'Surimi, salmon', descPL:'Surimi, łosoś'},
-          {en:'Rainbow', pl:'Rainbow', price:'48 zł', descEN:'Assorted fish', descPL:'Wachlarz ryb'},
-          {en:'Kegon', pl:'Kegon', price:'45 zł', descEN:'Salmon, eel', descPL:'Łosoś, węgorz'},
-          {en:'Mango Sake', pl:'Mango Sake', price:'42 zł', descEN:'Salmon, mango', descPL:'Łosoś, mango'}
+          {en:'Sake Philadelphia', pl:'Sake Philadelphia', price:'38 zł', descEN:'salmon with philadelphia cream cheese', descPL:'łosoś z serkiem philadelphia'},
+          {en:'Awokado Sake', pl:'Awokado Sake', price:'42 zł', descEN:'salmon wrapped in avocado', descPL:'łosoś owijany awokado'},
+          {en:'Mango Sake', pl:'Mango Sake', price:'42 zł', descEN:'salmon wrapped in mango', descPL:'łosoś owijany mango'},
+          {en:'Maguro Orange Pepper', pl:'Maguro Orange Pepper', price:'45 zł', descEN:'tuna with chopped leek and orange pepper', descPL:'tuńczyk z siekanym porem i orange pepper'},
+          {en:'Ebi Ten Mamemori', pl:'Ebi Ten Mamemori', price:'42 zł', descEN:'shrimp tempura wrapped in soy paper', descPL:'krewetka w tempurze zawijana w papier sojowy'},
+          {en:'Gold California', pl:'Gold California', price:'40 zł', descEN:'surimi wrapped in salmon', descPL:'surimi owijane łososiem'},
+          {en:'Rainbow', pl:'Rainbow', price:'48 zł', descEN:'surimi wrapped in assorted fish', descPL:'surimi owijane wachlarzem ryb'},
+          {en:'Ohio Spice Sake', pl:'Ohio Spice Sake', price:'42 zł', descEN:'salmon wrapped in butterfish', descPL:'łosoś owijany opalaną maślaną'},
+          {en:'Maguro Spicy Ebi Ten', pl:'Maguro Spicy Ebi Ten', price:'45 zł', descEN:'shrimp tempura wrapped in seared tuna', descPL:'krewetka w tempurze owijana opalanym tuńczykiem'},
+          {en:'Kegon', pl:'Kegon', price:'45 zł', descEN:'salmon wrapped in grilled eel', descPL:'łosoś owijany grillowanym węgorzem'},
+          {en:'Sake Aburi', pl:'Sake Aburi', price:'45 zł', descEN:'salmon wrapped in seared spicy salmon', descPL:'łosoś owijany opalanym pikantnym łososiem'},
+          {en:'Tobiko Ohio Ten', pl:'Tobiko Ohio Ten', price:'48 zł', descEN:'butterfish in tempura coated with caviar', descPL:'maślana w tempurze obtoczona kawiorem z latającej ryby'},
+          {en:'Nashi Sake', pl:'Nashi Sake', price:'45 zł', descEN:'salmon wrapped in Japanese pear', descPL:'łosoś owijany japońską gruszką'},
+          {en:'Sake Tataki Ebiten', pl:'Sake Tataki Ebiten', price:'48 zł', descEN:'shrimp tempura wrapped in salmon tartare', descPL:'krewetka w tempurze obłożona tatarem z łososia'}
         ],
         itemsRight:[
-          {en:'Tempura Sake', pl:'Tempura Sake', price:'38 zł', descEN:'Salmon', descPL:'Łosoś'},
-          {en:'Tempura Ohio', pl:'Tempura Ohio', price:'38 zł', descEN:'Butterfish', descPL:'Maślana'},
-          {en:'Tempura Ebi', pl:'Tempura Ebi', price:'40 zł', descEN:'Shrimp', descPL:'Krewetka'}
+          {en:'Tempura Sake', pl:'Tempura Sake', price:'38 zł', descEN:'salmon', descPL:'łosoś'},
+          {en:'Tempura Ohio', pl:'Tempura Ohio', price:'38 zł', descEN:'butterfish', descPL:'maślana'},
+          {en:'Tempura Maguro', pl:'Tempura Maguro', price:'42 zł', descEN:'tuna', descPL:'tuńczyk'},
+          {en:'Tempura Ebi', pl:'Tempura Ebi', price:'40 zł', descEN:'steamed shrimp', descPL:'parzona krewetka'},
+          {en:'Tempura Unagi Kabayaki', pl:'Tempura Unagi Kabayaki', price:'45 zł', descEN:'grilled eel', descPL:'grillowany węgorz'}
+        ]
+      },
+      {
+        id:'oyakomaki',
+        title:{en:'Oyakomaki (2 pcs)', pl:'Oyakomaki (2 szt.)'},
+        img:'images/oyakomaki.jpg',
+        desc:{en:'Our specialty rolls, often wrapped in fish or avocado instead of nori.', pl:'Nasze specjalne rolki, często zawijane w rybę lub awokado zamiast nori.'},
+        items:[
+          {en:'Sake Ebi Tataki', pl:'Sake Ebi Tataki', price:'36 zł', descEN:'chopped shrimp wrapped in salmon', descPL:'siekana krewetka owijana w łososia'},
+          {en:'Sake Ikura', pl:'Sake Ikura', price:'42 zł', descEN:'caviar with salmon wrapped in tuna', descPL:'kawior z łososia owijany tuńczykiem'},
+          {en:'Maguro Sake Tataki', pl:'Maguro Sake Tataki', price:'45 zł', descEN:'chopped salmon wrapped in tuna', descPL:'siekany łosoś owijany tuńczykiem'}
+        ]
+      },
+      {
+        id:'sashimi',
+        title:{en:'Sashimi (9 pcs)', pl:'Sashimi (9 szt.)'},
+        img:'images/sashimi.jpg',
+        desc:{en:'Thinly sliced raw fish and seafood, served without rice.', pl:'Cienko krojone slajsy surowej ryby i owoców morza, podawane bez ryżu.'},
+        items:[
+          {en:'Mizu', pl:'Mizu', price:'95 zł', descEN:'slices of raw fish — salmon, tuna, butterfish', descPL:'slajsy surowej ryby — łosoś, tuńczyk, maślana'}
         ]
       }
     ];
 
     let LANG = 'pl';
 
-    // --- APP LOGIC ---
-    window.addEventListener('load', () => {
-        setTimeout(() => {
-            document.getElementById('loader').classList.add('hidden');
-        }, 800);
-        render();
-    });
-
     function setLang(l) {
-        if(LANG === l) return;
-        LANG = l;
-        document.querySelectorAll('.l-btn').forEach(b => b.classList.toggle('active', b.innerText.toLowerCase() === l));
-        
-        // Simple fade out/in effect
-        const container = document.getElementById('menu-container');
-        container.style.opacity = '0';
-        setTimeout(() => {
-            render();
-            container.style.opacity = '1';
-        }, 200);
+      if(LANG===l) return;
+      LANG = l;
+      document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.innerText.toLowerCase() === l));
+      
+      const content = document.querySelector('.left');
+      
+      // Додаємо клас для анімації виходу
+      content.classList.add('switching');
+      
+      setTimeout(() => {
+        render();
+        // Прибираємо клас, щоб спрацювала анімація входу
+        content.classList.remove('switching');
+      }, 500); // Таймінг відповідає CSS transition
     }
 
-    function renderCard(item) {
+    function renderItem(i) {
         return `
-        <div class="card">
-            <div class="card-head">
-                <div class="c-name">${LANG==='en'?item.en:item.pl}</div>
-                <div class="c-price">${item.price}</div>
+        <div class="item">
+            <div class="item-info">
+                <div class="item-name">${LANG==='en'?i.en:i.pl}</div>
+                <div class="item-desc">${LANG==='en'?i.descEN:i.descPL}</div>
             </div>
-            <div class="c-desc">${LANG==='en'?item.descEN:item.descPL}</div>
+            <div class="item-price">${i.price}</div>
         </div>
         `;
     }
 
     function render() {
-        // Headers
-        document.getElementById('hero-sub').innerText = LANG==='en' ? TEXTS.sub.en : TEXTS.sub.pl;
-        document.getElementById('sheet-title').innerText = LANG==='en' ? TEXTS.allergyTitle.en : TEXTS.allergyTitle.pl;
-        document.getElementById('sheet-text').innerText = LANG==='en' ? TEXTS.allergyText.en : TEXTS.allergyText.pl;
+      // Texts
+      document.getElementById('sub').innerText = LANG==='en' ? 'Fine sushi — Menu' : 'Wyborne sushi — Menu';
+      document.getElementById('lbl-contacts').innerText = LANG==='en' ? 'Contacts' : 'Kontakt';
+      document.getElementById('lbl-web').innerText = LANG==='en' ? 'Menu — open web version' : 'Menu — wersja online';
 
-        // Nav
-        const navContainer = document.getElementById('nav-container');
-        navContainer.innerHTML = DATA.map((section, idx) => `
-            <div class="cat-chip ${idx===0?'active':''}" onclick="scrollToSec('${section.id}', this)">
-                ${LANG==='en'?section.title.en:section.title.pl}
-            </div>
-        `).join('');
+      // Update Info Modal Content
+      document.getElementById('info-title').innerText = LANG==='en'?ALLERGIES.title.en:ALLERGIES.title.pl;
+      document.getElementById('info-text').innerText = LANG==='en'?ALLERGIES.text.en:ALLERGIES.text.pl;
+      document.getElementById('info-note').innerText = LANG==='en'?ALLERGIES.service.en:ALLERGIES.service.pl;
 
-        // Menu
-        const menuContainer = document.getElementById('menu-container');
-        menuContainer.innerHTML = DATA.map(section => {
-            const title = LANG==='en'?section.title.en:section.title.pl;
-            const desc = LANG==='en'?section.desc.en:section.desc.pl;
+      // Nav
+      const nav = document.getElementById('nav-container');
+      nav.innerHTML = DATA.map(s => `
+        <button class="nav-chip" onclick="document.getElementById('${s.id}').scrollIntoView({behavior:'smooth'})">
+          ${LANG==='en'?s.title.en:s.title.pl}
+        </button>
+      `).join('');
 
-            let contentHtml = '';
+      // Menu
+      const container = document.getElementById('menu-container');
+      const menuHTML = DATA.map(section => {
+        const title = LANG==='en'?section.title.en:section.title.pl;
+        const desc = LANG==='en'?section.desc.en:section.desc.pl;
+        
+        // Image logic
+        let mediaHtml = '';
+        if(section.gallery) {
+            mediaHtml = `<div class="stack-grid">
+                ${section.gallery.map(g=> `<img src="${g.src}" class="stack-img" onclick="openLb('${g.src}')">`).join('')}
+            </div>`;
+        } else if(section.img) {
+            mediaHtml = `<img src="${section.img}" class="single-img" onclick="openLb('${section.img}')">`;
+        }
+
+        // Note logic
+        const noteHtml = section.note ? `<div class="note">${LANG==='en'?section.note.en:section.note.pl}</div>` : '';
+
+        // Items Logic (Split or Normal)
+        let itemsHtml = '';
+        if(section.isSplit) {
+            const tempuraNote = LANG==='en' ? '(whole roll in tempura batter)' : '(cała rolka w cieście tempura)';
+            itemsHtml = `
+            <div class="cols-2">
+                <div>
+                    <div class="col-title">Uramaki</div>
+                    ${section.itemsLeft.map(renderItem).join('')}
+                </div>
+                <div>
+                    <div class="col-title">
+                        ${LANG==='en'?'Tempura':'W Tempurze'}
+                        <div style="font-size:10px; font-weight:400; text-transform:none; color:var(--muted); margin-top:2px;">${tempuraNote}</div>
+                    </div>
+                    ${section.itemsRight.map(renderItem).join('')}
+                </div>
+            </div>`;
+        } else {
+            itemsHtml = section.items.map(renderItem).join('');
+        }
+
+        const btnText = LANG==='en'?'View items':'Pokaż pozycje';
+
+        return `
+        <div class="menu-block" id="${section.id}">
+            <div class="block-header"><h2>${title}</h2></div>
+            <div class="intro-media">${mediaHtml}</div>
+            <div class="intro-text">${desc}</div>
+            ${noteHtml}
             
-            if(section.isSplit) {
-                contentHtml = `
-                    <div class="split-col">
-                        <div class="split-title">Classic</div>
-                        ${section.itemsLeft.map(renderCard).join('')}
+            <div class="accordion-wrapper" onclick="toggleAcc(this)">
+                <button class="accordion-trigger">
+                    <span class="trigger-text">${btnText}</span>
+                    <span class="trigger-icon">▼</span>
+                </button>
+                <div class="accordion-content">
+                    <div class="min-h-0">
+                        <div class="items-list">
+                            ${itemsHtml}
+                        </div>
                     </div>
-                    <div class="split-col">
-                        <div class="split-title">Tempura</div>
-                        ${section.itemsRight.map(renderCard).join('')}
-                    </div>
-                `;
-            } else {
-                contentHtml = section.items.map(renderCard).join('');
-            }
-
-            return `
-            <div class="section-container" id="${section.id}">
-                <div class="sec-title">${title}</div>
-                <div class="sec-desc">${desc}</div>
-                ${contentHtml}
+                </div>
             </div>
-            `;
-        }).join('');
+        </div>
+        `;
+      }).join('');
+
+      // Add static allergy block at the bottom
+      const allergyHTML = `
+        <div class="menu-block" style="border:none; box-shadow:none; background:transparent;">
+            <div class="block-header" style="padding-bottom:10px; padding-left:0;">
+                <h2 style="font-size:18px; color:var(--muted);">${LANG==='en'?ALLERGIES.title.en:ALLERGIES.title.pl}</h2>
+            </div>
+            <div style="font-size:13px; color:var(--muted); line-height:1.6; background:#fff; padding:20px; border-radius:16px; border:1px solid rgba(0,0,0,0.04);">
+                ${LANG==='en'?ALLERGIES.text.en:ALLERGIES.text.pl}
+                <div style="margin-top:16px; font-style:italic; padding-top:16px; border-top:1px dashed #eee;">
+                    ${LANG==='en'?ALLERGIES.service.en:ALLERGIES.service.pl}
+                </div>
+            </div>
+        </div>
+      `;
+
+      container.innerHTML = menuHTML + allergyHTML;
+
+      // Contacts
+      document.getElementById('contacts-list').innerHTML = `
+        <a href="tel:+48502525544" class="c-btn">
+            <img src="images/phone.png"> <span>+48 502 525 544</span>
+        </a> 
+        <a href="https://www.instagram.com/ksiestwosushi?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" class="c-btn">
+            <img src="images/instagram.png"> <span>@ksiestwosushi</span>
+        </a>
+        <a href="https://maps.app.goo.gl/ZT1PfgScLAJkTbhx7" target="_blank" class="c-btn">
+            <img src="images/google_maps.png"> <span>Krupówki 38A</span>
+        </a>
+      `;
     }
 
-    // Scroll Logic
-    function scrollToSec(id, el) {
-        document.getElementById(id).scrollIntoView({behavior: 'smooth', block: 'start'});
-        // Update active chip manually for instant feedback
-        document.querySelectorAll('.cat-chip').forEach(c => c.classList.remove('active'));
-        el.classList.add('active');
+    // --- ACCORDION LOGIC ---
+    function toggleAcc(el) {
+        el.classList.toggle('active');
     }
 
-    // Sheet Logic
-    function openSheet() {
-        document.getElementById('sheet-overlay').classList.add('open');
+    // --- INFO MODAL ---
+    function openInfo() {
+        document.getElementById('info-modal').classList.add('open');
+        // Make button one-time use (hide it)
+        const btn = document.querySelector('.allergy-btn');
+        if(btn) {
+            btn.style.opacity = '0';
+            btn.style.pointerEvents = 'none';
+        }
     }
-    function closeSheet() {
-        document.getElementById('sheet-overlay').classList.remove('open');
+    function closeInfo(e) {
+        if (e.target.id === 'info-modal' || e.target.classList.contains('info-close')) {
+             document.getElementById('info-modal').classList.remove('open');
+        }
     }
 
-    // Intersection Observer for Nav Highlighting
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if(entry.isIntersecting) {
-                const id = entry.target.id;
-                document.querySelectorAll('.cat-chip').forEach(c => {
-                    c.classList.remove('active');
-                    // Match by onclick content logic is tricky, simpler to map by index or use data-target
-                    // For this demo, we trust the click interaction mostly, but this is a nice-to-have
-                });
-            }
-        });
-    }, {threshold:0.2});
-    
-    // Slight delay to attach observer
-    setTimeout(() => {
-        document.querySelectorAll('.section-container').forEach(s => observer.observe(s));
-    }, 1000);
+    // --- LIGHTBOX ---
+    function openLb(src) {
+        document.getElementById('lb-img').src = src;
+        document.getElementById('lb').classList.add('open');
+    }
+    function closeLb() {
+        document.getElementById('lb').classList.remove('open');
+    }
+
+    // INIT
+    render();
 
   </script>
+<script type="module" src="/index.tsx"></script>
 </body>
 </html>
