@@ -2,308 +2,316 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>KSIĘSTWO | Digital Menu</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Księstwo Sushi — Menu</title>
+  
+  <!-- FONTS -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Italiana&family=Space+Grotesk:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+        --bg: #050505;
+        --surface: #111;
+        --text: #ececec;
+        --dim: #666;
+        --accent: #ccff00; /* Acid Lime */
+        --border: rgba(255,255,255,0.15);
+        
+        --f-disp: 'Italiana', serif;
+        --f-tech: 'Space Grotesk', sans-serif;
+        
+        --pad: 20px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; outline: none; -webkit-tap-highlight-color: transparent; }
     
-    <!-- FONTS -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Italiana&family=Space+Grotesk:wght@300;400;500;700&display=swap" rel="stylesheet">
+    body {
+        background: var(--bg);
+        color: var(--text);
+        font-family: var(--f-tech);
+        overflow-x: hidden;
+        font-size: 16px;
+    }
 
-    <style>
-        :root {
-            --bg: #050505;
-            --surface: #111;
-            --text: #ececec;
-            --dim: #666;
-            --accent: #ccff00; /* Acid Lime */
-            --border: rgba(255,255,255,0.15);
-            
-            --f-disp: 'Italiana', serif;
-            --f-tech: 'Space Grotesk', sans-serif;
-            
-            --pad: 20px;
-        }
+    /* --- UI FRAME --- */
+    .frame {
+        position: fixed;
+        top: 0; left: 0; width: 100%; height: 100%;
+        pointer-events: none;
+        z-index: 900;
+        padding: var(--pad);
+        display: flex; flex-direction: column; justify-content: space-between;
+    }
+    
+    .logo-corner {
+        pointer-events: auto;
+        font-family: var(--f-disp);
+        font-size: 24px;
+        letter-spacing: -1px;
+        line-height: 1;
+        mix-blend-mode: difference;
+    }
+    
+    .lang-corner {
+        pointer-events: auto;
+        position: absolute; top: var(--pad); right: var(--pad);
+        display: flex; gap: 10px;
+    }
+    .lang-btn {
+        background: none; border: 1px solid var(--border);
+        color: var(--text); padding: 5px 12px;
+        border-radius: 50px; cursor: pointer;
+        font-size: 12px; font-weight: 700;
+        transition: 0.3s;
+        backdrop-filter: blur(5px);
+        text-decoration: none;
+        display: inline-block;
+    }
+    .lang-btn.active { background: var(--text); color: var(--bg); border-color: var(--text); }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; outline: none; -webkit-tap-highlight-color: transparent; }
-        
-        body {
-            background: var(--bg);
-            color: var(--text);
-            font-family: var(--f-tech);
-            overflow-x: hidden;
-            font-size: 16px;
-        }
+    .menu-trigger {
+        pointer-events: auto;
+        position: absolute; bottom: var(--pad); right: var(--pad);
+        background: var(--accent); color: #000;
+        border: none; width: 60px; height: 60px;
+        border-radius: 50%;
+        font-weight: 700; font-size: 12px;
+        display: flex; align-items: center; justify-content: center;
+        cursor: pointer;
+        transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        z-index: 1000;
+    }
+    .menu-trigger:hover { transform: scale(1.1) rotate(90deg); }
 
-        /* --- UI FRAME --- */
-        .frame {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            pointer-events: none;
-            z-index: 900;
-            padding: var(--pad);
-            display: flex; flex-direction: column; justify-content: space-between;
-        }
-        
-        .logo-corner {
-            pointer-events: auto;
-            font-family: var(--f-disp);
-            font-size: 24px;
-            letter-spacing: -1px;
-            line-height: 1;
-            mix-blend-mode: difference;
-        }
-        
-        .lang-corner {
-            pointer-events: auto;
-            position: absolute; top: var(--pad); right: var(--pad);
-            display: flex; gap: 10px;
-        }
-        .lang-btn {
-            background: none; border: 1px solid var(--border);
-            color: var(--text); padding: 5px 12px;
-            border-radius: 50px; cursor: pointer;
-            font-size: 12px; font-weight: 700;
-            transition: 0.3s;
-            backdrop-filter: blur(5px);
-        }
-        .lang-btn.active { background: var(--text); color: var(--bg); border-color: var(--text); }
+    /* --- HERO --- */
+    .hero {
+        height: 100vh;
+        display: flex; align-items: center; justify-content: center;
+        position: relative;
+        overflow: hidden;
+        border-bottom: 1px solid var(--border);
+    }
+    .hero-bg {
+        position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+        object-fit: cover; opacity: 0.3;
+        filter: grayscale(100%);
+        z-index: -1;
+        transform: scale(1.1);
+        animation: zoomSlow 20s infinite alternate;
+    }
+    @keyframes zoomSlow { to { transform: scale(1.2); } }
 
-        .menu-trigger {
-            pointer-events: auto;
-            position: absolute; bottom: var(--pad); right: var(--pad);
-            background: var(--accent); color: #000;
-            border: none; width: 60px; height: 60px;
-            border-radius: 50%;
-            font-weight: 700; font-size: 12px;
-            display: flex; align-items: center; justify-content: center;
-            cursor: pointer;
-            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            z-index: 1000;
-        }
-        .menu-trigger:hover { transform: scale(1.1) rotate(90deg); }
+    .hero-title {
+        font-family: var(--f-disp);
+        font-size: 15vw;
+        line-height: 0.8;
+        text-align: center;
+        text-transform: uppercase;
+        mix-blend-mode: overlay;
+        opacity: 0.8;
+    }
+    .scroll-hint {
+        position: absolute; bottom: 40px; left: 50%;
+        transform: translateX(-50%);
+        font-size: 10px; text-transform: uppercase;
+        letter-spacing: 2px;
+        animation: bounce 2s infinite;
+    }
+    @keyframes bounce { 0%, 100% { transform: translate(-50%, 0); } 50% { transform: translate(-50%, 10px); } }
 
-        /* --- HERO --- */
-        .hero {
-            height: 100vh;
-            display: flex; align-items: center; justify-content: center;
-            position: relative;
-            overflow: hidden;
-            border-bottom: 1px solid var(--border);
-        }
-        .hero-bg {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            object-fit: cover; opacity: 0.3;
-            filter: grayscale(100%);
-            z-index: -1;
-            transform: scale(1.1);
-            animation: zoomSlow 20s infinite alternate;
-        }
-        @keyframes zoomSlow { to { transform: scale(1.2); } }
+    /* --- MARQUEE --- */
+    .marquee-strip {
+        background: var(--accent);
+        color: #000;
+        padding: 10px 0;
+        overflow: hidden;
+        white-space: nowrap;
+        border-top: 1px solid #000;
+        border-bottom: 1px solid #000;
+        transform: rotate(-2deg) scale(1.05);
+        margin: 40px 0;
+        position: relative; z-index: 10;
+    }
+    .marquee-content {
+        display: inline-block;
+        animation: scrollLeft 20s linear infinite;
+        font-weight: 700; text-transform: uppercase; font-size: 14px;
+    }
+    @keyframes scrollLeft { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 
-        .hero-title {
-            font-family: var(--f-disp);
-            font-size: 15vw;
-            line-height: 0.8;
-            text-align: center;
-            text-transform: uppercase;
-            mix-blend-mode: overlay;
-            opacity: 0.8;
-        }
-        .scroll-hint {
-            position: absolute; bottom: 40px; left: 50%;
-            transform: translateX(-50%);
-            font-size: 10px; text-transform: uppercase;
-            letter-spacing: 2px;
-            animation: bounce 2s infinite;
-        }
-        @keyframes bounce { 0%, 100% { transform: translate(-50%, 0); } 50% { transform: translate(-50%, 10px); } }
+    /* --- MENU LAYOUT --- */
+    .menu-container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding-bottom: 100px;
+    }
 
-        /* --- MARQUEE --- */
-        .marquee-strip {
-            background: var(--accent);
-            color: #000;
-            padding: 10px 0;
-            overflow: hidden;
-            white-space: nowrap;
-            border-top: 1px solid #000;
-            border-bottom: 1px solid #000;
-            transform: rotate(-2deg) scale(1.05);
-            margin: 40px 0;
-            position: relative; z-index: 10;
-        }
-        .marquee-content {
-            display: inline-block;
-            animation: scrollLeft 20s linear infinite;
-            font-weight: 700; text-transform: uppercase; font-size: 14px;
-        }
-        @keyframes scrollLeft { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+    .section-wrapper {
+        position: relative;
+        border-top: 1px solid var(--border);
+        min-height: 80vh;
+    }
 
-        /* --- MENU LAYOUT --- */
-        .menu-container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding-bottom: 100px;
-        }
+    /* Sticky Header on the Left */
+    .section-head {
+        position: sticky;
+        top: 0;
+        padding: 20px;
+        background: rgba(5,5,5,0.9);
+        backdrop-filter: blur(10px);
+        z-index: 50;
+        border-bottom: 1px solid var(--border);
+        display: flex; justify-content: space-between; align-items: center;
+    }
+    .section-title {
+        font-family: var(--f-disp);
+        font-size: 3rem;
+        text-transform: uppercase;
+    }
+    .section-desc {
+        font-size: 0.9rem;
+        color: var(--dim);
+        max-width: 300px;
+        text-align: right;
+    }
 
-        .section-wrapper {
-            position: relative;
-            border-top: 1px solid var(--border);
-            min-height: 80vh;
-        }
+    /* Content Grid */
+    .section-body {
+        display: grid;
+        grid-template-columns: 1fr 1fr; /* Image Left, Menu Right */
+        min-height: 60vh;
+    }
+    
+    .section-visual {
+        position: relative;
+        border-right: 1px solid var(--border);
+        overflow: hidden;
+    }
+    .sticky-img-container {
+        position: sticky;
+        top: 80px; /* Below header */
+        height: calc(100vh - 80px);
+        width: 100%;
+    }
+    .sticky-img {
+        width: 100%; height: 100%;
+        object-fit: cover;
+        filter: grayscale(40%) contrast(1.1);
+        cursor: pointer;
+        transition: transform 0.5s;
+    }
+    .sticky-img:hover {
+        transform: scale(1.03);
+    }
 
-        /* Sticky Header on the Left */
-        .section-head {
-            position: sticky;
-            top: 0;
-            padding: 20px;
-            background: rgba(5,5,5,0.9);
-            backdrop-filter: blur(10px);
-            z-index: 50;
-            border-bottom: 1px solid var(--border);
-            display: flex; justify-content: space-between; align-items: center;
-        }
-        .section-title {
-            font-family: var(--f-disp);
-            font-size: 3rem;
-            text-transform: uppercase;
-        }
-        .section-desc {
-            font-size: 0.9rem;
-            color: var(--dim);
-            max-width: 300px;
-            text-align: right;
-        }
+    .section-list {
+        padding: 40px;
+    }
 
-        /* Content Grid */
-        .section-body {
-            display: grid;
-            grid-template-columns: 1fr 1fr; /* Image Left, Menu Right */
-            min-height: 60vh;
-        }
-        
-        .section-visual {
-            position: relative;
-            border-right: 1px solid var(--border);
-            overflow: hidden;
-        }
-        .sticky-img-container {
-            position: sticky;
-            top: 80px; /* Below header */
-            height: calc(100vh - 80px);
-            width: 100%;
-        }
-        .sticky-img {
-            width: 100%; height: 100%;
-            object-fit: cover;
-            filter: grayscale(40%) contrast(1.1);
-        }
+    /* Menu Item */
+    .dish {
+        margin-bottom: 40px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid rgba(255,255,255,0.05);
+        transition: 0.3s;
+        cursor: pointer;
+    }
+    .dish:hover {
+        border-color: var(--accent);
+        transform: translateX(10px);
+    }
+    .dish-top {
+        display: flex; justify-content: space-between; align-items: baseline;
+        margin-bottom: 8px;
+    }
+    .dish-name {
+        font-size: 1.2rem;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    .dish-price {
+        font-family: var(--f-disp);
+        font-size: 1.5rem;
+        color: var(--accent);
+    }
+    .dish-desc {
+        font-size: 0.9rem;
+        color: var(--dim);
+        line-height: 1.5;
+        white-space: pre-line;
+    }
 
-        .section-list {
-            padding: 40px;
-        }
+    /* Mobile Adjustments */
+    @media (max-width: 900px) {
+        .section-body { grid-template-columns: 1fr; }
+        .section-visual { height: 300px; border-right: none; border-bottom: 1px solid var(--border); }
+        .sticky-img-container { position: relative; top: 0; height: 100%; }
+        .section-list { padding: 20px; }
+        .section-head { flex-direction: column; align-items: flex-start; gap: 10px; }
+        .section-desc { text-align: left; }
+        .hero-title { font-size: 20vw; }
+    }
 
-        /* Menu Item */
-        .dish {
-            margin-bottom: 40px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-            transition: 0.3s;
-            cursor: pointer;
-        }
-        .dish:hover {
-            border-color: var(--accent);
-            transform: translateX(10px);
-        }
-        .dish-top {
-            display: flex; justify-content: space-between; align-items: baseline;
-            margin-bottom: 8px;
-        }
-        .dish-name {
-            font-size: 1.2rem;
-            font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        .dish-price {
-            font-family: var(--f-disp);
-            font-size: 1.5rem;
-            color: var(--accent);
-        }
-        .dish-desc {
-            font-size: 0.9rem;
-            color: var(--dim);
-            line-height: 1.5;
-        }
+    /* --- ALLERGY FOOTER --- */
+    .footer-info {
+        background: var(--surface);
+        padding: 60px 20px;
+        text-align: center;
+        border-top: 1px solid var(--border);
+        position: relative;
+    }
+    .allergy-tag {
+        display: inline-block;
+        border: 1px solid var(--accent);
+        color: var(--accent);
+        padding: 5px 15px;
+        border-radius: 50px;
+        font-size: 12px; text-transform: uppercase;
+        margin-bottom: 20px;
+    }
+    .footer-text { font-size: 0.9rem; color: var(--dim); max-width: 600px; margin: 0 auto 20px; line-height: 1.6;}
+    
+    /* --- NAVIGATION OVERLAY --- */
+    .nav-overlay {
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: var(--accent);
+        z-index: 950;
+        transform: translateY(100%);
+        transition: transform 0.6s cubic-bezier(0.77, 0, 0.175, 1);
+        display: flex; flex-direction: column; justify-content: center; align-items: center;
+    }
+    .nav-overlay.open { transform: translateY(0); }
+    .nav-link {
+        font-family: var(--f-disp);
+        font-size: 8vh;
+        color: #000;
+        text-decoration: none;
+        line-height: 1.1;
+        transition: 0.2s;
+    }
+    .nav-link:hover {
+        color: #fff;
+        font-style: italic;
+        letter-spacing: 5px;
+    }
 
-        /* Mobile Adjustments */
-        @media (max-width: 900px) {
-            .section-body { grid-template-columns: 1fr; }
-            .section-visual { height: 300px; border-right: none; border-bottom: 1px solid var(--border); }
-            .sticky-img-container { position: relative; top: 0; height: 100%; }
-            .section-list { padding: 20px; }
-            .section-head { flex-direction: column; align-items: flex-start; gap: 10px; }
-            .section-desc { text-align: left; }
-            .hero-title { font-size: 20vw; }
-        }
+    /* --- MODAL IMAGE --- */
+    .img-modal {
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0,0,0,0.95);
+        z-index: 2000;
+        display: flex; justify-content: center; align-items: center;
+        opacity: 0; pointer-events: none; transition: 0.3s;
+    }
+    .img-modal.active { opacity: 1; pointer-events: auto; }
+    .img-modal img { max-width: 90%; max-height: 90%; border: 1px solid var(--accent); }
+    .close-modal { position: absolute; top: 30px; right: 30px; color: #fff; font-size: 40px; background: none; border: none; cursor: pointer; }
 
-        /* --- ALLERGY FOOTER --- */
-        .footer-info {
-            background: var(--surface);
-            padding: 60px 20px;
-            text-align: center;
-            border-top: 1px solid var(--border);
-            position: relative;
-        }
-        .allergy-tag {
-            display: inline-block;
-            border: 1px solid var(--accent);
-            color: var(--accent);
-            padding: 5px 15px;
-            border-radius: 50px;
-            font-size: 12px; text-transform: uppercase;
-            margin-bottom: 20px;
-        }
-        .footer-text { font-size: 0.9rem; color: var(--dim); max-width: 600px; margin: 0 auto 20px; }
-        
-        /* --- NAVIGATION OVERLAY --- */
-        .nav-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--accent);
-            z-index: 950;
-            transform: translateY(100%);
-            transition: transform 0.6s cubic-bezier(0.77, 0, 0.175, 1);
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
-        }
-        .nav-overlay.open { transform: translateY(0); }
-        .nav-link {
-            font-family: var(--f-disp);
-            font-size: 8vh;
-            color: #000;
-            text-decoration: none;
-            line-height: 1.1;
-            transition: 0.2s;
-        }
-        .nav-link:hover {
-            color: #fff;
-            font-style: italic;
-            letter-spacing: 5px;
-        }
-
-        /* --- MODAL IMAGE --- */
-        .img-modal {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.95);
-            z-index: 2000;
-            display: flex; justify-content: center; align-items: center;
-            opacity: 0; pointer-events: none; transition: 0.3s;
-        }
-        .img-modal.active { opacity: 1; pointer-events: auto; }
-        .img-modal img { max-width: 90%; max-height: 90%; border: 1px solid var(--accent); }
-        .close-modal { position: absolute; top: 30px; right: 30px; color: #fff; font-size: 40px; background: none; border: none; cursor: pointer; }
-
-    </style>
+  </style>
 <script type="importmap">
 {
   "imports": {
@@ -331,6 +339,7 @@
         <a href="#sets" class="nav-link" onclick="toggleNav()">SETS</a>
         <a href="#starters" class="nav-link" onclick="toggleNav()">STARTERS</a>
         <a href="#soups" class="nav-link" onclick="toggleNav()">SOUPS</a>
+        <a href="#uramaki" class="nav-link" onclick="toggleNav()">ROLLS</a>
         <a href="#footer" class="nav-link" onclick="toggleNav()">INFO</a>
     </div>
 
@@ -368,7 +377,8 @@
         
         <div style="margin-top: 40px; display: flex; justify-content: center; gap: 20px;">
             <a href="tel:+48502525544" class="lang-btn">CALL US</a>
-            <a href="https://maps.app.goo.gl/ZT1PfgScLAJkTbhx7" class="lang-btn">MAPS</a>
+            <a href="https://maps.app.goo.gl/ZT1PfgScLAJkTbhx7" class="lang-btn" target="_blank">MAPS</a>
+            <a href="https://www.instagram.com/ksiestwosushi" class="lang-btn" target="_blank">INSTAGRAM</a>
         </div>
     </footer>
 
@@ -386,23 +396,23 @@
                 pl: 'Dania mogą zawierać: gluten, ogórek, oshinko, kampyo, awokado, mango, melon, sałatę, sezam, serek philadelphia, majonez, sosy, złoto jadalne.'
             },
             serviceText: {
-                en: '+10% service charge added to the final bill.',
-                pl: 'Doliczamy 10% serwisu kelnerskiego do rachunku.'
+                en: 'We kindly inform you that we add a waiter service of 10% to the final bill.',
+                pl: 'Uprzejmie informujemy, że doliczamy serwis kelnerski w wysokości 10% do rachunku końcowego.'
             },
             uramaki: { en: 'Uramaki', pl: 'Uramaki' },
             tempura: { en: 'Tempura', pl: 'W Tempurze' }
         };
 
         const MENU = [
-             {
+            {
                 id: 'sets',
-                title: { en: 'Sets', pl: 'Zestawy' },
-                img: 'images/zestawy.jpg',
-                desc: { en: 'Our finest combinations.', pl: 'Nasze najlepsze kompozycje.' },
+                title: { en: 'Sushi Sets', pl: 'Zestawy Sushi' },
+                img: 'images/zestawy.jpg', 
+                desc: { en: 'Curated combinations.', pl: 'Starannie dobrane kompozycje.' },
                 items: [
-                    { en: 'Ki Iro 14 pc.', pl: 'Ki Iro 14 szt.', price: '70', descEN: 'Hosomaki salmon, calabash, rainbow, ohio yaki', descPL: 'Hosomaki łosoś, tykwa, rainbow, ohioyaki' },
-                    { en: 'Orenji 16 pc.', pl: 'Orenji 16 szt.', price: '90', descEN: 'Ebi ten, gold california, avocado kani, ohio yaki', descPL: 'Ebi ten, gold california, awokado kani, ohioyaki' },
-                    { en: 'Aka 24 pc.', pl: 'Aka 24 szt.', price: '130', descEN: 'Gold california, ebi ten, mango sake, avocado kani, butterfish tempura', descPL: 'Gold california, ebi ten, mango sake, awokado kani, maślana tempura' }
+                  { en: 'Ki Iro 14 pc.', pl: 'Ki Iro 14 szt.', price: '70 zł', descEN: '3x hosomaki salmon\n3x hosomaki calabash\n4x rainbow\n4x futomaki ohio yaki', descPL: '3x hosomaki łosoś\n3x hosomaki tykwa\n4x rainbow\n4x futomaki ohioyaki' },
+                  { en: 'Orenji 16 pc.', pl: 'Orenji 16 szt.', price: '90 zł', descEN: '4x ebi ten\n4x gold california\n4x avocado kani\n4x ohio yaki', descPL: '4x ebi ten\n4x gold california\n4x awokado kani\n4x ohioyaki' },
+                  { en: 'Aka 24 pc.', pl: 'Aka 24 szt.', price: '130 zł', descEN: '4x gold california\n4x ebi ten\n4x mango sake\n4x avocado kani\n6x futomaki ohio ten', descPL: '4x gold california\n4x ebi ten\n4x mango sake\n4x awokado kani\n6x futomaki ohio ten' }
                 ]
             },
             {
@@ -411,10 +421,10 @@
                 img: 'images/sake-tataki.jpg',
                 desc: { en: 'Start light.', pl: 'Zacznij lekko.' },
                 items: [
-                    { en: 'Goma Wakame', pl: 'Goma Wakame', price: '20', descEN: 'Seaweed salad', descPL: 'Sałatka z wodorostów' },
-                    { en: 'Ebiten (3 pcs)', pl: 'Ebiten (3 szt.)', price: '30', descEN: 'Shrimp tempura', descPL: 'Krewetka w tempurze' },
-                    { en: 'Sake Tataki', pl: 'Sake Tataki', price: '50', descEN: 'Salmon tartare', descPL: 'Tatar z łososia' },
-                    { en: 'Maguro Tataki', pl: 'Maguro Tataki', price: '55', descEN: 'Tuna tartare', descPL: 'Tatar z tuńczyka' }
+                    { en: 'Goma Wakame', pl: 'Goma Wakame', price: '20 zł', descEN: 'Wakame salad', descPL: 'Sałatka wakame' },
+                    { en: 'Ebiten (3 pcs)', pl: 'Ebiten (3 szt.)', price: '30 zł', descEN: 'Shrimp tempura with ponzu', descPL: 'Krewetka tempura z sosem ponzu' },
+                    { en: 'Sake Tataki', pl: 'Sake Tataki', price: '50 zł', descEN: 'Salmon tartare', descPL: 'Tatar z łososia' },
+                    { en: 'Maguro Tataki', pl: 'Maguro Tataki', price: '55 zł', descEN: 'Tuna tartare', descPL: 'Tatar z tuńczyka' }
                 ]
             },
             {
@@ -423,8 +433,8 @@
                 img: 'images/ramen-zupa.jpg',
                 desc: { en: 'Hot & Deep.', pl: 'Gorące i Głębokie.' },
                 items: [
-                    { en: 'Ramen Chicken', pl: 'Ramen Kurczak', price: '48', descEN: 'Chicken, veg, noodles', descPL: 'Kurczak, warzywa, makaron' },
-                    { en: 'Ramen Beef', pl: 'Ramen Wołowina', price: '55', descEN: 'Beef, veg, noodles', descPL: 'Wołowina, warzywa, makaron' }
+                    { en: 'Ramen Chicken', pl: 'Ramen Chicken', price: '48 zł', descEN: 'Chicken, veg, noodles', descPL: 'Kurczak, warzywa, makaron' },
+                    { en: 'Ramen Beef', pl: 'Ramen Beef', price: '55 zł', descEN: 'Beef, veg, noodles', descPL: 'Wołowina, warzywa, makaron' }
                 ]
             },
             {
@@ -433,11 +443,14 @@
                 img: 'images/nigiri1.jpg',
                 desc: { en: 'Rice & Fish.', pl: 'Ryż i Ryba.' },
                 items: [
-                    { en: 'Sake', pl: 'Sake', price: '26', descEN: 'Salmon', descPL: 'Łosoś' },
-                    { en: 'Maguro', pl: 'Maguro', price: '30', descEN: 'Tuna', descPL: 'Tuńczyk' },
-                    { en: 'Unagi', pl: 'Unagi', price: '30', descEN: 'Eel', descPL: 'Węgorz' },
-                    { en: 'Ebi', pl: 'Ebi', price: '30', descEN: 'Shrimp', descPL: 'Krewetka' },
-                    { en: 'Hotate', pl: 'Hotate', price: '32', descEN: 'Scallop', descPL: 'Małże św. Jakuba' }
+                    { en: 'Sake', pl: 'Sake', price: '26 zł', descEN: 'Salmon', descPL: 'Łosoś' },
+                    { en: 'Ohio', pl: 'Ohio', price: '25 zł', descEN: 'Butterfish', descPL: 'Ryba maślana' },
+                    { en: 'Maguro', pl: 'Maguro', price: '30 zł', descEN: 'Tuna', descPL: 'Tuńczyk' },
+                    { en: 'Unagi', pl: 'Unagi', price: '30 zł', descEN: 'Eel', descPL: 'Węgorz' },
+                    { en: 'Hotate', pl: 'Hotate', price: '32 zł', descEN: 'Scallops', descPL: 'Małże św. Jakuba' },
+                    { en: 'Tako', pl: 'Tako', price: '30 zł', descEN: 'Octopus', descPL: 'Ośmiornica' },
+                    { en: 'Ika', pl: 'Ika', price: '30 zł', descEN: 'Squid', descPL: 'Kalmar' },
+                    { en: 'Ebi', pl: 'Ebi', price: '30 zł', descEN: 'Shrimp', descPL: 'Krewetka' }
                 ]
             },
             {
@@ -446,10 +459,14 @@
                 img: 'images/futomaki.jpg',
                 desc: { en: 'Thick Rolls.', pl: 'Grube Rolki.' },
                 items: [
-                    { en: 'Sake Philadelphia', pl: 'Sake Philadelphia', price: '38', descEN: 'Salmon, cream cheese', descPL: 'Łosoś, serek' },
-                    { en: 'Maguro Negi', pl: 'Maguro Negi', price: '42', descEN: 'Tuna, spicy leek', descPL: 'Tuńczyk, ostra dymka' },
-                    { en: 'Ebi Tempura', pl: 'Ebi Tempura', price: '40', descEN: 'Shrimp tempura', descPL: 'Krewetka w tempurze' },
-                    { en: 'Unagi Kabayaki', pl: 'Unagi Kabayaki', price: '45', descEN: 'Grilled eel', descPL: 'Grillowany węgorz' }
+                    { en: 'Sake Philadelphia', pl: 'Sake Philadelphia', price: '38 zł', descEN: 'Salmon, cream cheese', descPL: 'Łosoś, serek' },
+                    { en: 'Maguro Negi Togarashi', pl: 'Maguro Negi Togarashi', price: '42 zł', descEN: 'Tuna, spicy leek', descPL: 'Tuńczyk, ostra dymka' },
+                    { en: 'Ohio Spice Mango', pl: 'Ohio Spice Mango', price: '40 zł', descEN: 'Spicy butterfish, mango', descPL: 'Pikantna maślana, mango' },
+                    { en: 'Ebi Spicy', pl: 'Ebi Spicy', price: '40 zł', descEN: 'Spicy shrimp', descPL: 'Pikantna krewetka' },
+                    { en: 'Ebi Tempura', pl: 'Ebi Tempura', price: '40 zł', descEN: 'Shrimp tempura', descPL: 'Krewetka w tempurze' },
+                    { en: 'Unagi Kabayaki', pl: 'Unagi Kabayaki', price: '45 zł', descEN: 'Grilled eel', descPL: 'Grillowany węgorz' },
+                    { en: 'Ika Tempura', pl: 'Ika Tempura', price: '48 zł', descEN: 'Squid tempura', descPL: 'Kalmar w tempurze' },
+                    { en: 'Veggie', pl: 'Veggie', price: '36 zł', descEN: 'Vegetables', descPL: 'Warzywa' }
                 ]
             },
             {
@@ -459,14 +476,38 @@
                 desc: { en: 'Inside Out.', pl: 'Odwrócone.' },
                 isSplit: true,
                 itemsLeft: [
-                    { en: 'Gold California', pl: 'Gold California', price: '40', descEN: 'Surimi, salmon wrap', descPL: 'Surimi, owijane łososiem' },
-                    { en: 'Rainbow', pl: 'Rainbow', price: '48', descEN: 'Fish assortment', descPL: 'Wachlarz ryb' },
-                    { en: 'Kegon', pl: 'Kegon', price: '45', descEN: 'Eel wrap', descPL: 'Owijane węgorzem' }
+                    { en: 'Sake Philadelphia', pl: 'Sake Philadelphia', price: '38 zł', descEN: 'Salmon, cream cheese', descPL: 'Łosoś z serkiem' },
+                    { en: 'Awokado Sake', pl: 'Awokado Sake', price: '42 zł', descEN: 'Salmon wrapped in avocado', descPL: 'Łosoś owijany awokado' },
+                    { en: 'Mango Sake', pl: 'Mango Sake', price: '42 zł', descEN: 'Salmon wrapped in mango', descPL: 'Łosoś owijany mango' },
+                    { en: 'Maguro Orange Pepper', pl: 'Maguro Orange Pepper', price: '45 zł', descEN: 'Tuna, leek, orange pepper', descPL: 'Tuńczyk, por, orange pepper' },
+                    { en: 'Ebi Ten Mamemori', pl: 'Ebi Ten Mamemori', price: '42 zł', descEN: 'Shrimp tempura, soy paper', descPL: 'Krewetka w tempurze, papier sojowy' },
+                    { en: 'Gold California', pl: 'Gold California', price: '40 zł', descEN: 'Surimi wrapped in salmon', descPL: 'Surimi owijane łososiem' },
+                    { en: 'Rainbow', pl: 'Rainbow', price: '48 zł', descEN: 'Surimi wrapped in fish', descPL: 'Surimi owijane rybami' },
+                    { en: 'Ohio Spice Sake', pl: 'Ohio Spice Sake', price: '42 zł', descEN: 'Salmon wrapped in butterfish', descPL: 'Łosoś owijany maślaną' },
+                    { en: 'Maguro Spicy Ebi Ten', pl: 'Maguro Spicy Ebi Ten', price: '45 zł', descEN: 'Shrimp tempura wrapped in tuna', descPL: 'Krewetka w tempurze owijana tuńczykiem' },
+                    { en: 'Kegon', pl: 'Kegon', price: '45 zł', descEN: 'Salmon wrapped in eel', descPL: 'Łosoś owijany węgorzem' },
+                    { en: 'Sake Aburi', pl: 'Sake Aburi', price: '45 zł', descEN: 'Salmon wrapped in seared salmon', descPL: 'Łosoś owijany opalanym łososiem' },
+                    { en: 'Tobiko Ohio Ten', pl: 'Tobiko Ohio Ten', price: '48 zł', descEN: 'Butterfish tempura, caviar', descPL: 'Maślana w tempurze, kawior' },
+                    { en: 'Nashi Sake', pl: 'Nashi Sake', price: '45 zł', descEN: 'Salmon wrapped in pear', descPL: 'Łosoś owijany gruszką' },
+                    { en: 'Sake Tataki Ebiten', pl: 'Sake Tataki Ebiten', price: '48 zł', descEN: 'Shrimp tempura, salmon tartare', descPL: 'Krewetka w tempurze, tatar z łososia' }
                 ],
                 itemsRight: [
-                    { en: 'Tempura Sake', pl: 'Tempura Sake', price: '38', descEN: 'Salmon', descPL: 'Łosoś' },
-                    { en: 'Tempura Maguro', pl: 'Tempura Maguro', price: '42', descEN: 'Tuna', descPL: 'Tuńczyk' },
-                    { en: 'Tempura Ebi', pl: 'Tempura Ebi', price: '40', descEN: 'Shrimp', descPL: 'Krewetka' }
+                    { en: 'Tempura Sake', pl: 'Tempura Sake', price: '38 zł', descEN: 'Salmon', descPL: 'Łosoś' },
+                    { en: 'Tempura Ohio', pl: 'Tempura Ohio', price: '38 zł', descEN: 'Butterfish', descPL: 'Maślana' },
+                    { en: 'Tempura Maguro', pl: 'Tempura Maguro', price: '42 zł', descEN: 'Tuna', descPL: 'Tuńczyk' },
+                    { en: 'Tempura Ebi', pl: 'Tempura Ebi', price: '40 zł', descEN: 'Shrimp', descPL: 'Krewetka' },
+                    { en: 'Tempura Unagi Kabayaki', pl: 'Tempura Unagi Kabayaki', price: '45 zł', descEN: 'Eel', descPL: 'Węgorz' }
+                ]
+            },
+            {
+                id: 'oyakomaki',
+                title: { en: 'Oyakomaki', pl: 'Oyakomaki' },
+                img: 'images/oyakomaki.jpg',
+                desc: { en: 'Special Rolls.', pl: 'Specjalne.' },
+                items: [
+                    { en: 'Sake Ebi Tataki', pl: 'Sake Ebi Tataki', price: '36 zł', descEN: 'Chopped shrimp in salmon', descPL: 'Siekana krewetka w łososiu' },
+                    { en: 'Sake Ikura', pl: 'Sake Ikura', price: '42 zł', descEN: 'Caviar in tuna', descPL: 'Kawior w tuńczyku' },
+                    { en: 'Maguro Sake Tataki', pl: 'Maguro Sake Tataki', price: '45 zł', descEN: 'Chopped salmon in tuna', descPL: 'Siekany łosoś w tuńczyku' }
                 ]
             },
             {
@@ -475,7 +516,7 @@
                 img: 'images/sashimi.jpg',
                 desc: { en: 'No Rice.', pl: 'Bez Ryżu.' },
                 items: [
-                    { en: 'Mizu Set', pl: 'Zestaw Mizu', price: '95', descEN: 'Salmon, Tuna, Butterfish', descPL: 'Łosoś, Tuńczyk, Maślana' }
+                    { en: 'Mizu', pl: 'Mizu', price: '95 zł', descEN: 'Salmon, Tuna, Butterfish', descPL: 'Łosoś, Tuńczyk, Maślana' }
                 ]
             }
         ];
@@ -563,4 +604,3 @@
     </script>
 </body>
 </html>
-    
