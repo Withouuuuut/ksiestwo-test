@@ -1,882 +1,1191 @@
 <!DOCTYPE html>
-<html lang="pl"> <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Księstwo Sushi — Menu</title>
-  <style>
-    :root{
-      --bg:#f8f6f4;
-      --card:#ffffff;
-      --muted:#7b7b7b;
-      --accent:#d88b6a;
-      --text:#111;
-      --dark-btn:#222; 
-      --maxw:1000px;
-      --radius:16px;
-      --shadow: 0 10px 40px -10px rgba(0,0,0,0.08);
-      --ease: cubic-bezier(0.25, 1, 0.5, 1);
-    }
-    *{box-sizing:border-box}
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Księstwo Sushi | Premium Experience</title>
     
-    body{
-      margin:0;
-      font-family: "Georgia", "Times New Roman", serif;
-      background: var(--bg);
-      color:var(--text);
-      -webkit-font-smoothing:antialiased;
-      padding:24px;
-      display:flex;
-      justify-content:center;
-    }
+    <!-- FONTS -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,400&family=Manrope:wght@200;300;400;500;600;800&display=swap" rel="stylesheet">
 
-    .wrap{
-      width:100%;
-      max-width:var(--maxw);
-      background: rgba(255,255,255,0.92);
-      border-radius:24px;
-      padding:24px;
-      box-shadow: var(--shadow);
-      padding-top: 80px; 
-      backdrop-filter: blur(10px);
-      
-      opacity: 0;
-      animation: fadeIn 0.8s var(--ease) forwards;
-    }
-    
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
+    <style>
+        /* 
+         * ==========================================
+         * 1. CORE VARIABLES & RESET
+         * ==========================================
+         */
+        :root {
+            /* Colors */
+            --c-bg: #fdfcf8;
+            --c-bg-dark: #f4f1ea;
+            --c-text-main: #1a1a1a;
+            --c-text-muted: #66605b;
+            --c-accent: #d88b6a;
+            --c-accent-dark: #b56b4a;
+            --c-white: #ffffff;
+            --c-black: #000000;
+            --c-line: rgba(0,0,0,0.06);
+            
+            /* Typography */
+            --f-serif: 'Cormorant Garamond', serif;
+            --f-sans: 'Manrope', sans-serif;
+            
+            /* Spacing */
+            --container-w: 1100px;
+            --pad-section: 80px;
+            --radius-card: 20px;
+            --radius-btn: 100px;
+            
+            /* Effects */
+            --shadow-soft: 0 20px 40px -10px rgba(0,0,0,0.05);
+            --shadow-hover: 0 30px 60px -15px rgba(216, 139, 106, 0.15);
+            --ease-out: cubic-bezier(0.215, 0.61, 0.355, 1);
+            --ease-elastic: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
 
-    /* --- HEADER --- */
-    header{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      margin-bottom:20px;
-    }
-    .brand{
-      display:flex;
-      gap:16px;
-      align-items:center;
-    }
-    .logo{
-      width:60px;
-      height:60px;
-      border-radius:12px;
-      background:linear-gradient(135deg,var(--accent),#f3c9b3);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      font-weight:700;
-      color:#fff;
-      font-size:20px;
-      box-shadow:0 8px 20px -6px rgba(216,139,106,0.4);
-    }
-    h1{margin:0;font-size:22px;letter-spacing:0.5px}
-    .sub{color:var(--muted); font-size:14px; font-style: italic;}
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            outline: none;
+            -webkit-tap-highlight-color: transparent;
+        }
 
-    /* --- LANGUAGE SWITCHER --- */
-    .fixed-widget {
-      position: fixed;
-      top: 24px;
-      right: 24px;
-      z-index: 200;
-      transition: transform 0.4s var(--ease), opacity 0.4s var(--ease);
-    }
-    /* Hidden state for scroll */
-    .fixed-widget.hidden {
-        transform: translateY(-100px);
-        opacity: 0;
-        pointer-events: none;
-    }
+        html {
+            font-size: 16px;
+            scroll-behavior: smooth;
+        }
 
-    .lang-row {
-      background: #fff;
-      padding: 5px;
-      border-radius: 12px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-      display: flex;
-      gap: 4px;
-    }
-    .lang-btn {
-      background: transparent;
-      border: none;
-      padding: 8px 14px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: 600;
-      font-size: 13px;
-      color: var(--muted);
-      transition: all 0.2s var(--ease);
-    }
-    .lang-btn.active {
-      background: var(--accent);
-      color: white;
-      box-shadow: 0 2px 8px rgba(216,139,106,0.3);
-    }
+        body {
+            background-color: var(--c-bg);
+            color: var(--c-text-main);
+            font-family: var(--f-sans);
+            overflow-x: hidden;
+            width: 100%;
+            cursor: none; /* Hide default cursor for custom one */
+        }
 
-    /* --- NAVIGATION --- */
-    nav{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      margin-bottom:30px;
-    }
-    .nav-chip{
-      background:#fff;
-      padding:10px 16px;
-      border-radius:100px;
-      font-weight:600;
-      border:1px solid rgba(0,0,0,0.04);
-      cursor:pointer;
-      font-size:14px;
-      color: var(--muted);
-      transition: all 0.3s var(--ease);
-      font-family: sans-serif;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.03);
-    }
-    .nav-chip:hover {
-      background: #fff5f0;
-      color: var(--accent);
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-    }
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--c-bg); }
+        ::-webkit-scrollbar-thumb { background: #dcdcdc; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--c-accent); }
 
-    /* --- LAYOUT --- */
-    .content{
-      display:flex;
-      gap:40px;
-      align-items:flex-start;
-    }
-    .left{
-      flex:1;
-      min-width:0; /* fix flex overflow */
-      transition: opacity 0.3s var(--ease);
-    }
-    .right{
-      width:300px;
-      flex-shrink: 0;
-    }
+        /* 
+         * ==========================================
+         * 2. CUSTOM CURSOR
+         * ==========================================
+         */
+        .cursor-dot,
+        .cursor-outline {
+            position: fixed;
+            top: 0;
+            left: 0;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            z-index: 9999;
+            pointer-events: none;
+        }
 
-    @media (max-width:900px){
-      .content{flex-direction:column-reverse; gap:30px;}
-      .right{width:100%}
-      /* Mobile optimization */
-      body { padding: 6px; }
-      .wrap { padding: 12px; padding-top: 80px; }
-      .block-header { padding: 15px 15px 0 15px; }
-      .intro-text { padding: 0 15px 10px 15px; }
-      .accordion-trigger { padding: 16px 15px; }
-    }
+        .cursor-dot {
+            width: 8px;
+            height: 8px;
+            background-color: var(--c-accent);
+        }
 
-    /* --- SECTION STYLES --- */
-    .menu-block {
-        background: #fff;
-        border-radius: var(--radius);
-        margin-bottom: 24px;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.02);
-        border: 1px solid rgba(0,0,0,0.02);
-        overflow: hidden;
-    }
+        .cursor-outline {
+            width: 40px;
+            height: 40px;
+            border: 1px solid rgba(216, 139, 106, 0.5);
+            transition: width 0.2s, height 0.2s, background-color 0.2s;
+        }
 
-    .block-header {
-        padding: 20px 20px 0 20px;
-    }
-    .block-header h2 {
-        margin: 0 0 10px 0;
-        font-size: 20px;
-        color: var(--text);
-    }
+        /* Hover states for cursor */
+        body.hovering .cursor-outline {
+            width: 60px;
+            height: 60px;
+            background-color: rgba(216, 139, 106, 0.05);
+            border-color: var(--c-accent);
+        }
 
-    /* --- IMAGES --- */
-    /* Button wrapper for images */
-    .img-btn {
-      border: none;
-      background: none;
-      padding: 0;
-      margin: 0;
-      width: 100%;
-      display: block;
-      cursor: pointer;
-      text-align: left;
-    }
+        /* Mobile: show normal cursor */
+        @media (max-width: 1024px) {
+            .cursor-dot, .cursor-outline { display: none; }
+            body { cursor: auto; }
+        }
 
-    .intro-media {
-        width: 100%;
-        padding: 0 4px 10px 4px; 
-    }
-    
-    .single-img {
-        width: 100%;
-        height: 240px;
-        object-fit: cover;
-        border-radius: 12px;
-        transition: transform 0.5s var(--ease);
-        display: block;
-    }
-    .img-btn:hover .single-img { transform: scale(1.02); }
+        /* 
+         * ==========================================
+         * 3. BACKGROUND CANVAS & NOISE
+         * ==========================================
+         */
+        #bg-canvas {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: -1;
+            opacity: 0.6;
+            pointer-events: none;
+        }
 
-    .stack-grid {
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
-    }
-    .stack-img {
-        width: 100%;
-        height: 160px; 
-        object-fit: cover;
-        border-radius: 12px;
-        transition: transform 0.4s var(--ease), box-shadow 0.4s var(--ease);
-        display: block;
-    }
-    .img-btn:hover .stack-img { 
-        transform: scale(1.02); 
-        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-        z-index: 2;
-    }
+        .noise-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 9000;
+            opacity: 0.03;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
 
-    .intro-text {
-        padding: 0 20px 6px 20px; 
-        color: var(--muted);
-        font-size: 15px;
-        line-height: 1.5;
-    }
-    .note {
-        font-size: 13px;
-        color: var(--muted);
-        padding: 15px 20px;
-        background: #fafafa;
-        border-top: 1px solid #eee;
-    }
+        /* 
+         * ==========================================
+         * 4. PRELOADER
+         * ==========================================
+         */
+        .preloader {
+            position: fixed;
+            inset: 0;
+            background: var(--c-bg);
+            z-index: 10000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.8s var(--ease-out), visibility 0.8s;
+        }
+        .preloader.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+        .loader-content {
+            text-align: center;
+        }
+        .loader-logo {
+            font-family: var(--f-serif);
+            font-size: 4rem;
+            font-weight: 700;
+            color: var(--c-accent);
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.8s var(--ease-out) forwards;
+        }
+        .loader-line {
+            width: 0;
+            height: 2px;
+            background: var(--c-text-main);
+            margin: 20px auto;
+            animation: expandWidth 1.5s var(--ease-out) 0.5s forwards;
+        }
 
-    /* --- ACCORDION --- */
-    .accordion-trigger {
-        width: 100%;
-        padding: 18px 20px; /* Increased padding */
-        background: #f0f0f0; /* Darker grey for better visibility */
-        border: none;
-        border-top: 1px solid #e0e0e0; /* Distinct border */
-        cursor: pointer;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        transition: all 0.2s;
-        box-shadow: inset 0 2px 4px rgba(0,0,0,0.02); /* Inner shadow for depth */
-        position: relative;
-        z-index: 10;
-    }
-    .accordion-trigger:hover { background: #e8e8e8; }
-    
-    .trigger-text {
-        font-weight: 800;
-        color: var(--accent);
-        font-size: 14px;
-        text-transform: uppercase;
-        letter-spacing: 1.2px;
-    }
-    .trigger-icon {
-        font-size: 12px;
-        color: #555; /* Darker icon */
-        transition: transform 0.4s var(--ease);
-    }
-    .accordion-wrapper.active .trigger-icon { transform: rotate(180deg); }
+        @keyframes fadeInUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes expandWidth {
+            to { width: 100px; }
+        }
 
-    .accordion-content {
-        display: grid;
-        grid-template-rows: 0fr;
-        transition: grid-template-rows 0.6s var(--ease), opacity 0.6s var(--ease);
-        opacity: 0.4;
-    }
-    .accordion-wrapper.active .accordion-content {
-        grid-template-rows: 1fr;
-        opacity: 1;
-    }
-    
-    .min-h-0 { overflow: hidden; }
-    .items-list { padding: 20px; background: #fff; }
+        /* 
+         * ==========================================
+         * 5. LAYOUT & TYPOGRAPHY
+         * ==========================================
+         */
+        .main-wrapper {
+            max-width: var(--container-w);
+            margin: 0 auto;
+            padding: 120px 20px 40px;
+            position: relative;
+        }
 
-    /* --- MENU ITEMS --- */
-    .item {
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 16px;
-        padding-bottom: 16px;
-        border-bottom: 1px dashed #eee;
-        transition: transform 0.2s;
-    }
-    .item:last-child {
-        margin-bottom: 0;
-        padding-bottom: 0;
-        border-bottom: none;
-    }
-    .item-info { flex: 1; padding-right: 20px; }
-    .item-name { font-weight: 700; font-size: 16px; margin-bottom: 4px; }
-    .item-desc { 
-        font-size: 14px; color: var(--muted); line-height: 1.4; white-space: pre-line;
-    }
-    .item-price { 
-        font-weight: 700; color: var(--accent); font-size: 16px; white-space: nowrap;
-    }
+        h1, h2, h3 { font-family: var(--f-serif); color: var(--c-text-main); line-height: 1.1; }
+        p { line-height: 1.6; color: var(--c-text-muted); }
 
-    /* --- URAMAKI GRID --- */
-    .cols-2 {
-        display: grid; grid-template-columns: 1fr 1fr; gap: 30px;
-    }
-    .col-title {
-        font-size: 14px; font-weight: 700; color: var(--accent);
-        text-transform: uppercase; border-bottom: 2px solid #ffeadd;
-        padding-bottom: 8px; margin-bottom: 16px;
-    }
-    @media (max-width:700px) { .cols-2 { grid-template-columns: 1fr; gap: 20px; } }
+        /* Header */
+        header {
+            text-align: center;
+            margin-bottom: 60px;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 1s var(--ease-out) 1s forwards;
+        }
+        .header-logo {
+            width: 100px; height: 100px;
+            background: linear-gradient(135deg, var(--c-accent), #eac0a8);
+            color: #fff;
+            border-radius: 20px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 32px; font-weight: 700;
+            margin: 0 auto 20px;
+            box-shadow: 0 15px 35px rgba(216, 139, 106, 0.4);
+            font-family: var(--f-serif);
+        }
+        .header-title { font-size: 3.5rem; margin-bottom: 10px; font-weight: 400; }
+        .header-sub { 
+            font-size: 1.1rem; text-transform: uppercase; letter-spacing: 3px; color: var(--c-accent); font-weight: 600;
+        }
 
-    /* --- FLOATING ALLERGY BTN --- */
-    .allergy-btn {
-        position: fixed;
-        bottom: 30px; 
-        right: 30px;
-        width: 56px; height: 56px;
-        background: #fff;
-        color: var(--accent);
-        border: 2px solid var(--accent);
-        border-radius: 50%;
-        display: flex; align-items: center; justify-content: center;
-        font-size: 28px; font-weight: 800; font-family: sans-serif;
-        box-shadow: 0 8px 24px rgba(216, 139, 106, 0.4);
-        cursor: pointer;
-        z-index: 100;
-        transition: transform 0.3s var(--ease), opacity 0.3s var(--ease);
-        animation: pulse 2s infinite;
-    }
-    .allergy-btn:hover { animation: none; transform: scale(1.1); }
-    
-    @keyframes pulse {
-        0% { box-shadow: 0 0 0 0 rgba(216, 139, 106, 0.7); }
-        70% { box-shadow: 0 0 0 15px rgba(216, 139, 106, 0); }
-        100% { box-shadow: 0 0 0 0 rgba(216, 139, 106, 0); }
-    }
+        /* Navigation */
+        .nav-sticky {
+            position: sticky;
+            top: 20px;
+            z-index: 100;
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 60px;
+            padding: 15px;
+            background: rgba(255,255,255,0.7);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-radius: 50px;
+            border: 1px solid rgba(255,255,255,0.5);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+            transition: transform 0.3s;
+        }
+        .nav-sticky.scrolled {
+            transform: scale(0.95);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        }
+        .nav-btn {
+            background: transparent;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 40px;
+            font-family: var(--f-sans);
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--c-text-muted);
+            cursor: pointer;
+            transition: all 0.3s var(--ease-out);
+            position: relative;
+            overflow: hidden;
+        }
+        .nav-btn::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: var(--c-accent);
+            opacity: 0;
+            transform: scale(0.8);
+            border-radius: 40px;
+            transition: all 0.3s var(--ease-out);
+            z-index: -1;
+        }
+        .nav-btn:hover { color: var(--c-accent); }
+        .nav-btn.active { color: #fff; }
+        .nav-btn.active::before { opacity: 1; transform: scale(1); }
 
-    /* --- INFO MODAL --- */
-    .info-modal {
-        position: fixed; inset: 0; z-index: 2000;
-        background: rgba(0,0,0,0.6);
-        backdrop-filter: blur(8px);
-        display: flex; justify-content: center; align-items: center;
-        opacity: 0; pointer-events: none;
-        transition: opacity 0.3s var(--ease);
-        padding: 20px;
-    }
-    .info-modal.open { opacity: 1; pointer-events: auto; }
-    
-    .info-card {
-        background: #fff;
-        width: 100%; max-width: 450px;
-        padding: 30px;
-        border-radius: 20px;
-        box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-        transform: scale(0.9); opacity: 0;
-        transition: all 0.4s var(--ease);
-        position: relative;
-        text-align: center;
-    }
-    .info-modal.open .info-card { transform: scale(1); opacity: 1; }
-    
-    .info-close {
-        position: absolute; top: 15px; right: 20px;
-        font-size: 28px; color: var(--muted); cursor: pointer;
-        line-height: 1;
-        background: none; border: none; padding: 0;
-    }
-    .info-icon { font-size: 40px; margin-bottom: 16px; display: block; }
-    .info-title { font-size: 20px; font-weight: 700; margin-bottom: 12px; color: var(--text); }
-    .info-text { font-size: 15px; line-height: 1.6; color: var(--muted); margin-bottom: 20px; }
-    .info-note { 
-        font-size: 13px; font-style: italic; color: #555; 
-        background: #f4f4f4; padding: 12px; border-radius: 12px; 
-    }
+        /* Lang Switcher (Fixed) */
+        .lang-widget {
+            position: fixed;
+            top: 30px; right: 30px;
+            z-index: 200;
+            background: #fff;
+            padding: 6px;
+            border-radius: 12px;
+            display: flex; gap: 4px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: transform 0.5s var(--ease-elastic);
+        }
+        .lang-widget.hide { transform: translateY(-150%); }
+        .lang-btn {
+            border: none; background: transparent;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-weight: 700; font-size: 0.8rem;
+            cursor: pointer;
+            color: var(--c-text-muted);
+            transition: all 0.2s;
+        }
+        .lang-btn.active {
+            background: var(--c-text-main);
+            color: #fff;
+        }
 
-    /* --- SIDEBAR & FOOTER --- */
-    .contact-card {
-        background: #fff;
-        padding: 24px;
-        border-radius: var(--radius);
-        box-shadow: var(--shadow);
-    }
-    .contact-card h3 { margin: 0 0 20px 0; font-size: 18px; }
-    
-    .c-btn {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        background: #222;
-        color: #fff;
-        text-decoration: none;
-        padding: 14px 20px;
-        border-radius: 50px;
-        margin-bottom: 10px;
-        font-size: 14px;
-        font-weight: 600;
-        transition: transform 0.3s var(--ease), box-shadow 0.3s var(--ease);
-    }
-    .c-btn img { width: 20px; height: 20px; filter: invert(1); }
-    .c-btn:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 10px 20px rgba(0,0,0,0.15);
-    }
+        /* 
+         * ==========================================
+         * 6. MENU CARDS (3D TILT)
+         * ==========================================
+         */
+        .menu-grid {
+            display: grid;
+            gap: 60px;
+        }
+        
+        .menu-section {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s var(--ease-out), transform 0.8s var(--ease-out);
+        }
+        .menu-section.visible { opacity: 1; transform: translateY(0); }
 
-    footer {
-        margin-top: 40px;
-        padding-top: 20px;
-        border-top: 1px solid rgba(0,0,0,0.05);
-        display: flex;
-        justify-content: space-between;
-        color: var(--muted);
-        font-size: 13px;
-    }
+        .card-3d-wrap {
+            perspective: 1000px;
+        }
 
-    /* --- LIGHTBOX --- */
-    .lightbox {
-        position: fixed; inset: 0; z-index: 999;
-        background: rgba(0,0,0,0.9);
-        display: flex; justify-content: center; align-items: center;
-        opacity: 0; pointer-events: none;
-        transition: opacity 0.3s var(--ease);
-        backdrop-filter: blur(5px);
-    }
-    .lightbox.open { opacity: 1; pointer-events: auto; }
-    .lb-img {
-        max-width: 90%; max-height: 90vh;
-        border-radius: 12px;
-        transform: scale(0.9);
-        transition: transform 0.4s var(--ease);
-        box-shadow: 0 0 50px rgba(0,0,0,0.5);
-    }
-    .lightbox.open .lb-img { transform: scale(1); }
-    .lb-close {
-        position: absolute; top: 20px; right: 30px;
-        color: #fff; font-size: 40px; cursor: pointer;
-        background: none; border: none;
-        opacity: 0.7; transition: 0.2s;
-    }
-    .lb-close:hover { opacity: 1; transform: scale(1.1); }
+        .card {
+            background: #fff;
+            border-radius: var(--radius-card);
+            box-shadow: var(--shadow-soft);
+            transition: transform 0.1s ease-out, box-shadow 0.3s ease;
+            transform-style: preserve-3d;
+            border: 1px solid rgba(0,0,0,0.02);
+            overflow: hidden;
+            position: relative;
+        }
+        /* Gradient sheen effect */
+        .card::after {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(120deg, rgba(255,255,255,0) 30%, rgba(255,255,255,0.4) 38%, rgba(255,255,255,0.4) 40%, rgba(255,255,255,0) 48%);
+            transform: translateX(-100%);
+            transition: transform 0.6s;
+            pointer-events: none;
+            z-index: 10;
+        }
+        .card:hover::after {
+            transform: translateX(100%);
+            transition: transform 0.8s;
+        }
 
-  </style>
+        /* Card Content */
+        .card-header {
+            padding: 30px 30px 10px;
+        }
+        .section-title {
+            font-size: 2.2rem;
+            margin-bottom: 20px;
+            position: relative;
+            display: inline-block;
+        }
+        .section-title::after {
+            content: ''; display: block; width: 40px; height: 2px;
+            background: var(--c-accent); margin-top: 10px;
+        }
+
+        /* Images Gallery */
+        .media-gallery {
+            padding: 0 10px;
+        }
+        .img-wrapper {
+            position: relative;
+            border-radius: 16px;
+            overflow: hidden;
+            margin-bottom: 12px;
+            cursor: pointer;
+        }
+        .img-wrapper img {
+            width: 100%;
+            height: 280px;
+            object-fit: cover;
+            transition: transform 0.7s var(--ease-out), filter 0.4s;
+            display: block;
+        }
+        /* Cinematic Look */
+        .img-wrapper img {
+            filter: contrast(1.05) saturate(1.1);
+        }
+        .img-wrapper:hover img {
+            transform: scale(1.06);
+        }
+        /* Vignette */
+        .img-wrapper::after {
+            content: ''; position: absolute; inset: 0;
+            background: radial-gradient(circle, transparent 50%, rgba(0,0,0,0.2) 100%);
+            pointer-events: none;
+        }
+
+        /* Starters Stack Special */
+        .stack-wrapper {
+            display: flex; flex-direction: column; gap: 12px;
+        }
+        .stack-wrapper .img-wrapper img { height: 180px; }
+
+        .card-desc {
+            padding: 10px 30px 20px;
+            font-size: 1.05rem;
+            color: var(--c-text-muted);
+        }
+        .card-note {
+            margin: 0 30px 20px;
+            padding: 15px 20px;
+            background: #f9f9f9;
+            border-left: 3px solid var(--c-accent);
+            font-size: 0.9rem;
+            font-style: italic;
+            border-radius: 0 10px 10px 0;
+        }
+
+        /* 
+         * ==========================================
+         * 7. ACCORDION (PREMIUM)
+         * ==========================================
+         */
+        .acc-trigger {
+            width: 100%;
+            padding: 24px 30px;
+            background: #f4f4f4; /* High contrast */
+            border: none;
+            border-top: 1px solid #eaeaeb;
+            cursor: pointer;
+            display: flex; justify-content: space-between; align-items: center;
+            transition: background 0.3s;
+            position: relative;
+        }
+        .acc-trigger:hover { background: #eeeeee; }
+        
+        .acc-btn-text {
+            font-family: var(--f-sans);
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--c-text-main);
+            font-size: 0.9rem;
+        }
+        .acc-icon {
+            width: 24px; height: 24px;
+            border: 1px solid var(--c-text-muted);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            transition: transform 0.4s var(--ease-elastic);
+        }
+        .active .acc-icon {
+            transform: rotate(180deg);
+            background: var(--c-text-main);
+            border-color: var(--c-text-main);
+            color: #fff;
+        }
+
+        .acc-content {
+            display: grid;
+            grid-template-rows: 0fr;
+            transition: grid-template-rows 0.6s var(--ease-out);
+            background: #fff;
+        }
+        .active .acc-content { grid-template-rows: 1fr; }
+        
+        .acc-inner { overflow: hidden; }
+        
+        .item-list { padding: 30px; }
+        
+        .menu-item {
+            display: flex; justify-content: space-between;
+            padding: 16px 0;
+            border-bottom: 1px dashed #e0e0e0;
+            position: relative;
+        }
+        .menu-item::before {
+            content: ''; position: absolute; left: -10px; top: 50%; width: 4px; height: 4px;
+            background: var(--c-accent); border-radius: 50%; opacity: 0; transition: 0.3s;
+        }
+        .menu-item:hover::before { opacity: 1; left: -15px; }
+        
+        .item-details { padding-right: 20px; flex: 1; }
+        .item-name { font-weight: 700; font-size: 1.1rem; color: var(--c-text-main); margin-bottom: 4px; }
+        .item-desc { font-size: 0.95rem; color: var(--c-text-muted); line-height: 1.4; }
+        .item-price { font-weight: 800; font-size: 1.1rem; color: var(--c-accent); white-space: nowrap; }
+
+        /* Uramaki Split */
+        .split-cols {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 40px;
+        }
+        .sub-head {
+            font-family: var(--f-serif); font-size: 1.2rem; color: var(--c-accent);
+            border-bottom: 2px solid #faeadd; padding-bottom: 10px; margin-bottom: 20px;
+        }
+
+        /* 
+         * ==========================================
+         * 8. CONTACT SIDEBAR & FOOTER
+         * ==========================================
+         */
+        .sidebar {
+            margin-top: 60px;
+            display: grid; grid-template-columns: 1fr 300px; gap: 40px;
+        }
+        .contact-box {
+            background: #fff;
+            padding: 30px;
+            border-radius: var(--radius-card);
+            box-shadow: var(--shadow-soft);
+            border: 1px solid rgba(0,0,0,0.02);
+            height: fit-content;
+        }
+        .contact-btn {
+            display: flex; align-items: center; gap: 15px;
+            background: #222; color: #fff;
+            padding: 16px 24px;
+            border-radius: var(--radius-btn);
+            text-decoration: none;
+            margin-bottom: 12px;
+            font-weight: 600;
+            transition: transform 0.3s var(--ease-elastic), box-shadow 0.3s;
+            position: relative; overflow: hidden;
+        }
+        /* Button Ripple Effect */
+        .contact-btn::after {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(255,255,255,0.1); transform: scaleX(0); transform-origin: right;
+            transition: transform 0.4s var(--ease-out);
+        }
+        .contact-btn:hover::after { transform: scaleX(1); transform-origin: left; }
+        .contact-btn:hover { transform: translateY(-4px); box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
+        
+        .contact-icon { width: 24px; height: 24px; filter: invert(1); }
+
+        /* Floating Allergy Button (One-time) */
+        .float-alert {
+            position: fixed; bottom: 40px; right: 40px;
+            width: 64px; height: 64px;
+            background: #fff;
+            border: 2px solid var(--c-accent);
+            color: var(--c-accent);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 30px; font-weight: 800;
+            box-shadow: 0 10px 30px rgba(216, 139, 106, 0.4);
+            cursor: pointer; z-index: 500;
+            transition: 0.4s var(--ease-elastic);
+        }
+        .float-alert:hover { transform: scale(1.15) rotate(10deg); }
+        .float-alert.removed { transform: scale(0); opacity: 0; pointer-events: none; }
+
+        /* Static Allergy Info */
+        .allergy-static {
+            margin-top: 40px;
+            background: #fff;
+            border-radius: var(--radius-card);
+            padding: 30px;
+            border: 1px solid rgba(0,0,0,0.04);
+            position: relative;
+            overflow: hidden;
+        }
+        .allergy-static::before {
+            content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 6px;
+            background: var(--c-accent);
+        }
+
+        footer {
+            margin-top: 60px;
+            border-top: 1px solid rgba(0,0,0,0.05);
+            padding-top: 30px;
+            display: flex; justify-content: space-between;
+            color: var(--c-text-muted); font-size: 0.9rem;
+        }
+
+        /* 
+         * ==========================================
+         * 9. MODALS (LIGHTBOX & INFO)
+         * ==========================================
+         */
+        .modal-overlay {
+            position: fixed; inset: 0; z-index: 2000;
+            background: rgba(10,10,10,0.85);
+            backdrop-filter: blur(10px);
+            opacity: 0; pointer-events: none;
+            transition: opacity 0.4s;
+            display: flex; justify-content: center; align-items: center;
+        }
+        .modal-overlay.active { opacity: 1; pointer-events: auto; }
+
+        .modal-img {
+            max-width: 90vw; max-height: 90vh;
+            border-radius: 12px;
+            box-shadow: 0 0 50px rgba(0,0,0,0.8);
+            transform: scale(0.9); transition: transform 0.5s var(--ease-out);
+        }
+        .modal-overlay.active .modal-img { transform: scale(1); }
+        
+        .modal-close {
+            position: absolute; top: 30px; right: 30px;
+            background: none; border: none; color: #fff;
+            font-size: 40px; cursor: pointer; transition: 0.3s;
+        }
+        .modal-close:hover { transform: rotate(90deg); color: var(--c-accent); }
+
+        .info-card {
+            background: #fff; width: 90%; max-width: 500px;
+            padding: 40px; border-radius: 24px; text-align: center;
+            transform: translateY(30px); opacity: 0; transition: 0.5s var(--ease-out);
+        }
+        .modal-overlay.active .info-card { transform: translateY(0); opacity: 1; }
+
+        /* 
+         * ==========================================
+         * 10. RESPONSIVE
+         * ==========================================
+         */
+        @media (max-width: 900px) {
+            .header-title { font-size: 2.5rem; }
+            .sidebar { grid-template-columns: 1fr; }
+            .split-cols { grid-template-columns: 1fr; }
+            .menu-grid { gap: 40px; }
+            .main-wrapper { padding-top: 80px; }
+            /* Mobile Optimization: More Width */
+            body { padding: 0; }
+            .main-wrapper { padding: 80px 10px 40px; width: 100%; max-width: 100%; }
+            .card { border-radius: 16px; }
+            .card-header, .card-desc, .acc-trigger, .item-list { padding-left: 15px; padding-right: 15px; }
+            .img-wrapper img { height: 220px; }
+            
+            /* Hide cursor elements */
+            .cursor-dot, .cursor-outline { display: none !important; }
+        }
+    </style>
 <script type="importmap">
 {
   "imports": {
-    "react/": "https://aistudiocdn.com/react@^19.2.0/",
-    "react": "https://aistudiocdn.com/react@^19.2.0"
+    "react": "https://aistudiocdn.com/react@^19.2.0",
+    "react/": "https://aistudiocdn.com/react@^19.2.0/"
   }
 }
 </script>
 </head>
 <body>
 
-  <div class="fixed-widget">
-    <div class="lang-row">
-      <button class="lang-btn active" onclick="setLang('pl')">PL</button>
-      <button class="lang-btn" onclick="setLang('en')">EN</button>
-    </div>
-  </div>
-  
-  <button class="allergy-btn" onclick="openInfo()">!</button>
-
-  <div class="wrap">
-    <header>
-      <div class="brand">
-        <div class="logo">KS</div>
-        <div>
-          <h1>Księstwo Sushi</h1>
-          <div class="sub" id="sub">Fine sushi — Menu</div>
+    <!-- PRELOADER -->
+    <div class="preloader" id="preloader">
+        <div class="loader-content">
+            <div class="loader-logo">KS</div>
+            <div class="loader-line"></div>
         </div>
-      </div>
-    </header>
-
-    <nav id="nav-container"></nav>
-
-    <div class="content">
-      <main class="left" id="menu-container">
-        <!-- Menu Items Render Here -->
-      </main>
-
-      <aside class="right">
-        <div class="contact-card">
-          <h3 id="lbl-contacts">Kontakt</h3>
-          <div id="contacts-list"></div>
-        </div>
-      </aside>
     </div>
 
-    <footer>
-      <span>Księstwo Sushi 2024</span>
-      <span id="lbl-web">Menu — online version</span>
-    </footer>
-  </div>
+    <!-- BACKGROUND EFFECTS -->
+    <div class="noise-overlay"></div>
+    <canvas id="bg-canvas"></canvas>
 
-  <!-- LIGHTBOX -->
-  <div class="lightbox" id="lb" onclick="closeLb()">
-    <button class="lb-close" onclick="closeLb()">&times;</button>
-    <img src="" class="lb-img" id="lb-img">
-  </div>
-  
-  <!-- INFO MODAL -->
-  <div class="info-modal" id="info-modal" onclick="closeInfo(event)">
-    <div class="info-card">
-      <button class="info-close" onclick="closeInfo(event)">&times;</button>
-      <div class="info-icon">⚠️</div>
-      <div class="info-title" id="info-title"></div>
-      <div class="info-text" id="info-text"></div>
-      <div class="info-note" id="info-note"></div>
+    <!-- CUSTOM CURSOR -->
+    <div class="cursor-dot"></div>
+    <div class="cursor-outline"></div>
+
+    <!-- UI CONTROLS -->
+    <div class="lang-widget" id="lang-widget">
+        <button class="lang-btn active" data-lang="pl">PL</button>
+        <button class="lang-btn" data-lang="en">EN</button>
     </div>
-  </div>
 
-  <script>
-    // --- SCROLL LOGIC FOR LANG WIDGET ---
-    window.addEventListener('scroll', () => {
-        const widget = document.querySelector('.fixed-widget');
-        if (window.scrollY > 50) {
-            widget.classList.add('hidden');
-        } else {
-            widget.classList.remove('hidden');
-        }
-    });
+    <button class="float-alert" id="allergy-trigger">!</button>
 
-    // --- ALLERGENS ---
-    const ALLERGIES = {
-        title: { en: 'Allergy Information', pl: 'Informacja o alergenach' },
-        text: {
-            en: 'According to the recipe, they may contain: gluten, cucumber, oshinko, kampyo, avocado, mango, melon, lettuce, sesame seeds, Philadelphia cream cheese, mayonnaise, sauces, edible gold.',
-            pl: 'Zgodnie z recepturą mogą zawierać: gluten, ogórek, oshinko, kampyo, awokado, mango, melon, sałatę, sezam, serek philadelphia, majonez, sosy, złoto jadalne.'
-        },
-        service: {
-            en: 'We kindly inform you that we add a waiter service of 10% to the final bill.',
-            pl: 'Uprzejmie informujemy, że doliczamy serwis kelnerski w wysokości 10% do rachunku końcowego.'
-        }
-    };
-
-    // --- DATA ---
-    const DATA = [
-      {
-        id:'sets',
-        title:{en:'Sushi Sets', pl:'Zestawy Sushi'},
-        img: 'images/zestawy.jpg', 
-        desc:{en:'Curated combinations of our finest rolls, perfect for experiencing a variety of flavors.', pl:'Starannie dobrane kompozycje naszych najlepszych rolek, idealne do poznania różnorodności smaków.'},
-        items:[
-          { en:'Ki Iro 14 pc.', pl:'Ki Iro 14 szt.', price:'70 zł',
-            descEN:'3x hosomaki salmon (raw Fish)\n3x hosomaki calabash (marinated pumpkin shoots)\n4x rainbow (surimi wraped in variety of raw fish)\n4x futomaki Ohio yaki (baked butterfish)',
-            descPL:'3x hosomaki łosoś (surowa ryba)\n3x hosomaki tykwa (marynowane pędy dyni)\n4x rainbow (surimi owijane wachlarzem surowych ryb)\n4x futomaki ohioyaki (pieczona ryba maślana)' },
-          { en:'Orenji 16 pc.', pl:'Orenji 16 szt.', price:'90 zł',
-            descEN:'4x ebi ten (shrimp tempura)\n4x gold california (surimi wraped in raw salmon)\n4x avocado kani (surimi wraped in avocado)\n4x Ohio yaki (baked butterfish covered in seasame)',
-            descPL:'4x ebi ten (krewetka w tempurze)\n4x gold california (surimi owijane surowym łososiem)\n4x awokado kani (surimi owijane awokado)\n4x ohioyaki (pieczona ryba maślana obtoczona w sezamie)' },
-          { en:'Aka 24 pc.', pl:'Aka 24 szt.', price:'130 zł',
-            descEN:'4x gold california (surimi wraped in raw salmon)\n4x ebi ten (shrimp tempura)\n4x mango sake (raw salmon wraped in a mango)\n4x avocado kani (surimi wraped in avocado)\n6x futomaki ohio ten (butterfish tempura)',
-            descPL:'4x gold california (surimi owijane surowym łososiem)\n4x ebi ten (krewetka w tempurze)\n4x mango sake (surowy łosoś owijany mango)\n4x awokado kani (surimi owijane awokado)\n6x Futomaki ohio ten (ryba maślana w tempurze)' }
-        ]
-      },
-      {
-        id:'starters',
-        title:{en:'Starters', pl:'Przystawki'},
-        gallery:[
-            {src:'images/wakame.jpg'},
-            {src:'images/ebiten.jpg'},
-            {src:'images/sake-tataki.jpg'}
-        ], 
-        desc:{en:'A selection of light and fresh starters to begin your sushi experience.', pl:'Wybór lekkich i świeżych przystawek na rozpoczęcie przygody z sushi.'},
-        items:[
-          {en:'Goma Wakame', pl:'Goma Wakame', price:'20 zł', descEN:'wakame salad', descPL:'sałatka wakame'},
-          {en:'Ebiten (3 pcs)', pl:'Ebiten (3 szt.)', price:'30 zł', descEN:'shrimp tempura served with ponzu sauce', descPL:'krewetka tempura z sosem ponzu'},
-          {en:'Sake Tataki', pl:'Sake Tataki', price:'50 zł', descEN:'salmon tartare', descPL:'tatar z łososia'},
-          {en:'Maguro Tataki', pl:'Maguro Tataki', price:'55 zł', descEN:'tuna tartare', descPL:'tatar z tuńczyka'}
-        ]
-      },
-      {
-        id:'soups',
-        title:{en:'Soups', pl:'Zupy'},
-        img:'images/ramen-zupa.jpg',
-        desc:{en:'Traditional Japanese soups, including rich Ramen bowls with various fillings.', pl:'Tradycyjne japońskie zupy, w tym bogate miski Ramenu z różnymi dodatkami.'},
-        note:{en:'The Ramen portion is 800ml, recommended for sharing (2 people).', pl:'Uwaga: Porcja Ramenu to 800ml, polecamy do podziału (dla 2 osób).'},
-        items:[
-          {en:'Ramen Chicken', pl:'Ramen Chicken', price:'48 zł', descEN:'flavorful broth with chicken, vegetables, and ramen noodles', descPL:'bulion z warzywami, mięsem i makaronem ramen'},
-          {en:'Ramen Beef', pl:'Ramen Beef', price:'55 zł', descEN:'beef ramen', descPL:'ramen wołowy'}
-        ]
-      },
-      {
-        id:'nigiri',
-        title:{en:'Nigiri (2 pc)', pl:'Nigiri (2 szt.)'},
-        img:'images/nigiri1.jpg',
-        desc:{en:'Hand-pressed rice topped with fresh fish or seafood.', pl:'Ręcznie formowany ryż z plastrem świeżej ryby lub owoców morza.'},
-        items:[
-          {en:'Sake', pl:'Sake', price:'26 zł', descEN:'salmon', descPL:'łosoś'},
-          {en:'Ohio', pl:'Ohio', price:'25 zł', descEN:'butterfish', descPL:'ryba maślana'},
-          {en:'Maguro', pl:'Maguro', price:'30 zł', descEN:'tuna', descPL:'tuńczyk'},
-          {en:'Unagi', pl:'Unagi', price:'30 zł', descEN:'eel', descPL:'węgorz'},
-          {en:'Hotate', pl:'Hotate', price:'32 zł', descEN:'scallops', descPL:'małże św. Jakuba'},
-          {en:'Tako', pl:'Tako', price:'30 zł', descEN:'octopus', descPL:'ośmiornica'},
-          {en:'Ika', pl:'Ika', price:'30 zł', descEN:'squid', descPL:'kalmar'},
-          {en:'Ebi', pl:'Ebi', price:'30 zł', descEN:'shrimp', descPL:'krewetka'}
-        ]
-      },
-      {
-        id:'futomaki',
-        title:{en:'Futomaki (6 pc)', pl:'Futomaki (6 szt.)'},
-        img:'images/futomaki.jpg',
-        desc:{en:'Thick, traditional rolls with nori on the outside.', pl:'Grube, tradycyjne rolki z nori na zewnątrz.'},
-        items:[
-          {en:'Sake Philadelphia', pl:'Sake Philadelphia', price:'38 zł', descEN:'salmon with philadelphia cream cheese', descPL:'łosoś z serkiem philadelphia'},
-          {en:'Maguro Negi Togarashi', pl:'Maguro Negi Togarashi', price:'42 zł', descEN:'tuna with spicy leek', descPL:'tuńczyk z ostrą dymką'},
-          {en:'Ohio Spice Mango', pl:'Ohio Spice Mango', price:'40 zł', descEN:'spicy butterfish with mango', descPL:'pikantna ryba maślana z mango'},
-          {en:'Ebi Spicy', pl:'Ebi Spicy', price:'40 zł', descEN:'spicy shrimp', descPL:'pikantna krewetka'},
-          {en:'Ebi Tempura', pl:'Ebi Tempura', price:'40 zł', descEN:'shrimp tempura', descPL:'krewetka w tempurze'},
-          {en:'Unagi Kabayaki', pl:'Unagi Kabayaki', price:'45 zł', descEN:'grilled eel with kabayaki sauce', descPL:'grillowany węgorz w sosie kabayaki'},
-          {en:'Ika Tempura', pl:'Ika Tempura', price:'48 zł', descEN:'squid tempura', descPL:'kalmar w tempurze'},
-          {en:'Veggie', pl:'Veggie', price:'36 zł', descEN:'vegetables', descPL:'warzywa'}
-        ]
-      },
-      {
-        id:'uramaki',
-        title:{en:'Uramaki & Tempura (8 pc)', pl:'Uramaki & Tempura (8 szt.)'},
-        img:'images/tempura.jpg',
-        desc:{en:'Our selection of Uramaki (inside-out rolls) and crispy Tempura Uramaki.', pl:'Nasz wybór Uramaki (rolek ryżem na zewnątrz) oraz chrupiących Uramaki w Tempurze.'},
-        isSplit: true,
-        itemsLeft:[
-          {en:'Sake Philadelphia', pl:'Sake Philadelphia', price:'38 zł', descEN:'salmon with philadelphia cream cheese', descPL:'łosoś z serkiem philadelphia'},
-          {en:'Awokado Sake', pl:'Awokado Sake', price:'42 zł', descEN:'salmon wrapped in avocado', descPL:'łosoś owijany awokado'},
-          {en:'Mango Sake', pl:'Mango Sake', price:'42 zł', descEN:'salmon wrapped in mango', descPL:'łosoś owijany mango'},
-          {en:'Maguro Orange Pepper', pl:'Maguro Orange Pepper', price:'45 zł', descEN:'tuna with chopped leek and orange pepper', descPL:'tuńczyk z siekanym porem i orange pepper'},
-          {en:'Ebi Ten Mamemori', pl:'Ebi Ten Mamemori', price:'42 zł', descEN:'shrimp tempura wrapped in soy paper', descPL:'krewetka w tempurze zawijana w papier sojowy'},
-          {en:'Gold California', pl:'Gold California', price:'40 zł', descEN:'surimi wrapped in salmon', descPL:'surimi owijane łososiem'},
-          {en:'Rainbow', pl:'Rainbow', price:'48 zł', descEN:'surimi wrapped in assorted fish', descPL:'surimi owijane wachlarzem ryb'},
-          {en:'Ohio Spice Sake', pl:'Ohio Spice Sake', price:'42 zł', descEN:'salmon wrapped in butterfish', descPL:'łosoś owijany opalaną maślaną'},
-          {en:'Maguro Spicy Ebi Ten', pl:'Maguro Spicy Ebi Ten', price:'45 zł', descEN:'shrimp tempura wrapped in seared tuna', descPL:'krewetka w tempurze owijana opalanym tuńczykiem'},
-          {en:'Kegon', pl:'Kegon', price:'45 zł', descEN:'salmon wrapped in grilled eel', descPL:'łosoś owijany grillowanym węgorzem'},
-          {en:'Sake Aburi', pl:'Sake Aburi', price:'45 zł', descEN:'salmon wrapped in seared spicy salmon', descPL:'łosoś owijany opalanym pikantnym łososiem'},
-          {en:'Tobiko Ohio Ten', pl:'Tobiko Ohio Ten', price:'48 zł', descEN:'butterfish in tempura coated with caviar', descPL:'maślana w tempurze obtoczona kawiorem z latającej ryby'},
-          {en:'Nashi Sake', pl:'Nashi Sake', price:'45 zł', descEN:'salmon wrapped in Japanese pear', descPL:'łosoś owijany japońską gruszką'},
-          {en:'Sake Tataki Ebiten', pl:'Sake Tataki Ebiten', price:'48 zł', descEN:'shrimp tempura wrapped in salmon tartare', descPL:'krewetka w tempurze obtoczona tatarem z łososia'}
-        ],
-        itemsRight:[
-          {en:'Tempura Sake', pl:'Tempura Sake', price:'38 zł', descEN:'salmon', descPL:'łosoś'},
-          {en:'Tempura Ohio', pl:'Tempura Ohio', price:'38 zł', descEN:'butterfish', descPL:'maślana'},
-          {en:'Tempura Maguro', pl:'Tempura Maguro', price:'42 zł', descEN:'tuna', descPL:'tuńczyk'},
-          {en:'Tempura Ebi', pl:'Tempura Ebi', price:'40 zł', descEN:'steamed shrimp', descPL:'parzona krewetka'},
-          {en:'Tempura Unagi Kabayaki', pl:'Tempura Unagi Kabayaki', price:'45 zł', descEN:'grilled eel', descPL:'grillowany węgorz'}
-        ]
-      },
-      {
-        id:'oyakomaki',
-        title:{en:'Oyakomaki (2 pc)', pl:'Oyakomaki (2 szt.)'},
-        img:'images/oyakomaki.jpg',
-        desc:{en:'Our specialty rolls, often wrapped in fish or avocado instead of nori.', pl:'Nasze specjalne rolki, często zawijane w rybę lub awokado zamiast nori.'},
-        items:[
-          {en:'Sake Ebi Tataki', pl:'Sake Ebi Tataki', price:'36 zł', descEN:'chopped shrimp wrapped in salmon', descPL:'siekana krewetka owijana w łososia'},
-          {en:'Sake Ikura', pl:'Sake Ikura', price:'42 zł', descEN:'caviar with salmon wrapped in tuna', descPL:'kawior z łososia owijany tuńczykiem'},
-          {en:'Maguro Sake Tataki', pl:'Maguro Sake Tataki', price:'45 zł', descEN:'chopped salmon wrapped in tuna', descPL:'siekany łosoś owijany tuńczyком'}
-        ]
-      },
-      {
-        id:'sashimi',
-        title:{en:'Sashimi (9 pc)', pl:'Sashimi (9 szt.)'},
-        img:'images/sashimi.jpg',
-        desc:{en:'Thinly sliced raw fish and seafood, served without rice.', pl:'Cienko krojone plastry surowej ryby i owoców morza, podawane bez ryżu.'},
-        items:[
-          {en:'Mizu', pl:'Mizu', price:'95 zł', descEN:'slices of raw fish — salmon, tuna, butterfish', descPL:'plastry surowej ryby — łosoś, tuńczyk, maślana'}
-        ]
-      }
-    ];
-
-    let LANG = 'pl';
-
-    function setLang(l) {
-      if(LANG===l) return;
-      LANG = l;
-      
-      const buttons = document.querySelectorAll('.lang-btn');
-      buttons.forEach(b => {
-          const isActive = b.innerText.toLowerCase() === l;
-          b.classList.toggle('active', isActive);
-      });
-      
-      const content = document.querySelector('.left');
-      content.style.opacity = '0';
-      setTimeout(() => {
-        render();
-        content.style.opacity = '1';
-      }, 300);
-    }
-
-    function renderItem(i) {
-        return `
-        <div class="item">
-            <div class="item-info">
-                <div class="item-name">${LANG==='en'?i.en:i.pl}</div>
-                <div class="item-desc">${LANG==='en'?i.descEN:i.descPL}</div>
-            </div>
-            <div class="item-price">${i.price}</div>
-        </div>
-        `;
-    }
-
-    function render() {
-      // Texts
-      document.getElementById('sub').innerText = LANG==='en' ? 'Fine sushi — Menu' : 'Wyborne sushi — Menu';
-      document.getElementById('lbl-contacts').innerText = LANG==='en' ? 'Contacts' : 'Kontakt';
-      document.getElementById('lbl-web').innerText = LANG==='en' ? 'Menu — open web version' : 'Menu — wersja online';
-
-      // Update Info Modal Content
-      document.getElementById('info-title').innerText = LANG==='en'?ALLERGIES.title.en:ALLERGIES.title.pl;
-      document.getElementById('info-text').innerText = LANG==='en'?ALLERGIES.text.en:ALLERGIES.text.pl;
-      document.getElementById('info-note').innerText = LANG==='en'?ALLERGIES.service.en:ALLERGIES.service.pl;
-
-      // Nav
-      const nav = document.getElementById('nav-container');
-      nav.innerHTML = DATA.map(s => `
-        <button class="nav-chip" onclick="document.getElementById('${s.id}').scrollIntoView({behavior:'smooth'})">
-          ${LANG==='en'?s.title.en:s.title.pl}
-        </button>
-      `).join('');
-
-      // Menu
-      const container = document.getElementById('menu-container');
-      const menuHTML = DATA.map(section => {
-        const title = LANG==='en'?section.title.en:section.title.pl;
-        const desc = LANG==='en'?section.desc.en:section.desc.pl;
+    <!-- MAIN WRAPPER -->
+    <div class="main-wrapper">
         
-        // Image logic
-        let mediaHtml = '';
-        if(section.gallery) {
-            mediaHtml = `<div class="stack-grid">
-                ${section.gallery.map(g=> `
-                  <button type="button" class="img-btn" onclick="openLb('${g.src}')">
-                    <img src="${g.src}" class="stack-img">
-                  </button>
-                `).join('')}
-            </div>`;
-        } else if(section.img) {
-            mediaHtml = `
-              <button type="button" class="img-btn" onclick="openLb('${section.img}')">
-                <img src="${section.img}" class="single-img">
-              </button>
-            `;
-        }
+        <header>
+            <div class="header-logo">KS</div>
+            <h1 class="header-title">Księstwo Sushi</h1>
+            <div class="header-sub" data-i18n="subtitle">Fine sushi — Menu</div>
+        </header>
 
-        // Note logic
-        const noteHtml = section.note ? `<div class="note">${LANG==='en'?section.note.en:section.note.pl}</div>` : '';
+        <nav class="nav-sticky" id="main-nav">
+            <!-- Populated by JS -->
+        </nav>
 
-        // Items Logic (Split or Normal)
-        let itemsHtml = '';
-        if(section.isSplit) {
-            itemsHtml = `
-            <div class="cols-2">
-                <div>
-                    <div class="col-title">Uramaki</div>
-                    ${section.itemsLeft.map(renderItem).join('')}
+        <div class="sidebar">
+            <!-- LEFT: MENU CONTENT -->
+            <main class="menu-grid" id="menu-container">
+                <!-- Populated by JS -->
+            </main>
+
+            <!-- RIGHT: CONTACT (Desktop sticky) -->
+            <aside>
+                <div class="contact-box" style="position: sticky; top: 100px;">
+                    <h3 style="margin-bottom: 20px; font-size:1.2rem;" data-i18n="contact">Kontakt</h3>
+                    <a href="tel:+48502525544" class="contact-btn" data-cursor="hover">
+                        <img src="images/phone.png" class="contact-icon" alt="phone">
+                        <span>+48 502 525 544</span>
+                    </a>
+                    <a href="https://www.instagram.com/ksiestwosushi" target="_blank" class="contact-btn" data-cursor="hover">
+                        <img src="images/instagram.png" class="contact-icon" alt="insta">
+                        <span>@ksiestwosushi</span>
+                    </a>
+                    <a href="https://maps.app.goo.gl/ZT1PfgScLAJkTbhx7" target="_blank" class="contact-btn" data-cursor="hover">
+                        <img src="images/google_maps.png" class="contact-icon" alt="map">
+                        <span>Krupówki 38A</span>
+                    </a>
                 </div>
-                <div>
-                    <div class="col-title">${LANG==='en'?'Tempura':'W Tempurze'}</div>
-                    ${section.itemsRight.map(renderItem).join('')}
-                </div>
-            </div>`;
-        } else {
-            itemsHtml = section.items.map(renderItem).join('');
-        }
+            </aside>
+        </div>
 
-        const btnText = LANG==='en'?'View items':'Pokaż pozycje';
-        const sectionId = `sec-${section.id}`;
-        const contentId = `content-${section.id}`;
+        <footer>
+            <span>Księstwo Sushi 2024</span>
+            <span data-i18n="webVersion">Menu — online version</span>
+        </footer>
 
-        return `
-        <div class="menu-block" id="${sectionId}">
-            <div class="block-header"><h2>${title}</h2></div>
-            <div class="intro-media">${mediaHtml}</div>
-            <div class="intro-text">${desc}</div>
-            ${noteHtml}
+    </div>
+
+    <!-- LIGHTBOX MODAL -->
+    <div class="modal-overlay" id="lightbox">
+        <button class="modal-close">&times;</button>
+        <img src="" class="modal-img" id="lightbox-img">
+    </div>
+
+    <!-- INFO MODAL -->
+    <div class="modal-overlay" id="info-modal">
+        <div class="info-card">
+            <button class="modal-close" style="color:#222; top:20px; right:20px;">&times;</button>
+            <div style="font-size: 50px; margin-bottom: 20px;">⚠️</div>
+            <h3 data-i18n="allergyTitle" style="margin-bottom:15px; font-size:1.5rem;"></h3>
+            <p data-i18n="allergyText" style="margin-bottom:20px; font-size:1rem;"></p>
+            <div style="background:#f0f0f0; padding:15px; border-radius:12px; font-size:0.9rem; font-style:italic;" data-i18n="serviceText"></div>
+        </div>
+    </div>
+
+    <script>
+        /**
+         * ==========================================
+         * 1. DATA STORE
+         * ==========================================
+         */
+        const TEXTS = {
+            subtitle: { en: 'Fine sushi — Menu', pl: 'Wyborne sushi — Menu' },
+            contact: { en: 'Contact', pl: 'Kontakt' },
+            webVersion: { en: 'Menu — open web version', pl: 'Menu — wersja online' },
+            viewItems: { en: 'View available items', pl: 'Pokaż dostępne pozycje' },
+            allergyTitle: { en: 'Allergy Information', pl: 'Informacja o alergenach' },
+            allergyText: {
+                en: 'According to the recipe, dishes may contain: gluten, cucumber, oshinko, kampyo, avocado, mango, melon, lettuce, sesame seeds, Philadelphia cream cheese, mayonnaise, sauces, edible gold.',
+                pl: 'Zgodnie z recepturą mogą zawierać: gluten, ogórek, oshinko, kampyo, awokado, mango, melon, sałatę, sezam, serek philadelphia, majonez, sosy, złoto jadalne.'
+            },
+            serviceText: {
+                en: 'We kindly inform you that we add a waiter service of 10% to the final bill.',
+                pl: 'Uprzejmie informujemy, że doliczamy serwis kelnerski w wysokości 10% do rachunku końcowego.'
+            },
+            tempura: { en: 'Tempura', pl: 'W Tempurze' }
+        };
+
+        const MENU = [
+            {
+                id: 'sets',
+                title: { en: 'Sushi Sets', pl: 'Zestawy Sushi' },
+                img: 'images/zestawy.jpg',
+                desc: { en: 'Curated combinations of our finest rolls, perfect for experiencing a variety of flavors.', pl: 'Starannie dobrane kompozycje naszych najlepszych rolek, idealne do poznania różnorodności smaków.' },
+                items: [
+                    { en: 'Ki Iro 14 pc.', pl: 'Ki Iro 14 szt.', price: '70 zł', descEN: '3x hosomaki salmon\n3x hosomaki calabash\n4x rainbow\n4x futomaki Ohio yaki', descPL: '3x hosomaki łosoś\n3x hosomaki tykwa\n4x rainbow\n4x futomaki ohioyaki' },
+                    { en: 'Orenji 16 pc.', pl: 'Orenji 16 szt.', price: '90 zł', descEN: '4x ebi ten\n4x gold california\n4x avocado kani\n4x Ohio yaki', descPL: '4x ebi ten\n4x gold california\n4x awokado kani\n4x ohioyaki' },
+                    { en: 'Aka 24 pc.', pl: 'Aka 24 szt.', price: '130 zł', descEN: '4x gold california\n4x ebi ten\n4x mango sake\n4x avocado kani\n6x futomaki ohio ten', descPL: '4x gold california\n4x ebi ten\n4x mango sake\n4x awokado kani\n6x Futomaki ohio ten' }
+                ]
+            },
+            {
+                id: 'starters',
+                title: { en: 'Starters', pl: 'Przystawki' },
+                gallery: [
+                    {src: 'images/wakame.jpg'},
+                    {src: 'images/ebiten.jpg'},
+                    {src: 'images/sake-tataki.jpg'}
+                ],
+                desc: { en: 'A selection of light and fresh starters to begin your sushi experience.', pl: 'Wybór lekkich i świeżych przystawek na rozpoczęcie przygody z sushi.' },
+                items: [
+                    { en: 'Goma Wakame', pl: 'Goma Wakame', price: '20 zł', descEN: 'Wakame salad', descPL: 'Sałatka wakame' },
+                    { en: 'Ebiten (3 pcs)', pl: 'Ebiten (3 szt.)', price: '30 zł', descEN: 'Shrimp tempura with ponzu', descPL: 'Krewetka tempura z sosem ponzu' },
+                    { en: 'Sake Tataki', pl: 'Sake Tataki', price: '50 zł', descEN: 'Salmon tartare', descPL: 'Tatar z łososia' },
+                    { en: 'Maguro Tataki', pl: 'Maguro Tataki', price: '55 zł', descEN: 'Tuna tartare', descPL: 'Tatar z tuńczyka' }
+                ]
+            },
+            {
+                id: 'soups',
+                title: { en: 'Soups', pl: 'Zupy' },
+                img: 'images/ramen-zupa.jpg',
+                desc: { en: 'Traditional Japanese soups, including rich Ramen bowls with various fillings.', pl: 'Tradycyjne japońskie zupy, w tym bogate miski Ramenu z różnymi dodatkami.' },
+                note: { en: 'Note: The Ramen portion is 800ml, recommended for sharing (2 people).', pl: 'Uwaga: Porcja Ramenu to 800ml, polecamy do podziału (dla 2 osób).' },
+                items: [
+                    { en: 'Ramen Chicken', pl: 'Ramen Chicken', price: '48 zł', descEN: 'Broth with chicken & vegetables', descPL: 'Bulion z warzywami i mięsem' },
+                    { en: 'Ramen Beef', pl: 'Ramen Beef', price: '55 zł', descEN: 'Beef ramen', descPL: 'Ramen wołowy' }
+                ]
+            },
+            {
+                id: 'nigiri',
+                title: { en: 'Nigiri (2 pc)', pl: 'Nigiri (2 szt.)' },
+                img: 'images/nigiri1.jpg',
+                desc: { en: 'Hand-pressed rice topped with fresh fish or seafood.', pl: 'Ręcznie formowany ryż z plastrem świeżej ryby lub owoców morza.' },
+                items: [
+                    { en: 'Sake', pl: 'Sake', price: '26 zł', descEN: 'Salmon', descPL: 'Łosoś' },
+                    { en: 'Ohio', pl: 'Ohio', price: '25 zł', descEN: 'Butterfish', descPL: 'Ryba maślana' },
+                    { en: 'Maguro', pl: 'Maguro', price: '30 zł', descEN: 'Tuna', descPL: 'Tuńczyk' },
+                    { en: 'Unagi', pl: 'Unagi', price: '30 zł', descEN: 'Eel', descPL: 'Węgorz' },
+                    { en: 'Hotate', pl: 'Hotate', price: '32 zł', descEN: 'Scallops', descPL: 'Małże św. Jakuba' },
+                    { en: 'Ebi', pl: 'Ebi', price: '30 zł', descEN: 'Shrimp', descPL: 'Krewetka' }
+                ]
+            },
+            {
+                id: 'futomaki',
+                title: { en: 'Futomaki (6 pc)', pl: 'Futomaki (6 szt.)' },
+                img: 'images/futomaki.jpg',
+                desc: { en: 'Thick, traditional rolls with nori on the outside.', pl: 'Grube, tradycyjne rolki z nori na zewnątrz.' },
+                items: [
+                    { en: 'Sake Philadelphia', pl: 'Sake Philadelphia', price: '38 zł', descEN: 'Salmon & cream cheese', descPL: 'Łosoś z serkiem' },
+                    { en: 'Maguro Negi', pl: 'Maguro Negi', price: '42 zł', descEN: 'Tuna with spicy leek', descPL: 'Tuńczyk z ostrą dymką' },
+                    { en: 'Ohio Spice Mango', pl: 'Ohio Spice Mango', price: '40 zł', descEN: 'Spicy butterfish, mango', descPL: 'Pikantna maślana z mango' },
+                    { en: 'Ebi Tempura', pl: 'Ebi Tempura', price: '40 zł', descEN: 'Shrimp tempura', descPL: 'Krewetka w tempurze' },
+                    { en: 'Unagi Kabayaki', pl: 'Unagi Kabayaki', price: '45 zł', descEN: 'Grilled eel', descPL: 'Grillowany węgorz' },
+                    { en: 'Veggie', pl: 'Veggie', price: '36 zł', descEN: 'Vegetables', descPL: 'Warzywa' }
+                ]
+            },
+            {
+                id: 'uramaki',
+                title: { en: 'Uramaki & Tempura', pl: 'Uramaki & Tempura' },
+                img: 'images/tempura.jpg',
+                desc: { en: 'Our selection of Uramaki (inside-out rolls) and crispy Tempura Uramaki.', pl: 'Nasz wybór Uramaki (rolek ryżem na zewnątrz) oraz chrupiących Uramaki w Tempurze.' },
+                isSplit: true,
+                itemsLeft: [
+                    { en: 'Sake Philadelphia', pl: 'Sake Philadelphia', price: '38 zł', descEN: 'Salmon & cheese', descPL: 'Łosoś z serkiem' },
+                    { en: 'Awokado Sake', pl: 'Awokado Sake', price: '42 zł', descEN: 'Salmon wrapped in avocado', descPL: 'Łosoś owijany awokado' },
+                    { en: 'Gold California', pl: 'Gold California', price: '40 zł', descEN: 'Surimi wrapped in salmon', descPL: 'Surimi owijane łososiem' },
+                    { en: 'Rainbow', pl: 'Rainbow', price: '48 zł', descEN: 'Assorted fish wrap', descPL: 'Wachlarz ryb' },
+                    { en: 'Kegon', pl: 'Kegon', price: '45 zł', descEN: 'Eel wrap', descPL: 'Owijane węgorzem' }
+                ],
+                itemsRight: [
+                    { en: 'Tempura Sake', pl: 'Tempura Sake', price: '38 zł', descEN: 'Salmon', descPL: 'Łosoś' },
+                    { en: 'Tempura Maguro', pl: 'Tempura Maguro', price: '42 zł', descEN: 'Tuna', descPL: 'Tuńczyk' },
+                    { en: 'Tempura Ebi', pl: 'Tempura Ebi', price: '40 zł', descEN: 'Shrimp', descPL: 'Krewetka' },
+                    { en: 'Tempura Unagi', pl: 'Tempura Unagi', price: '45 zł', descEN: 'Eel', descPL: 'Węgorz' }
+                ]
+            },
+            {
+                id: 'oyakomaki',
+                title: { en: 'Oyakomaki (2 pc)', pl: 'Oyakomaki (2 szt.)' },
+                img: 'images/oyakomaki.jpg',
+                desc: { en: 'Specialty rolls wrapped in fish.', pl: 'Specjalne rolki owijane w rybę.' },
+                items: [
+                    { en: 'Sake Ebi Tataki', pl: 'Sake Ebi Tataki', price: '36 zł', descEN: 'Shrimp in salmon', descPL: 'Krewetka w łososiu' },
+                    { en: 'Sake Ikura', pl: 'Sake Ikura', price: '42 zł', descEN: 'Caviar in tuna', descPL: 'Kawior w tuńczyku' }
+                ]
+            },
+            {
+                id: 'sashimi',
+                title: { en: 'Sashimi (9 pc)', pl: 'Sashimi (9 szt.)' },
+                img: 'images/sashimi.jpg',
+                desc: { en: 'Thinly sliced raw fish.', pl: 'Cienko krojone plastry surowej ryby.' },
+                items: [
+                    { en: 'Mizu', pl: 'Mizu', price: '95 zł', descEN: 'Salmon, tuna, butterfish', descPL: 'Łosoś, tuńczyk, maślana' }
+                ]
+            }
+        ];
+
+        /**
+         * ==========================================
+         * 2. APPLICATION STATE
+         * ==========================================
+         */
+        const App = {
+            lang: 'pl',
             
-            <div class="accordion-wrapper">
-                <button class="accordion-trigger" onclick="toggleAcc(this)">
-                    <span class="trigger-text">${btnText}</span>
-                    <span class="trigger-icon">▼</span>
-                </button>
-                <div id="${contentId}" class="accordion-content">
-                    <div class="min-h-0">
-                        <div class="items-list">
-                            ${itemsHtml}
+            init() {
+                this.cacheDOM();
+                this.bindEvents();
+                this.render();
+                this.initCanvas();
+                this.initCursor();
+                this.initTiltEffect();
+                
+                // Remove preloader
+                setTimeout(() => {
+                    document.getElementById('preloader').classList.add('hidden');
+                }, 1000);
+            },
+
+            cacheDOM() {
+                this.dom = {
+                    nav: document.getElementById('main-nav'),
+                    menuContainer: document.getElementById('menu-container'),
+                    langBtns: document.querySelectorAll('.lang-btn'),
+                    lightbox: document.getElementById('lightbox'),
+                    lightboxImg: document.getElementById('lightbox-img'),
+                    infoModal: document.getElementById('info-modal'),
+                    allergyTrigger: document.getElementById('allergy-trigger'),
+                    langWidget: document.getElementById('lang-widget')
+                };
+            },
+
+            bindEvents() {
+                this.dom.langBtns.forEach(btn => {
+                    btn.addEventListener('click', () => this.setLang(btn.dataset.lang));
+                });
+                
+                this.dom.allergyTrigger.addEventListener('click', () => {
+                    this.dom.infoModal.classList.add('active');
+                    this.dom.allergyTrigger.classList.add('removed');
+                });
+
+                document.querySelectorAll('.modal-close, .modal-overlay').forEach(el => {
+                    el.addEventListener('click', (e) => {
+                        if(e.target === el) {
+                            this.dom.infoModal.classList.remove('active');
+                            this.dom.lightbox.classList.remove('active');
+                        }
+                    });
+                });
+
+                window.addEventListener('scroll', this.handleScroll.bind(this));
+            },
+
+            setLang(newLang) {
+                if(this.lang === newLang) return;
+                this.lang = newLang;
+                
+                // Update active button state
+                this.dom.langBtns.forEach(b => b.classList.toggle('active', b.dataset.lang === newLang));
+                
+                // Fade out content
+                this.dom.menuContainer.style.opacity = '0';
+                
+                setTimeout(() => {
+                    this.render(); // Re-render everything
+                    this.updateStaticTexts();
+                    this.dom.menuContainer.style.opacity = '1';
+                    this.initTiltEffect(); // Re-bind 3D tilt
+                }, 300);
+            },
+
+            handleScroll() {
+                // Nav scroll effect
+                const nav = document.querySelector('.nav-sticky');
+                if (window.scrollY > 50) {
+                    nav.classList.add('scrolled');
+                    this.dom.langWidget.classList.add('hide');
+                } else {
+                    nav.classList.remove('scrolled');
+                    this.dom.langWidget.classList.remove('hide');
+                }
+                
+                // Section reveal
+                document.querySelectorAll('.menu-section').forEach(sec => {
+                    const rect = sec.getBoundingClientRect();
+                    if(rect.top < window.innerHeight * 0.85) {
+                        sec.classList.add('visible');
+                    }
+                });
+            },
+
+            updateStaticTexts() {
+                document.querySelectorAll('[data-i18n]').forEach(el => {
+                    const key = el.dataset.i18n;
+                    if(TEXTS[key]) el.textContent = TEXTS[key][this.lang];
+                });
+            },
+
+            render() {
+                // 1. Render Navigation
+                this.dom.nav.innerHTML = MENU.map(section => `
+                    <button class="nav-btn" onclick="document.getElementById('sec-${section.id}').scrollIntoView({behavior:'smooth'})" data-cursor="hover">
+                        ${section.title[this.lang]}
+                    </button>
+                `).join('');
+
+                // 2. Render Menu Sections
+                const menuHTML = MENU.map((section, index) => {
+                    const title = section.title[this.lang];
+                    const desc = section.desc[this.lang];
+                    
+                    // Images Logic
+                    let mediaHtml = '';
+                    if(section.gallery) {
+                        mediaHtml = `<div class="stack-wrapper">
+                            ${section.gallery.map(g => `
+                                <div class="img-wrapper" onclick="App.openLightbox('${g.src}')" data-cursor="hover">
+                                    <img src="${g.src}" loading="lazy">
+                                </div>
+                            `).join('')}
+                        </div>`;
+                    } else if(section.img) {
+                        mediaHtml = `<div class="img-wrapper" onclick="App.openLightbox('${section.img}')" data-cursor="hover">
+                            <img src="${section.img}" loading="lazy">
+                        </div>`;
+                    }
+
+                    // Note Logic
+                    const noteHtml = section.note ? `<div class="card-note">${section.note[this.lang]}</div>` : '';
+
+                    // Items Logic
+                    let itemsHtml = '';
+                    if(section.isSplit) {
+                        itemsHtml = `
+                        <div class="split-cols">
+                            <div>
+                                <h4 class="sub-head">Uramaki</h4>
+                                ${section.itemsLeft.map(i => this.renderItem(i)).join('')}
+                            </div>
+                            <div>
+                                <h4 class="sub-head">${TEXTS.tempura[this.lang]}</h4>
+                                ${section.itemsRight.map(i => this.renderItem(i)).join('')}
+                            </div>
+                        </div>`;
+                    } else {
+                        itemsHtml = section.items.map(i => this.renderItem(i)).join('');
+                    }
+
+                    const btnText = TEXTS.viewItems[this.lang];
+
+                    return `
+                    <section class="menu-section card-3d-wrap" id="sec-${section.id}" style="transition-delay: ${index * 100}ms">
+                        <div class="card js-tilt">
+                            <div class="card-header">
+                                <h2 class="section-title">${title}</h2>
+                            </div>
+                            <div class="media-gallery">${mediaHtml}</div>
+                            <div class="card-desc">${desc}</div>
+                            ${noteHtml}
+                            
+                            <div class="accordion-wrapper">
+                                <button class="acc-trigger" onclick="this.closest('.accordion-wrapper').classList.toggle('active')" data-cursor="hover">
+                                    <span class="acc-btn-text">${btnText}</span>
+                                    <span class="acc-icon">▼</span>
+                                </button>
+                                <div class="acc-content">
+                                    <div class="acc-inner">
+                                        <div class="item-list">
+                                            ${itemsHtml}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
+                    </section>
+                    `;
+                }).join('');
+
+                // 3. Static Allergy Block (Bottom)
+                const allergyHTML = `
+                <section class="menu-section allergy-static">
+                   <h2 style="font-size:1.5rem; margin-bottom:15px; color:var(--c-accent);">${TEXTS.allergyTitle[this.lang]}</h2>
+                   <p style="font-size:0.95rem; line-height:1.6; margin-bottom:20px;">${TEXTS.allergyText[this.lang]}</p>
+                   <p style="font-size:0.9rem; font-style:italic; padding:15px; background:#f9f9f9; border-radius:10px;">${TEXTS.serviceText[this.lang]}</p>
+                </section>
+                `;
+
+                this.dom.menuContainer.innerHTML = menuHTML + allergyHTML;
+                this.updateStaticTexts();
+            },
+
+            renderItem(item) {
+                const name = this.lang === 'en' ? item.en : item.pl;
+                const desc = this.lang === 'en' ? item.descEN : item.descPL;
+                return `
+                <div class="menu-item">
+                    <div class="item-details">
+                        <div class="item-name">${name}</div>
+                        <div class="item-desc">${desc.replace(/\n/g, '<br>')}</div>
                     </div>
+                    <div class="item-price">${item.price}</div>
                 </div>
-            </div>
-        </div>
-        `;
-      }).join('');
+                `;
+            },
 
-      // Add static allergy block at the bottom
-      const allergyHTML = `
-        <div class="menu-block" style="border:none; box-shadow:none; background:transparent;">
-            <div class="block-header" style="padding-bottom:10px; padding-left:0;">
-                <h2 style="font-size:18px; color:var(--muted);">${LANG==='en'?ALLERGIES.title.en:ALLERGIES.title.pl}</h2>
-            </div>
-            <div style="font-size:13px; color:var(--muted); line-height:1.6; background:#fff; padding:20px; border-radius:16px; border:1px solid rgba(0,0,0,0.04);">
-                ${LANG==='en'?ALLERGIES.text.en:ALLERGIES.text.pl}
-                <div style="margin-top:16px; font-style:italic; padding-top:16px; border-top:1px dashed #eee;">
-                    ${LANG==='en'?ALLERGIES.service.en:ALLERGIES.service.pl}
-                </div>
-            </div>
-        </div>
-      `;
+            openLightbox(src) {
+                this.dom.lightboxImg.src = src;
+                this.dom.lightbox.classList.add('active');
+            },
 
-      container.innerHTML = menuHTML + allergyHTML;
+            // --- CANVAS PARTICLES ---
+            initCanvas() {
+                const canvas = document.getElementById('bg-canvas');
+                const ctx = canvas.getContext('2d');
+                let width, height;
+                let particles = [];
 
-      // Contacts
-      document.getElementById('contacts-list').innerHTML = `
-        <a href="tel:+48502525544" class="c-btn">
-            <img src="images/phone.png"> <span>+48 502 525 544</span>
-        </a> 
-        <a href="https://www.instagram.com/ksiestwosushi?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" class="c-btn">
-            <img src="images/instagram.png"> <span>@ksiestwosushi</span>
-        </a>
-        <a href="https://maps.app.goo.gl/ZT1PfgScLAJkTbhx7" target="_blank" class="c-btn">
-            <img src="images/google_maps.png"> <span>Krupówki 38A</span>
-        </a>
-      `;
-    }
+                const resize = () => {
+                    width = canvas.width = window.innerWidth;
+                    height = canvas.height = window.innerHeight;
+                };
+                window.addEventListener('resize', resize);
+                resize();
 
-    // --- ACCORDION LOGIC ---
-    function toggleAcc(btn) {
-        btn.parentElement.classList.toggle('active');
-    }
+                class Particle {
+                    constructor() {
+                        this.x = Math.random() * width;
+                        this.y = Math.random() * height;
+                        this.vx = (Math.random() - 0.5) * 0.5;
+                        this.vy = (Math.random() - 0.5) * 0.5;
+                        this.size = Math.random() * 3 + 1;
+                        this.color = `rgba(216, 139, 106, ${Math.random() * 0.3})`;
+                    }
+                    update() {
+                        this.x += this.vx;
+                        this.y += this.vy;
+                        if(this.x < 0) this.x = width;
+                        if(this.x > width) this.x = 0;
+                        if(this.y < 0) this.y = height;
+                        if(this.y > height) this.y = 0;
+                    }
+                    draw() {
+                        ctx.beginPath();
+                        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                        ctx.fillStyle = this.color;
+                        ctx.fill();
+                    }
+                }
 
-    // --- INFO MODAL ---
-    function openInfo() {
-        const modal = document.getElementById('info-modal');
-        modal.classList.add('open');
-        
-        // Hide button
-        const btn = document.querySelector('.allergy-btn');
-        if(btn) {
-            btn.style.opacity = '0';
-            btn.style.pointerEvents = 'none';
-        }
-    }
-    
-    function closeInfo(e) {
-        if (e.target.id === 'info-modal' || e.target.classList.contains('info-close') || e.key === 'Escape') {
-             document.getElementById('info-modal').classList.remove('open');
-        }
-    }
+                for(let i=0; i<40; i++) particles.push(new Particle());
 
-    // --- LIGHTBOX ---
-    function openLb(src) {
-        const lb = document.getElementById('lb');
-        document.getElementById('lb-img').src = src;
-        lb.classList.add('open');
-    }
-    
-    function closeLb() {
-        document.getElementById('lb').classList.remove('open');
-    }
+                const animate = () => {
+                    ctx.clearRect(0, 0, width, height);
+                    particles.forEach(p => { p.update(); p.draw(); });
+                    requestAnimationFrame(animate);
+                };
+                animate();
+            },
 
-    // INIT
-    render();
+            // --- CUSTOM CURSOR ---
+            initCursor() {
+                const dot = document.querySelector('.cursor-dot');
+                const outline = document.querySelector('.cursor-outline');
+                
+                window.addEventListener('mousemove', (e) => {
+                    const posX = e.clientX;
+                    const posY = e.clientY;
+                    
+                    // Dot follows instantly
+                    dot.style.left = `${posX}px`;
+                    dot.style.top = `${posY}px`;
+                    
+                    // Outline follows with delay (simulated via CSS transition or JS lag)
+                    outline.animate({
+                        left: `${posX}px`,
+                        top: `${posY}px`
+                    }, { duration: 500, fill: "forwards" });
+                });
 
-  </script>
+                // Hover effect
+                document.body.addEventListener('mouseover', (e) => {
+                    if (e.target.closest('[data-cursor="hover"]')) {
+                        document.body.classList.add('hovering');
+                    } else {
+                        document.body.classList.remove('hovering');
+                    }
+                });
+            },
+
+            // --- 3D TILT EFFECT FOR CARDS ---
+            initTiltEffect() {
+                if(window.innerWidth < 900) return; // Disable on mobile
+
+                document.querySelectorAll('.js-tilt').forEach(card => {
+                    card.addEventListener('mousemove', (e) => {
+                        const rect = card.getBoundingClientRect();
+                        const x = e.clientX - rect.left;
+                        const y = e.clientY - rect.top;
+                        
+                        const centerX = rect.width / 2;
+                        const centerY = rect.height / 2;
+                        
+                        const rotateX = ((y - centerY) / centerY) * -2; // Max 2deg rotation
+                        const rotateY = ((x - centerX) / centerX) * 2;
+
+                        card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.01, 1.01, 1.01)`;
+                    });
+
+                    card.addEventListener('mouseleave', () => {
+                        card.style.transform = `perspective(1000px) rotateX(0) rotateY(0) scale3d(1, 1, 1)`;
+                    });
+                });
+            }
+        };
+
+        // START APP
+        document.addEventListener('DOMContentLoaded', () => App.init());
+
+    </script>
 </body>
 </html>
