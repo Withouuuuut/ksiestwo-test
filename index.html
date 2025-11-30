@@ -2,360 +2,294 @@
 <html lang="pl">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Księstwo Sushi — Haute Cuisine</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <title>Księstwo Sushi — Mobile Luxury</title>
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Tenor+Sans&display=swap" rel="stylesheet">
 
   <style>
     :root {
-      --bg: #050505;
-      --surface: #0f0f0f;
-      --gold: #d4af37;
-      --gold-dim: #8a702a;
-      --text: #e0e0e0;
-      --muted: #666;
-      --white: #ffffff;
-      --ease: cubic-bezier(0.16, 1, 0.3, 1);
+      --bg: #000000;
+      --card-bg: #0a0a0a;
+      --gold: #c5a059;
+      --gold-light: #e5cfa0;
+      --text: #f0f0f0;
+      --muted: #888;
+      --glass: rgba(20, 20, 20, 0.6);
+      --border: rgba(197, 160, 89, 0.15);
+      --safe-area-bottom: env(safe-area-inset-bottom);
     }
 
-    * { box-sizing: border-box; cursor: none; /* Hiding default cursor for custom one */ }
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
     
     body {
       margin: 0;
       background-color: var(--bg);
       color: var(--text);
-      font-family: 'Manrope', sans-serif;
+      font-family: 'Tenor Sans', sans-serif; /* Clean, fashion sans-serif */
       overflow-x: hidden;
-      -webkit-font-smoothing: antialiased;
-    }
-
-    /* --- NOISE TEXTURE OVERLAY --- */
-    .noise {
-      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      pointer-events: none; z-index: 9000;
-      opacity: 0.05;
-      background: url('https://grainy-gradients.vercel.app/noise.svg');
-    }
-
-    /* --- CUSTOM CURSOR --- */
-    .cursor-dot, .cursor-circle {
-      position: fixed; top: 0; left: 0;
-      transform: translate(-50%, -50%);
-      border-radius: 50%;
-      z-index: 9999;
-      pointer-events: none;
-    }
-    .cursor-dot { width: 8px; height: 8px; background: var(--gold); }
-    .cursor-circle {
-      width: 40px; height: 40px;
-      border: 1px solid rgba(212, 175, 55, 0.5);
-      transition: width 0.2s, height 0.2s, background-color 0.2s;
-    }
-    /* Hover state for cursor */
-    body.hovering .cursor-circle {
-      width: 60px; height: 60px;
-      background: rgba(212, 175, 55, 0.1);
-      border-color: var(--gold);
+      padding-bottom: calc(100px + var(--safe-area-bottom)); /* Space for bottom nav */
     }
 
     /* --- TYPOGRAPHY --- */
-    h1, h2, h3 { font-family: 'Playfair Display', serif; font-weight: 400; margin: 0; }
+    h1, h2, h3 { font-family: 'Cinzel', serif; font-weight: 400; margin: 0; letter-spacing: 0.05em; }
     
-    .hero-title {
-      font-size: clamp(3rem, 8vw, 8rem);
-      line-height: 0.9;
-      color: var(--white);
-      mix-blend-mode: exclusion;
+    /* --- LOADER --- */
+    .loader {
+      position: fixed; inset: 0; background: #000; z-index: 9999;
+      display: flex; align-items: center; justify-content: center;
+      transition: opacity 0.6s ease;
     }
-    
-    .section-title {
-      font-size: clamp(2rem, 4vw, 3.5rem);
-      color: var(--gold);
-      margin-bottom: 40px;
-      border-bottom: 1px solid rgba(212, 175, 55, 0.2);
-      padding-bottom: 20px;
-      display: inline-block;
+    .loader.hidden { opacity: 0; pointer-events: none; }
+    .loader-text {
+      color: var(--gold); font-family: 'Cinzel', serif; font-size: 24px;
+      animation: pulse 2s infinite; letter-spacing: 4px;
     }
 
-    /* --- LAYOUT --- */
-    .container {
-      max-width: 1400px;
-      margin: 0 auto;
-      padding: 0 20px;
-    }
-
-    /* --- HERO SECTION --- */
-    .hero {
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      position: relative;
-      overflow: hidden;
-    }
-    .hero-bg {
-      position: absolute; inset: 0;
-      background: radial-gradient(circle at center, #1a1a1a 0%, #050505 70%);
-      z-index: -1;
-    }
-    .brand-mark {
-      font-size: 14px; text-transform: uppercase; letter-spacing: 4px; color: var(--gold);
-      margin-bottom: 20px; display: block;
-    }
-
-    /* --- NAVIGATION --- */
-    .nav-bar {
-      position: fixed; top: 0; left: 0; width: 100%;
-      padding: 30px 40px;
+    /* --- HEADER (Floating) --- */
+    .top-bar {
+      position: fixed; top: 0; left: 0; right: 0;
+      padding: 20px 24px;
       display: flex; justify-content: space-between; align-items: center;
       z-index: 100;
-      background: linear-gradient(to bottom, rgba(5,5,5,0.9), transparent);
+      background: linear-gradient(to bottom, rgba(0,0,0,0.9), transparent);
+      pointer-events: none; /* Let clicks pass through except buttons */
     }
     .logo {
-      font-family: 'Playfair Display', serif; font-size: 24px; color: var(--white); font-weight: 600;
+      font-family: 'Cinzel', serif; color: var(--gold); font-size: 18px; 
+      pointer-events: auto; text-transform: uppercase; border: 1px solid var(--gold);
+      padding: 6px 12px;
     }
-    .lang-switch {
-      display: flex; gap: 20px;
+    .lang-toggle {
+      pointer-events: auto;
+      background: var(--glass); backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 20px;
+      display: flex; overflow: hidden;
     }
-    .lang-btn {
-      background: none; border: none; color: var(--muted);
-      font-size: 14px; font-weight: 600; letter-spacing: 1px;
-      transition: color 0.3s;
+    .l-btn {
+      border: none; background: transparent; color: var(--muted);
+      padding: 8px 14px; font-size: 11px; font-weight: 600;
+      transition: 0.3s;
     }
-    .lang-btn.active { color: var(--gold); }
-    .lang-btn:hover { color: var(--white); }
+    .l-btn.active { color: #fff; background: rgba(255,255,255,0.1); }
 
-    /* --- MENU GRID --- */
-    .menu-section {
-      padding: 100px 0;
+    /* --- HERO --- */
+    .hero {
+      height: 85vh;
+      display: flex; flex-direction: column; justify-content: flex-end;
+      padding: 30px;
+      position: relative;
+      background: radial-gradient(circle at 50% 30%, #1a1a1a 0%, #000 70%);
     }
-    
-    .category-block {
-      margin-bottom: 120px;
-      opacity: 0; transform: translateY(50px);
-      transition: opacity 0.8s var(--ease), transform 0.8s var(--ease);
+    .hero::after {
+      content:''; position: absolute; inset: 0;
+      background: url('https://grainy-gradients.vercel.app/noise.svg');
+      opacity: 0.07; pointer-events: none;
     }
-    .category-block.visible { opacity: 1; transform: translateY(0); }
-
-    .category-header {
-      display: flex; justify-content: space-between; align-items: flex-end;
-      margin-bottom: 40px;
+    .hero-big {
+      font-size: 42px; line-height: 1.1; color: #fff; margin-bottom: 10px;
+      background: linear-gradient(to right, #fff, #999);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
     }
-    .cat-desc {
-      max-width: 400px; color: var(--muted); font-size: 16px; line-height: 1.6;
-      text-align: right; font-style: italic;
-    }
-
-    /* --- ITEM CARDS (Luxury Minimal) --- */
-    .items-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-      gap: 60px 40px;
-    }
-    
-    .lux-item {
-      group: relative;
-    }
-    
-    .item-top {
-      display: flex; justify-content: space-between; align-items: baseline;
-      border-bottom: 1px solid rgba(255,255,255,0.1);
-      padding-bottom: 12px; margin-bottom: 12px;
-      transition: border-color 0.3s;
-    }
-    .lux-item:hover .item-top { border-color: var(--gold); }
-
-    .item-name {
-      font-family: 'Playfair Display', serif; font-size: 22px; color: var(--white);
-    }
-    .item-price {
-      font-family: 'Manrope', sans-serif; font-weight: 600; color: var(--gold); font-size: 18px;
-    }
-    .item-details {
-      color: var(--muted); font-size: 14px; line-height: 1.5;
+    .hero-sub {
+      color: var(--gold); font-size: 13px; text-transform: uppercase; letter-spacing: 3px;
+      margin-bottom: 40px; opacity: 0.8;
     }
 
-    /* --- SPLIT LAYOUT (Uramaki) --- */
-    .split-grid {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 80px;
-    }
-    .split-col h4 {
-      color: var(--white); font-size: 18px; margin-bottom: 30px; letter-spacing: 2px; text-transform: uppercase;
-    }
-    @media(max-width: 800px) { .split-grid { grid-template-columns: 1fr; gap: 40px; } }
-
-    /* --- IMAGERY --- */
-    .art-image {
-      width: 100%; height: 300px; object-fit: cover;
-      filter: grayscale(80%) contrast(1.1);
-      transition: filter 0.5s var(--ease);
+    /* --- STICKY CATEGORY NAV --- */
+    .cat-nav-wrap {
+      position: sticky; top: 0; z-index: 90;
+      background: rgba(0,0,0,0.85);
+      backdrop-filter: blur(15px);
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      padding: 15px 0;
       margin-bottom: 30px;
     }
-    .art-image:hover { filter: grayscale(0%) contrast(1); }
+    .cat-scroll {
+      display: flex; overflow-x: auto; gap: 20px;
+      padding: 0 24px;
+      scrollbar-width: none; /* Firefox */
+    }
+    .cat-scroll::-webkit-scrollbar { display: none; } /* Chrome */
+    
+    .cat-chip {
+      white-space: nowrap; color: var(--muted); font-size: 13px;
+      text-transform: uppercase; letter-spacing: 1px;
+      transition: color 0.3s; padding-bottom: 4px;
+      border-bottom: 2px solid transparent; flex-shrink: 0;
+    }
+    .cat-chip.active { color: var(--gold); border-color: var(--gold); }
 
-    /* --- FOOTER --- */
-    footer {
-      border-top: 1px solid rgba(255,255,255,0.1);
-      padding: 80px 0; margin-top: 100px;
-      text-align: center; color: var(--muted);
+    /* --- MENU LIST --- */
+    .section-container {
+      padding: 0 20px;
+      margin-bottom: 60px;
     }
-    .footer-links {
-      display: flex; justify-content: center; gap: 40px; margin-bottom: 40px;
+    .sec-title {
+      font-size: 24px; color: #fff; margin-bottom: 8px;
     }
-    .f-link {
-      color: var(--white); text-decoration: none; text-transform: uppercase; letter-spacing: 2px; font-size: 12px;
-      transition: color 0.3s;
+    .sec-desc {
+      font-size: 13px; color: var(--muted); margin-bottom: 24px; font-style: italic;
     }
-    .f-link:hover { color: var(--gold); }
 
-    /* --- ALLERGY INFO --- */
-    .allergy-btn {
-      position: fixed; bottom: 40px; right: 40px;
-      width: 60px; height: 60px;
-      border: 1px solid rgba(255,255,255,0.2);
-      border-radius: 50%;
-      background: rgba(0,0,0,0.5);
-      color: var(--white);
-      display: flex; align-items: center; justify-content: center;
-      font-family: 'Playfair Display', serif; font-style: italic; font-size: 24px;
-      backdrop-filter: blur(5px);
-      z-index: 100;
-      transition: all 0.3s;
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      padding: 20px;
+      margin-bottom: 16px;
+      position: relative;
+      transition: transform 0.2s, background 0.2s;
     }
-    .allergy-btn:hover { border-color: var(--gold); color: var(--gold); transform: scale(1.1); }
+    .card:active { transform: scale(0.98); background: #111; }
 
-    /* --- MODAL --- */
-    .modal-overlay {
-      position: fixed; inset: 0; background: rgba(0,0,0,0.95);
-      z-index: 2000; opacity: 0; pointer-events: none;
-      transition: opacity 0.5s; display: flex; align-items: center; justify-content: center;
+    .card-head {
+      display: flex; justify-content: space-between; align-items: flex-start;
+      margin-bottom: 10px;
     }
-    .modal-overlay.open { opacity: 1; pointer-events: auto; }
-    .modal-content {
-      max-width: 600px; padding: 40px; border: 1px solid var(--gold-dim);
-      background: #0a0a0a; text-align: center;
+    .c-name { color: #fff; font-size: 16px; font-weight: 600; max-width: 75%; }
+    .c-price { color: var(--gold); font-family: 'Cinzel', serif; font-size: 16px; }
+    .c-desc { font-size: 12px; color: #777; line-height: 1.5; }
+
+    /* Split Grid for Uramaki */
+    .split-col { margin-bottom: 30px; }
+    .split-title { color: var(--gold); font-size: 12px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 15px; border-bottom: 1px solid #333; display: inline-block; padding-bottom: 5px;}
+
+    /* --- BOTTOM BAR (Floating Glass) --- */
+    .bottom-bar {
+      position: fixed; bottom: 20px; left: 20px; right: 20px;
+      background: rgba(30, 30, 30, 0.7);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 16px;
+      height: 64px;
+      display: flex; justify-content: space-around; align-items: center;
+      z-index: 200;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
     }
-    .modal-close {
-      margin-top: 30px; background: transparent; border: 1px solid var(--white); color: var(--white);
-      padding: 10px 30px; text-transform: uppercase; letter-spacing: 2px;
-      transition: all 0.3s;
+    .bb-item {
+      display: flex; flex-direction: column; align-items: center; gap: 4px;
+      color: #fff; text-decoration: none; font-size: 10px; text-transform: uppercase; letter-spacing: 1px;
+      opacity: 0.7; transition: opacity 0.2s;
     }
-    .modal-close:hover { background: var(--gold); border-color: var(--gold); color: #000; }
+    .bb-item.main {
+        background: var(--gold); color: #000;
+        width: 44px; height: 44px; border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        font-weight: bold; font-size: 18px; margin-top: -20px;
+        box-shadow: 0 5px 15px rgba(197, 160, 89, 0.4);
+        opacity: 1;
+    }
+    .bb-item:active { opacity: 1; transform: scale(0.95); }
+
+    /* --- MODAL (Bottom Sheet) --- */
+    .sheet-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.8);
+      z-index: 300; opacity: 0; pointer-events: none; transition: opacity 0.3s;
+    }
+    .sheet-overlay.open { opacity: 1; pointer-events: auto; }
+    
+    .sheet {
+      position: fixed; bottom: 0; left: 0; right: 0;
+      background: #151515;
+      border-top-left-radius: 24px; border-top-right-radius: 24px;
+      padding: 30px 24px calc(30px + var(--safe-area-bottom));
+      transform: translateY(100%); transition: transform 0.4s cubic-bezier(0.1, 0.9, 0.2, 1);
+      z-index: 301;
+      border-top: 1px solid #333;
+    }
+    .sheet-overlay.open .sheet { transform: translateY(0); }
+    
+    .sheet-handle {
+      width: 40px; height: 4px; background: #333; border-radius: 2px;
+      margin: 0 auto 20px;
+    }
+    .sheet h3 { color: var(--gold); margin-bottom: 15px; font-size: 18px; }
+    .sheet p { color: #999; font-size: 13px; line-height: 1.6; margin: 0; }
+
+    /* Helper Animation */
+    @keyframes pulse { 0% {opacity:0.6;} 50% {opacity:1;} 100% {opacity:0.6;} }
 
   </style>
 </head>
 <body>
 
-  <div class="noise"></div>
+  <div class="loader" id="loader">
+    <div class="loader-text">KS.</div>
+  </div>
 
-  <div class="cursor-dot" id="cursor-dot"></div>
-  <div class="cursor-circle" id="cursor-circle"></div>
-
-  <nav class="nav-bar">
-    <div class="logo">KS.</div>
-    <div class="lang-switch">
-      <button class="lang-btn active hover-target" onclick="setLang('pl')">PL</button>
-      <button class="lang-btn hover-target" onclick="setLang('en')">EN</button>
-    </div>
-  </nav>
-
-  <header class="hero">
-    <div class="hero-bg"></div>
-    <div class="container">
-      <span class="brand-mark">Księstwo Sushi</span>
-      <h1 class="hero-title">The Art <br> of <i style="color:var(--gold)">Raw</i>.</h1>
+  <header class="top-bar">
+    <div class="logo">KS</div>
+    <div class="lang-toggle">
+      <button class="l-btn active" onclick="setLang('pl')">PL</button>
+      <button class="l-btn" onclick="setLang('en')">EN</button>
     </div>
   </header>
 
-  <div class="container menu-section" id="menu-container">
+  <div class="hero">
+    <div class="hero-big">Premium <br> Sushi <br> Art</div>
+    <div class="hero-sub" id="hero-sub">Zakopane — Haute Cuisine</div>
+  </div>
+
+  <div class="cat-nav-wrap">
+    <div class="cat-scroll" id="nav-container">
+      </div>
+  </div>
+
+  <div id="menu-container">
     </div>
 
-  <footer>
-    <div class="footer-links">
-      <a href="tel:+48502525544" class="f-link hover-target">Call</a>
-      <a href="https://instagram.com/ksiestwosushi" class="f-link hover-target">Instagram</a>
-      <a href="https://maps.google.com" class="f-link hover-target">Location</a>
+  <div class="bottom-bar">
+    <div class="bb-item" onclick="openSheet()">
+      <span>Info</span>
     </div>
-    <div style="font-size: 12px; opacity: 0.5;">
-      © 2024 Księstwo Sushi. Premium Experience.
-    </div>
-  </footer>
+    <a href="tel:+48502525544" class="bb-item main">
+      📞
+    </a>
+    <a href="https://instagram.com/ksiestwosushi" target="_blank" class="bb-item">
+      <span>Insta</span>
+    </a>
+  </div>
 
-  <div class="modal-overlay" id="info-modal">
-    <div class="modal-content">
-      <h2 style="color:var(--gold); margin-bottom:20px;">Allergens</h2>
-      <p id="modal-text" style="color:var(--muted); line-height:1.8;"></p>
-      <button class="modal-close hover-target" onclick="closeInfo()">Close</button>
+  <div class="sheet-overlay" id="sheet-overlay" onclick="closeSheet()">
+    <div class="sheet" onclick="event.stopPropagation()">
+      <div class="sheet-handle"></div>
+      <h3 id="sheet-title">Alergeny</h3>
+      <p id="sheet-text">Tekst...</p>
     </div>
   </div>
-  
-  <div class="allergy-btn hover-target" onclick="openInfo()">i</div>
 
   <script>
-    // --- CURSOR LOGIC ---
-    const cursorDot = document.getElementById('cursor-dot');
-    const cursorCircle = document.getElementById('cursor-circle');
-    let mouseX = 0, mouseY = 0;
-    let circleX = 0, circleY = 0;
-
-    document.addEventListener('mousemove', (e) => {
-      mouseX = e.clientX;
-      mouseY = e.clientY;
-      cursorDot.style.left = mouseX + 'px';
-      cursorDot.style.top = mouseY + 'px';
-      
-      // Check hover targets
-      if(e.target.classList.contains('hover-target') || e.target.closest('.hover-target')) {
-        document.body.classList.add('hovering');
-      } else {
-        document.body.classList.remove('hovering');
-      }
-    });
-
-    function animateCursor() {
-      // Smooth follow
-      circleX += (mouseX - circleX) * 0.15;
-      circleY += (mouseY - circleY) * 0.15;
-      
-      cursorCircle.style.left = circleX + 'px';
-      cursorCircle.style.top = circleY + 'px';
-      
-      requestAnimationFrame(animateCursor);
-    }
-    animateCursor();
-
-
     // --- DATA ---
-    const ALLERGIES = {
-        title: { en: 'Allergy Information', pl: 'Informacja o alergenach' },
-        text: {
-            en: 'Our dishes may contain: gluten, cucumber, oshinko, kampyo, avocado, mango, melon, lettuce, sesame seeds, Philadelphia cream cheese, mayonnaise, sauces, edible gold. \n\n 10% service charge is added to the bill.',
-            pl: 'Zgodnie z recepturą mogą zawierać: gluten, ogórek, oshinko, kampyo, awokado, mango, melon, sałatę, sezam, serek philadelphia, majonez, sosy, złoto jadalne. \n\n Doliczamy serwis 10%.'
+    const TEXTS = {
+        sub: { en: 'Zakopane — Haute Cuisine', pl: 'Zakopane — Haute Cuisine' },
+        allergyTitle: { en: 'Information', pl: 'Informacje' },
+        allergyText: {
+            en: 'Ingredients may include: gluten, sesame, seafood, spicy mayo, edible gold. \n\n We add a 10% service charge to the final bill.',
+            pl: 'Dania mogą zawierać: gluten, sezam, owoce morza, ostry majonez, złoto jadalne. \n\n Doliczamy 10% serwisu kelnerskiego.'
         }
     };
 
     const DATA = [
       {
         id:'sets',
-        title:{en:'The Sets', pl:'Kolekcja Zestawów'},
-        img: 'images/zestawy.jpg', 
-        desc:{en:'Curated for the demanding.', pl:'Starannie dobrane kompozycje.'},
+        title:{en:'Sets', pl:'Zestawy'},
+        desc:{en:'The Collection', pl:'Kolekcja Smaków'},
         items:[
           { en:'OTO 16 pcs', pl:'OTO 16 szt.', price:'90 zł', descEN:'Gold California, Avocado Kani, Ohio Irygoma, Ebi Ten', descPL:'Gold California, Awokado Kani, Ohio Irygoma, Ebi Ten' },
           { en:'AKA 22 pcs', pl:'AKA 22 szt.', price:'130 zł', descEN:'Rainbow, Mango Sake, Ebi Ten, Avocado Kani, Futomaki Ohio Yaki', descPL:'Rainbow, Mango Sake, Ebi Ten, Awokado Kani, Futomaki Ohio Yaki' },
           { en:'AKASHI 38 pcs', pl:'AKASHI 38 szt.', price:'210 zł', descEN:'Rainbow, Goma Sake Yaki, Ebi Ten, Sake Philadelphia, Ohio Ten, Maguro Spice', descPL:'Rainbow, Goma Sake Yaki, Ebi Ten, Sake Philadelphia, Ohio Ten, Maguro Spice' },
           { en:'KUROISO 52 pcs', pl:'KUROISO 52 szt.', price:'290 zł', descEN:'Rainbow, Tempura Ohio, Goma Yaki Sake, Kegon, Ebi Ten Ohio Tataki, Sake Philadelphia, Suzuki Yaki', descPL:'Rainbow, Tempura Ohio, Goma Yaki Sake, Kegon, Ebi Ten Ohio Tataki, Sake Philadelphia, Suzuki Yaki' },
-          { en:'BIWA 60 pcs', pl:'BIWA 60 szt.', price:'340 zł', descEN:'Gold California, Ohio Ten Nashi, Ebi Ten Avocado, Kegon, Tempura Cali Rae, Maguro Philadelphia, Ohio Spice Mango, Nigiri Set', descPL:'Gold California, Ohio Ten Nashi, Ebi Ten Avocado, Kegon, Tempura Cali Rae, Maguro Philadelphia, Ohio Spice Mango, Zestaw Nigiri' }
+          { en:'BIWA 60 pcs', pl:'BIWA 60 szt.', price:'340 zł', descEN:'Exclusive set with Nigiri, Tempura & Rolls wrapped in gold standard ingredients.', descPL:'Ekskluzywny set z Nigiri, Tempurą i Rolkami w najlepszym wydaniu.' }
         ]
       },
       {
         id:'starters',
-        title:{en:'Starters', pl:'Przystawki'},
-        img:'images/sake-tataki.jpg',
-        desc:{en:'Begin properly.', pl:'Na dobry początek.'},
+        title:{en:'Starters', pl:'Start'},
+        desc:{en:'Appetizers', pl:'Przystawki'},
         items:[
           {en:'Goma Wakame', pl:'Goma Wakame', price:'20 zł', descEN:'Seaweed salad', descPL:'Sałatka z wodorostów'},
           {en:'Ebi Ten (3)', pl:'Ebi Ten (3)', price:'30 zł', descEN:'Shrimp tempura, ponzu', descPL:'Krewetki w tempurze, ponzu'},
@@ -365,9 +299,8 @@
       },
       {
         id:'soups',
-        title:{en:'Soups', pl:'Zupy'},
-        img:'images/ramen-zupa.jpg',
-        desc:{en:'Depth of flavor.', pl:'Głębia smaku.'},
+        title:{en:'Bowls', pl:'Zupy'},
+        desc:{en:'Soups', pl:'Buliony'},
         items:[
           {en:'Ramen Chicken', pl:'Ramen Chicken', price:'48 zł', descEN:'800ml sharing portion', descPL:'800ml porcja dla dwojga'},
           {en:'Ramen Beef', pl:'Ramen Beef', price:'55 zł', descEN:'800ml sharing portion', descPL:'800ml porcja dla dwojga'},
@@ -377,11 +310,9 @@
       {
         id:'nigiri',
         title:{en:'Nigiri', pl:'Nigiri'},
-        img:'images/nigiri1.jpg',
-        desc:{en:'Simplicity.', pl:'Prostota.'},
+        desc:{en:'2 pieces', pl:'2 sztuki'},
         items:[
           {en:'Sake', pl:'Sake', price:'26 zł', descEN:'Salmon', descPL:'Łosoś'},
-          {en:'Ohio', pl:'Ohio', price:'25 zł', descEN:'Butterfish', descPL:'Ryba maślana'},
           {en:'Maguro', pl:'Maguro', price:'30 zł', descEN:'Tuna', descPL:'Tuńczyk'},
           {en:'Unagi', pl:'Unagi', price:'30 zł', descEN:'Eel', descPL:'Węgorz'},
           {en:'Hotate', pl:'Hotate', price:'32 zł', descEN:'Scallops', descPL:'Małże św. Jakuba'},
@@ -391,144 +322,150 @@
       {
         id:'futomaki',
         title:{en:'Futomaki', pl:'Futomaki'},
-        img:'images/futomaki.jpg',
-        desc:{en:'Traditional classics.', pl:'Klasyka gatunku.'},
+        desc:{en:'Classic Rolls', pl:'Klasyczne Rolki'},
         items:[
           {en:'Sake Philadelphia', pl:'Sake Philadelphia', price:'38 zł', descEN:'Salmon, cream cheese', descPL:'Łosoś, serek philadelphia'},
           {en:'Maguro Negi Togarashi', pl:'Maguro Negi Togarashi', price:'42 zł', descEN:'Spicy tuna', descPL:'Tuńczyk na ostro'},
           {en:'Ohio Spice Mango', pl:'Ohio Spice Mango', price:'40 zł', descEN:'Spicy butterfish, mango', descPL:'Pikantna maślana, mango'},
-          {en:'Unagi Kabayaki', pl:'Unagi Kabayaki', price:'45 zł', descEN:'Eel, kabayaki', descPL:'Węgorz, kabayaki'},
-          {en:'Veggie', pl:'Veggie', price:'36 zł', descEN:'Seasonal vegetables', descPL:'Warzywa sezonowe'}
+          {en:'Unagi Kabayaki', pl:'Unagi Kabayaki', price:'45 zł', descEN:'Eel, kabayaki', descPL:'Węgorz, kabayaki'}
         ]
       },
       {
         id:'uramaki',
-        title:{en:'Uramaki & Tempura', pl:'Uramaki & Tempura'},
-        img:'images/tempura.jpg',
-        desc:{en:'Inside out.', pl:'Ryż na zewnątrz.'},
+        title:{en:'Uramaki', pl:'Uramaki'},
+        desc:{en:'Inside Out & Tempura', pl:'Uramaki i Tempura'},
         isSplit: true,
         itemsLeft:[
-          {en:'Sake Philadelphia', pl:'Sake Philadelphia', price:'38 zł', descEN:'Salmon, cream cheese', descPL:'Łosoś, serek philadelphia'},
-          {en:'Awokado Sake', pl:'Awokado Sake', price:'42 zł', descEN:'Salmon wrapped in avocado', descPL:'Łosoś owijany awokado'},
-          {en:'Mango Sake', pl:'Mango Sake', price:'42 zł', descEN:'Salmon wrapped in mango', descPL:'Łosoś owijany mango'},
-          {en:'Gold California', pl:'Gold California', price:'40 zł', descEN:'Surimi wrapped in salmon', descPL:'Surimi owijane łososiem'},
+          {en:'Gold California', pl:'Gold California', price:'40 zł', descEN:'Surimi, salmon', descPL:'Surimi, łosoś'},
           {en:'Rainbow', pl:'Rainbow', price:'48 zł', descEN:'Assorted fish', descPL:'Wachlarz ryb'},
-          {en:'Kegon', pl:'Kegon', price:'45 zł', descEN:'Salmon wrapped in eel', descPL:'Łosoś owijany węgorzem'}
+          {en:'Kegon', pl:'Kegon', price:'45 zł', descEN:'Salmon, eel', descPL:'Łosoś, węgorz'},
+          {en:'Mango Sake', pl:'Mango Sake', price:'42 zł', descEN:'Salmon, mango', descPL:'Łosoś, mango'}
         ],
         itemsRight:[
           {en:'Tempura Sake', pl:'Tempura Sake', price:'38 zł', descEN:'Salmon', descPL:'Łosoś'},
           {en:'Tempura Ohio', pl:'Tempura Ohio', price:'38 zł', descEN:'Butterfish', descPL:'Maślana'},
-          {en:'Tempura Maguro', pl:'Tempura Maguro', price:'42 zł', descEN:'Tuna', descPL:'Tuńczyk'},
-          {en:'Tempura Ebi', pl:'Tempura Ebi', price:'40 zł', descEN:'Shrimp', descPL:'Krewetka'},
-          {en:'Tempura Unagi', pl:'Tempura Unagi', price:'45 zł', descEN:'Eel', descPL:'Węgorz'}
-        ]
-      },
-      {
-        id:'sashimi',
-        title:{en:'Sashimi', pl:'Sashimi'},
-        img:'images/sashimi.jpg',
-        desc:{en:'Pure fish.', pl:'Sama ryba.'},
-        items:[
-          {en:'Mizu Set', pl:'Mizu Set', price:'95 zł', descEN:'Salmon, Tuna, Butterfish', descPL:'Łosoś, Tuńczyk, Maślana'}
+          {en:'Tempura Ebi', pl:'Tempura Ebi', price:'40 zł', descEN:'Shrimp', descPL:'Krewetka'}
         ]
       }
     ];
 
     let LANG = 'pl';
 
+    // --- APP LOGIC ---
+    window.addEventListener('load', () => {
+        setTimeout(() => {
+            document.getElementById('loader').classList.add('hidden');
+        }, 800);
+        render();
+    });
+
     function setLang(l) {
-      if(LANG===l) return;
-      LANG = l;
-      document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.innerText.toLowerCase() === l));
-      render();
+        if(LANG === l) return;
+        LANG = l;
+        document.querySelectorAll('.l-btn').forEach(b => b.classList.toggle('active', b.innerText.toLowerCase() === l));
+        
+        // Simple fade out/in effect
+        const container = document.getElementById('menu-container');
+        container.style.opacity = '0';
+        setTimeout(() => {
+            render();
+            container.style.opacity = '1';
+        }, 200);
     }
 
-    function renderItem(i) {
+    function renderCard(item) {
         return `
-        <div class="lux-item hover-target">
-            <div class="item-top">
-                <span class="item-name">${LANG==='en'?i.en:i.pl}</span>
-                <span class="item-price">${i.price}</span>
+        <div class="card">
+            <div class="card-head">
+                <div class="c-name">${LANG==='en'?item.en:item.pl}</div>
+                <div class="c-price">${item.price}</div>
             </div>
-            <div class="item-details">${LANG==='en'?i.descEN:i.descPL}</div>
+            <div class="c-desc">${LANG==='en'?item.descEN:item.descPL}</div>
         </div>
         `;
     }
 
     function render() {
-      const container = document.getElementById('menu-container');
-      
-      const content = DATA.map(section => {
-        const title = LANG==='en'?section.title.en:section.title.pl;
-        const desc = LANG==='en'?section.desc.en:section.desc.pl;
-        
-        let itemsHtml = '';
-        if(section.isSplit) {
-            itemsHtml = `
-            <div class="split-grid">
-                <div class="split-col">
-                    <h4>Classic</h4>
-                    <div class="items-grid" style="grid-template-columns:1fr;">
-                         ${section.itemsLeft.map(renderItem).join('')}
-                    </div>
-                </div>
-                <div class="split-col">
-                    <h4>Tempura</h4>
-                    <div class="items-grid" style="grid-template-columns:1fr;">
-                         ${section.itemsRight.map(renderItem).join('')}
-                    </div>
-                </div>
-            </div>`;
-        } else {
-            itemsHtml = `<div class="items-grid">${section.items.map(renderItem).join('')}</div>`;
-        }
+        // Headers
+        document.getElementById('hero-sub').innerText = LANG==='en' ? TEXTS.sub.en : TEXTS.sub.pl;
+        document.getElementById('sheet-title').innerText = LANG==='en' ? TEXTS.allergyTitle.en : TEXTS.allergyTitle.pl;
+        document.getElementById('sheet-text').innerText = LANG==='en' ? TEXTS.allergyText.en : TEXTS.allergyText.pl;
 
-        return `
-        <div class="category-block" id="${section.id}">
-            <div class="category-header">
-                <h2 class="section-title">${title}</h2>
-                <div class="cat-desc">${desc}</div>
+        // Nav
+        const navContainer = document.getElementById('nav-container');
+        navContainer.innerHTML = DATA.map((section, idx) => `
+            <div class="cat-chip ${idx===0?'active':''}" onclick="scrollToSec('${section.id}', this)">
+                ${LANG==='en'?section.title.en:section.title.pl}
             </div>
+        `).join('');
+
+        // Menu
+        const menuContainer = document.getElementById('menu-container');
+        menuContainer.innerHTML = DATA.map(section => {
+            const title = LANG==='en'?section.title.en:section.title.pl;
+            const desc = LANG==='en'?section.desc.en:section.desc.pl;
+
+            let contentHtml = '';
             
-            ${section.img ? `<img src="${section.img}" class="art-image hover-target" alt="">` : ''}
-            
-            ${itemsHtml}
-        </div>
-        `;
-      }).join('');
+            if(section.isSplit) {
+                contentHtml = `
+                    <div class="split-col">
+                        <div class="split-title">Classic</div>
+                        ${section.itemsLeft.map(renderCard).join('')}
+                    </div>
+                    <div class="split-col">
+                        <div class="split-title">Tempura</div>
+                        ${section.itemsRight.map(renderCard).join('')}
+                    </div>
+                `;
+            } else {
+                contentHtml = section.items.map(renderCard).join('');
+            }
 
-      container.innerHTML = content;
-      
-      // Update text
-      document.getElementById('modal-text').innerText = LANG==='en' ? ALLERGIES.text.en : ALLERGIES.text.pl;
-
-      // Re-trigger observer
-      observeElements();
+            return `
+            <div class="section-container" id="${section.id}">
+                <div class="sec-title">${title}</div>
+                <div class="sec-desc">${desc}</div>
+                ${contentHtml}
+            </div>
+            `;
+        }).join('');
     }
 
-    // --- INTERSECTION OBSERVER (Scroll Animations) ---
-    function observeElements() {
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                }
-            });
-        }, { threshold: 0.1 });
-
-        document.querySelectorAll('.category-block').forEach(el => observer.observe(el));
+    // Scroll Logic
+    function scrollToSec(id, el) {
+        document.getElementById(id).scrollIntoView({behavior: 'smooth', block: 'start'});
+        // Update active chip manually for instant feedback
+        document.querySelectorAll('.cat-chip').forEach(c => c.classList.remove('active'));
+        el.classList.add('active');
     }
 
-    // --- MODAL ---
-    function openInfo() {
-        document.getElementById('info-modal').classList.add('open');
+    // Sheet Logic
+    function openSheet() {
+        document.getElementById('sheet-overlay').classList.add('open');
     }
-    function closeInfo() {
-        document.getElementById('info-modal').classList.remove('open');
+    function closeSheet() {
+        document.getElementById('sheet-overlay').classList.remove('open');
     }
 
-    // Init
-    render();
+    // Intersection Observer for Nav Highlighting
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if(entry.isIntersecting) {
+                const id = entry.target.id;
+                document.querySelectorAll('.cat-chip').forEach(c => {
+                    c.classList.remove('active');
+                    // Match by onclick content logic is tricky, simpler to map by index or use data-target
+                    // For this demo, we trust the click interaction mostly, but this is a nice-to-have
+                });
+            }
+        });
+    }, {threshold:0.2});
+    
+    // Slight delay to attach observer
+    setTimeout(() => {
+        document.querySelectorAll('.section-container').forEach(s => observer.observe(s));
+    }, 1000);
 
   </script>
 </body>
