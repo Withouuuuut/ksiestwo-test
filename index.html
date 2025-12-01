@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />
-  <title>Księstwo Sushi — ROYAL</title>
+  <title>Księstwo Sushi & Ramen — ROYAL</title>
   
   <!-- FONTS -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -90,6 +90,23 @@
 
   <script type="text/babel">
     const { useState, useEffect } = React;
+
+    // --- UI TRANSLATIONS ---
+    const UI_TEXT = {
+      hero_subtitle: {
+        en: "Experience the art of Japanese cuisine \n Reimagined for the modern era.",
+        pl: "Poznaj sztukę japońskiej kuchni \n Stworzoną na nowo dla współczesności."
+      },
+      explore_btn: { en: "Explore Menu", pl: "Odkryj Menu" },
+      description_label: { en: "Description", pl: "Opis" },
+      uramaki_title: { en: "URAMAKI", pl: "URAMAKI" },
+      tempura_title: { en: "TEMPURA", pl: "W TEMPURZE" },
+      location_label: { en: "LOCATION", pl: "LOKALIZACJA" },
+      contact_label: { en: "CONTACT", pl: "KONTAKT" },
+      poland: { en: "Poland", pl: "Polska" },
+      copyright: { en: "Cinematic Edition.", pl: "Edycja Kinowa." },
+      tagline: { en: "Cinematic Dining", pl: "Kinowe Doświadczenie" }
+    };
 
     // --- DATA CONSTANTS ---
     const DATA = [
@@ -393,7 +410,7 @@
 
     // 2. Menu Components
     const MenuItemRow = ({ item, lang, isOpen, onToggle }) => {
-      // Logic for individual image display removed as per request.
+      // Logic for individual image display removed.
       return (
         <div className="border-b border-gray-200 last:border-0">
           <div 
@@ -416,7 +433,7 @@
           >
              <div className="flex flex-col items-start pt-2 px-4 border-l-2 border-gold/30 ml-2">
                 <h4 className="font-cinzel text-gold text-xs tracking-[0.2em] uppercase mb-3 inline-block">
-                  Description
+                  {UI_TEXT.description_label[lang]}
                 </h4>
                 <p className="font-rajdhani text-ink text-lg md:text-xl leading-relaxed whitespace-pre-line">
                   {item.desc[lang]}
@@ -460,7 +477,7 @@
              {data.isSplit ? (
                <div className="space-y-20">
                  <div>
-                   <h3 className="text-center font-cinzel text-2xl text-gold mb-12 tracking-widest">URAMAKI</h3>
+                   <h3 className="text-center font-cinzel text-2xl text-gold mb-12 tracking-widest">{UI_TEXT.uramaki_title[lang]}</h3>
                    <div className="flex flex-col">
                      {data.items.map((item, i) => (
                        <MenuItemRow 
@@ -474,7 +491,7 @@
                    </div>
                  </div>
                  <div>
-                   <h3 className="text-center font-cinzel text-2xl text-gold mb-12 tracking-widest">{lang === 'en' ? 'TEMPURA' : 'W TEMPURZE'}</h3>
+                   <h3 className="text-center font-cinzel text-2xl text-gold mb-12 tracking-widest">{UI_TEXT.tempura_title[lang]}</h3>
                    <div className="flex flex-col">
                      {data.itemsRight?.map((item, i) => {
                        const idx = i + 1000;
@@ -510,7 +527,7 @@
     };
 
     // 3. Intro & App
-    const Intro = ({ onComplete }) => {
+    const Intro = ({ onComplete, lang }) => {
       const [opacity, setOpacity] = useState(1);
       const [mounted, setMounted] = useState(true);
 
@@ -538,7 +555,7 @@
             </h1>
             <div className="h-[2px] bg-gold w-0 animate-[width_1s_ease-out_forwards] mx-auto mb-4" style={{width: '100px'}}></div>
             <div className="text-gold uppercase tracking-[0.5em] font-rajdhani text-sm animate-fade-in">
-              Cinematic Dining
+              {UI_TEXT.tagline[lang] || 'Cinematic Dining'}
             </div>
           </div>
         </div>
@@ -552,7 +569,7 @@
 
       return (
         <React.Fragment>
-          <Intro onComplete={() => setBooted(true)} />
+          <Intro onComplete={() => setBooted(true)} lang={lang} />
           
           <div className={`min-h-screen bg-alabaster transition-opacity duration-1000 ${booted ? 'opacity-100' : 'opacity-0'}`}>
             
@@ -568,18 +585,20 @@
                   />
                </div>
                <div className="relative z-10 text-center px-6">
-                  <h1 className="font-cinzel text-5xl md:text-8xl text-white font-bold tracking-[0.15em] mb-6 drop-shadow-2xl">
+                  <h1 className="font-cinzel text-4xl md:text-7xl text-white font-bold tracking-[0.15em] mb-6 drop-shadow-2xl">
                      KSIĘSTWO
-                     <span className="block text-gold text-3xl md:text-5xl mt-2 tracking-[0.3em] font-normal">SUSHI</span>
+                     <span className="block text-gold text-2xl md:text-4xl mt-4 tracking-[0.3em] font-normal border-t border-b border-gold/30 py-4 mx-auto max-w-2xl">
+                       SUSHI & RAMEN
+                     </span>
                   </h1>
-                  <p className="font-rajdhani text-gray-300 tracking-widest uppercase text-sm md:text-base max-w-lg mx-auto leading-loose border-t border-white/20 pt-6">
-                     Experience the art of Japanese cuisine <br/> Reimagined for the modern era.
+                  <p className="font-rajdhani text-gray-300 tracking-widest uppercase text-sm md:text-base max-w-lg mx-auto leading-loose pt-6 whitespace-pre-line">
+                     {UI_TEXT.hero_subtitle[lang]}
                   </p>
                   <button 
                      onClick={() => document.getElementById('sets')?.scrollIntoView({ behavior: 'smooth' })}
                      className="mt-12 px-8 py-4 border border-gold text-gold font-cinzel hover:bg-gold hover:text-ink transition-all duration-500 uppercase tracking-widest text-sm"
                   >
-                     Explore Menu
+                     {UI_TEXT.explore_btn[lang]}
                   </button>
                </div>
                
@@ -605,19 +624,19 @@
                   
                   <div className="grid md:grid-cols-2 gap-12 mb-20 text-left md:text-center font-rajdhani text-gray-400">
                       <div>
-                         <h5 className="text-white font-cinzel tracking-widest mb-4">LOCATION</h5>
+                         <h5 className="text-white font-cinzel tracking-widest mb-4">{UI_TEXT.location_label[lang]}</h5>
                          <p>Krupówki 38A, Zakopane</p>
-                         <p>Poland</p>
+                         <p>{UI_TEXT.poland[lang]}</p>
                       </div>
                       <div>
-                         <h5 className="text-white font-cinzel tracking-widest mb-4">CONTACT</h5>
+                         <h5 className="text-white font-cinzel tracking-widest mb-4">{UI_TEXT.contact_label[lang]}</h5>
                          <p>+48 502 525 544</p>
                          <p>@ksiestwosushi</p>
                       </div>
                   </div>
 
                   <div className="text-[10px] text-gray-700 font-rajdhani tracking-[0.3em] uppercase border-t border-white/5 pt-10">
-                     © 2024 Księstwo Sushi. Cinematic Edition.
+                     © 2024 Księstwo Sushi & Ramen. {UI_TEXT.copyright[lang]}
                   </div>
                </div>
             </footer>
