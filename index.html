@@ -397,7 +397,10 @@
 
     // 2. Menu Components
     const MenuItemRow = ({ item, lang, isOpen, onToggle, onImageClick }) => {
-      const imageName = item.name.en.replace(/\s+/g, '_').replace(/\//g, '-');
+      // Improved logic: Strips out (quantity) info to find clean filenames
+      // e.g. "Ebi Ten (3 pcs)" -> "Ebi_Ten.jpg" instead of "Ebi_Ten_(3_pcs).jpg"
+      const cleanName = item.name.en.split('(')[0].trim();
+      const imageName = cleanName.replace(/\s+/g, '_').replace(/\//g, '-');
       const imgSrc = item.img || `images/${imageName}.jpg`;
       const [imgError, setImgError] = useState(false);
 
