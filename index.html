@@ -183,10 +183,6 @@
           en: 'Traditional Japanese soups, including rich Ramen bowls with various fillings.',
           pl: 'Tradycyjne japońskie zupy, w tym bogate miski Ramenu z różnymi dodatkami.'
         },
-        note: {
-          en: 'The Ramen portion is 800ml, recommended for sharing (2 people).',
-          pl: 'Uwaga: Porcja Ramenu to 800ml, polecamy do podziału (dla 2 osób).'
-        },
         items: [
           {
             name: { en: 'Ramen Chicken', pl: 'Ramen Chicken' },
@@ -396,14 +392,8 @@
     };
 
     // 2. Menu Components
-    const MenuItemRow = ({ item, lang, isOpen, onToggle, onImageClick }) => {
-      // Improved logic: Strips out (quantity) info to find clean filenames
-      // e.g. "Ebi Ten (3 pcs)" -> "Ebi_Ten.jpg" instead of "Ebi_Ten_(3_pcs).jpg"
-      const cleanName = item.name.en.split('(')[0].trim();
-      const imageName = cleanName.replace(/\s+/g, '_').replace(/\//g, '-');
-      const imgSrc = item.img || `images/${imageName}.jpg`;
-      const [imgError, setImgError] = useState(false);
-
+    const MenuItemRow = ({ item, lang, isOpen, onToggle }) => {
+      // Logic for individual image display removed as per request.
       return (
         <div className="border-b border-gray-200 last:border-0">
           <div 
@@ -422,50 +412,22 @@
           </div>
 
           <div 
-            className={`overflow-hidden transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] ${isOpen ? 'max-h-[800px] opacity-100 pb-8' : 'max-h-0 opacity-0'}`}
+            className={`overflow-hidden transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] ${isOpen ? 'max-h-[500px] opacity-100 pb-8' : 'max-h-0 opacity-0'}`}
           >
-             <div className="flex flex-col md:flex-row gap-8 items-start pt-2">
-                <div 
-                  className="w-full md:w-1/2 aspect-[16/9] md:aspect-[4/3] overflow-hidden rounded-sm relative cursor-zoom-in group/img shadow-xl"
-                  onClick={() => onImageClick(imgSrc)}
-                >
-                  {!imgError ? (
-                    <img 
-                      src={imgSrc} 
-                      alt={item.name[lang]} 
-                      onError={() => setImgError(true)}
-                      className="w-full h-full object-cover transform transition-transform duration-[2s] group-hover/img:scale-110"
-                    />
-                  ) : (
-                    <div className="w-full h-full bg-alabaster flex items-center justify-center flex-col text-gold/30">
-                       <span className="font-cinzel text-4xl">KS</span>
-                       <span className="text-[10px] uppercase tracking-widest mt-2">No Image</span>
-                    </div>
-                  )}
-                  <div className="absolute inset-0 bg-black/0 group-hover/img:bg-black/10 transition-colors duration-500"></div>
-                </div>
-
-                <div className="w-full md:w-1/2 flex flex-col justify-center">
-                   <h4 className="font-cinzel text-gold text-sm tracking-[0.2em] uppercase mb-4 border-b border-gold/20 pb-2 inline-block self-start">
-                     Description
-                   </h4>
-                   <p className="font-rajdhani text-ink text-lg md:text-xl leading-relaxed whitespace-pre-line">
-                     {item.desc[lang]}
-                   </p>
-                   <button 
-                      onClick={(e) => { e.stopPropagation(); onImageClick(imgSrc); }}
-                      className="mt-8 self-start px-6 py-3 border border-ink text-ink font-rajdhani text-xs font-bold uppercase tracking-widest hover:bg-ink hover:text-white transition-all"
-                   >
-                     {lang === 'en' ? 'View Full Photo' : 'Zobacz Zdjęcie'}
-                   </button>
-                </div>
+             <div className="flex flex-col items-start pt-2 px-4 border-l-2 border-gold/30 ml-2">
+                <h4 className="font-cinzel text-gold text-xs tracking-[0.2em] uppercase mb-3 inline-block">
+                  Description
+                </h4>
+                <p className="font-rajdhani text-ink text-lg md:text-xl leading-relaxed whitespace-pre-line">
+                  {item.desc[lang]}
+                </p>
              </div>
           </div>
         </div>
       );
     };
 
-    const MenuSection = ({ data, lang, onImageClick, index }) => {
+    const MenuSection = ({ data, lang, index }) => {
       const [openItemId, setOpenItemId] = useState(null);
       const toggleItem = (idx) => setOpenItemId(openItemId === idx ? null : idx);
 
@@ -507,7 +469,6 @@
                          lang={lang} 
                          isOpen={openItemId === i} 
                          onToggle={() => toggleItem(i)} 
-                         onImageClick={onImageClick} 
                        />
                      ))}
                    </div>
@@ -524,7 +485,6 @@
                           lang={lang} 
                           isOpen={openItemId === idx} 
                           onToggle={() => toggleItem(idx)} 
-                          onImageClick={onImageClick} 
                         />
                        )
                      })}
@@ -540,7 +500,6 @@
                       lang={lang} 
                       isOpen={openItemId === i} 
                       onToggle={() => toggleItem(i)} 
-                      onImageClick={onImageClick} 
                     />
                   ))}
                </div>
@@ -589,7 +548,6 @@
     const App = () => {
       const [booted, setBooted] = useState(false);
       const [lang, setLang] = useState('pl');
-      const [lightboxSrc, setLightboxSrc] = useState(null);
       const [showInfo, setShowInfo] = useState(false);
 
       return (
@@ -636,7 +594,6 @@
                     key={section.id} 
                     data={section} 
                     lang={lang} 
-                    onImageClick={setLightboxSrc}
                     index={idx}
                   />
                 ))}
@@ -664,24 +621,6 @@
                   </div>
                </div>
             </footer>
-
-            {lightboxSrc && (
-              <div 
-                className="fixed inset-0 z-[100] bg-black/95 backdrop-blur-md flex justify-center items-center p-4 cursor-zoom-out animate-fade-in"
-                onClick={() => setLightboxSrc(null)}
-              >
-                <div className="relative max-w-7xl w-full h-full flex items-center justify-center">
-                  <img 
-                    src={lightboxSrc} 
-                    alt="Full View" 
-                    className="max-w-full max-h-[90vh] object-contain shadow-2xl rounded-sm"
-                  />
-                  <div className="absolute bottom-6 left-0 right-0 text-center text-white/50 font-rajdhani tracking-widest text-xs pointer-events-none">
-                     CLICK ANYWHERE TO CLOSE
-                  </div>
-                </div>
-              </div>
-            )}
 
             {showInfo && (
               <div 
