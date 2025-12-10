@@ -2,7 +2,7 @@
 <html lang="pl" class="scroll-smooth">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0, viewport-fit=cover" />
   <title>Księstwo Sushi & Ramen — ROYAL</title>
   
   <!-- FONTS -->
@@ -60,12 +60,32 @@
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
   <style>
+    :root {
+      /* Safe area insets for notches */
+      --sat: env(safe-area-inset-top);
+      --sab: env(safe-area-inset-bottom);
+      --sal: env(safe-area-inset-left);
+      --sar: env(safe-area-inset-right);
+    }
+
+    * {
+      -webkit-tap-highlight-color: transparent; /* Remove iOS tap highlight */
+    }
+
     body {
       background-color: #0F0F0F; /* Default to dark to match intro/lang */
       color: #0F0F0F;
       overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
     }
     
+    ::selection {
+      background: #C5A028; /* Gold */
+      color: #0F0F0F;
+    }
+
     /* Hide scrollbar for Dynamic Island horizontal scroll */
     .no-scrollbar::-webkit-scrollbar {
       display: none;
@@ -81,6 +101,7 @@
       background-position: center;
       background-repeat: no-repeat;
       background-size: cover;
+      will-change: transform; /* Performance hint */
     }
     @media (pointer: coarse) {
         .parallax-bg {
@@ -88,13 +109,12 @@
         }
     }
   </style>
-<link rel="stylesheet" href="/index.css">
 <script type="importmap">
 {
   "imports": {
-    "react": "https://aistudiocdn.com/react@^19.2.1",
     "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.1/",
-    "react/": "https://aistudiocdn.com/react@^19.2.1/"
+    "react/": "https://aistudiocdn.com/react@^19.2.1/",
+    "react": "https://aistudiocdn.com/react@^19.2.1"
   }
 }
 </script>
@@ -349,6 +369,7 @@
     const DynamicIsland = ({ lang, setLang, onOpenInfo }) => {
       const [expanded, setExpanded] = useState(false);
       const [scrolled, setScrolled] = useState(false);
+      const islandRef = useRef(null);
 
       useEffect(() => {
         const handleScroll = () => setScrolled(window.scrollY > 100);
@@ -356,15 +377,32 @@
         return () => window.removeEventListener('scroll', handleScroll);
       }, []);
 
+      // Handle click outside to close on mobile/desktop
+      useEffect(() => {
+        const handleClickOutside = (event) => {
+          if (expanded && islandRef.current && !islandRef.current.contains(event.target)) {
+            setExpanded(false);
+          }
+        };
+        // Use mousedown/touchstart to catch interaction early
+        document.addEventListener('mousedown', handleClickOutside);
+        document.addEventListener('touchstart', handleClickOutside);
+        return () => {
+          document.removeEventListener('mousedown', handleClickOutside);
+          document.removeEventListener('touchstart', handleClickOutside);
+        };
+      }, [expanded]);
+
       return (
         <div 
-          className="fixed top-6 left-1/2 -translate-x-1/2 z-50 flex flex-col items-center"
+          ref={islandRef}
+          className="fixed top-6 left-1/2 -translate-x-1/2 z-50 flex flex-col items-center transition-all duration-300"
           onMouseEnter={() => setExpanded(true)}
           onMouseLeave={() => setExpanded(false)}
         >
           <div 
             className={`bg-ink/90 backdrop-blur-xl text-white shadow-2xl transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] overflow-hidden flex flex-col ${
-              expanded ? 'w-[90vw] max-w-[500px] rounded-[32px] p-6' : 'w-[140px] h-[44px] rounded-full cursor-pointer hover:w-[160px] hover:scale-105'
+              expanded ? 'w-[90vw] max-w-[500px] rounded-[32px] p-6' : 'w-[140px] h-[44px] rounded-full cursor-pointer hover:w-[160px] hover:scale-105 active:scale-95'
             }`}
             onClick={() => !expanded && setExpanded(true)}
           >
@@ -384,7 +422,7 @@
                    <div className="w-8 h-8 rounded-full bg-gold text-ink flex items-center justify-center font-cinzel font-bold text-sm">KS</div>
                    <span className="font-cinzel text-lg tracking-widest">KSIĘSTWO</span>
                  </div>
-                 <button onClick={(e) => { e.stopPropagation(); setExpanded(false); }} className="text-white/50 hover:text-white">&times;</button>
+                 <button onClick={(e) => { e.stopPropagation(); setExpanded(false); }} className="text-white/50 hover:text-white p-2">&times;</button>
               </div>
 
               <div className="grid grid-cols-2 gap-3 max-h-[40vh] overflow-y-auto no-scrollbar">
@@ -396,7 +434,7 @@
                       document.getElementById(s.id)?.scrollIntoView({ behavior: 'smooth' });
                       setExpanded(false);
                     }}
-                    className="text-left px-4 py-3 rounded-xl bg-white/5 hover:bg-gold/20 hover:text-gold transition-colors font-rajdhani text-sm uppercase tracking-wider"
+                    className="text-left px-4 py-3 rounded-xl bg-white/5 hover:bg-gold/20 hover:text-gold transition-colors font-rajdhani text-sm uppercase tracking-wider touch-manipulation"
                   >
                     {s.title[lang]}
                   </button>
@@ -407,16 +445,16 @@
                  <div className="flex bg-white/10 rounded-full p-1">
                     <button 
                       onClick={(e) => { e.stopPropagation(); setLang('pl'); }}
-                      className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all ${lang === 'pl' ? 'bg-gold text-ink' : 'text-white/60'}`}
+                      className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all touch-manipulation ${lang === 'pl' ? 'bg-gold text-ink' : 'text-white/60'}`}
                     >PL</button>
                     <button 
                       onClick={(e) => { e.stopPropagation(); setLang('en'); }}
-                      className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all ${lang === 'en' ? 'bg-gold text-ink' : 'text-white/60'}`}
+                      className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all touch-manipulation ${lang === 'en' ? 'bg-gold text-ink' : 'text-white/60'}`}
                     >EN</button>
                  </div>
                  <button 
                    onClick={(e) => { e.stopPropagation(); onOpenInfo(); setExpanded(false); }}
-                   className="w-8 h-8 rounded-full border border-white/20 flex items-center justify-center text-gold hover:bg-gold hover:text-ink transition-colors"
+                   className="w-8 h-8 rounded-full border border-white/20 flex items-center justify-center text-gold hover:bg-gold hover:text-ink transition-colors touch-manipulation"
                  >!</button>
               </div>
             </div>
@@ -428,12 +466,11 @@
     // 2. Menu Components
     // Accordion style for Sets
     const MenuItemRow = ({ item, lang, isOpen, onToggle }) => {
-      // Logic for individual image display removed.
       return (
         <div className="border-b border-gray-200 last:border-0">
           <div 
             onClick={onToggle}
-            className="flex items-center justify-between py-6 cursor-pointer group hover:pl-4 transition-all duration-300"
+            className="flex items-center justify-between py-6 cursor-pointer group hover:pl-4 transition-all duration-300 touch-manipulation"
           >
             <div className="flex flex-col">
                <span className={`font-cinzel text-xl md:text-2xl transition-colors duration-300 ${isOpen ? 'text-gold-dark font-bold' : 'text-ink group-hover:text-gold-dark'}`}>
@@ -487,7 +524,7 @@
 
       return (
         <section id={data.id} className="mb-0 w-full bg-white relative">
-          <div className="w-full h-[60vh] md:h-[80vh] relative flex items-center justify-center overflow-hidden">
+          <div className="w-full h-[100dvh] md:h-[80vh] relative flex items-center justify-center overflow-hidden">
             <div 
                className="absolute inset-0 parallax-bg"
                style={{ backgroundImage: `url(${data.img || 'https://picsum.photos/1920/1080'})` }}
@@ -597,7 +634,7 @@
 
       return (
         <div 
-          className="fixed inset-0 z-[9999] bg-ink flex flex-col items-center justify-center transition-opacity duration-1000"
+          className="fixed inset-0 z-[9999] bg-ink flex flex-col items-center justify-center transition-opacity duration-1000 supports-[height:100dvh]:h-[100dvh]"
           style={{ opacity }}
         >
           <div className="relative text-center p-8 flex flex-col items-center">
@@ -628,7 +665,7 @@
 
       return (
         <div 
-          className="fixed inset-0 z-[9990] bg-ink flex flex-col items-center justify-center transition-opacity duration-700"
+          className="fixed inset-0 z-[9990] bg-ink flex flex-col items-center justify-center transition-opacity duration-700 supports-[height:100dvh]:h-[100dvh]"
           style={{ opacity }}
         >
           <div className="relative z-10 text-center p-8 w-full max-w-lg flex flex-col items-center">
@@ -637,14 +674,14 @@
              <div className="flex gap-8 justify-center w-full">
                <button 
                  onClick={() => handleSelect('pl')}
-                 className="w-40 h-14 border border-white/20 hover:border-gold hover:bg-gold/10 transition-all duration-500 flex items-center justify-center group"
+                 className="w-40 h-14 border border-white/20 hover:border-gold hover:bg-gold/10 transition-all duration-500 flex items-center justify-center group touch-manipulation"
                >
                  <span className="font-rajdhani text-white text-xl tracking-[0.2em] group-hover:text-gold transition-colors">PL</span>
                </button>
 
                <button 
                  onClick={() => handleSelect('en')}
-                 className="w-40 h-14 border border-white/20 hover:border-gold hover:bg-gold/10 transition-all duration-500 flex items-center justify-center group"
+                 className="w-40 h-14 border border-white/20 hover:border-gold hover:bg-gold/10 transition-all duration-500 flex items-center justify-center group touch-manipulation"
                >
                  <span className="font-rajdhani text-white text-xl tracking-[0.2em] group-hover:text-gold transition-colors">EN</span>
                </button>
@@ -693,7 +730,7 @@
                 <DynamicIsland lang={lang} setLang={setLang} onOpenInfo={() => setShowInfo(true)} />
 
                 {/* HERO LANDING */}
-                <div className="h-screen w-full relative flex items-center justify-center overflow-hidden">
+                <div className="h-[100dvh] w-full relative flex items-center justify-center overflow-hidden">
                   <div className="absolute inset-0 bg-ink">
                       <img 
                         src="images/zestawy.jpg" 
@@ -713,7 +750,7 @@
                       </p>
                       <button 
                         onClick={() => document.getElementById('sets')?.scrollIntoView({ behavior: 'smooth' })}
-                        className="mt-12 px-8 py-4 border border-gold text-gold font-cinzel hover:bg-gold hover:text-ink transition-all duration-500 uppercase tracking-widest text-sm"
+                        className="mt-12 px-8 py-4 border border-gold text-gold font-cinzel hover:bg-gold hover:text-ink transition-all duration-500 uppercase tracking-widest text-sm touch-manipulation"
                       >
                         {UI_TEXT.explore_btn[lang]}
                       </button>
@@ -742,15 +779,15 @@
                       <div className="grid md:grid-cols-2 gap-12 mb-20 text-left md:text-center font-rajdhani text-gray-400">
                           <div>
                             <h5 className="text-white font-cinzel tracking-widest mb-4">{UI_TEXT.location_label[lang]}</h5>
-                            <a href="https://www.google.com/maps/search/?api=1&query=Krupówki+38A,+Zakopane" target="_blank" rel="noopener noreferrer" className="hover:text-gold transition-colors block leading-relaxed">
+                            <a href="https://maps.app.goo.gl/T5n17WJtzwm2L7VTA" target="_blank" rel="noopener noreferrer" className="hover:text-gold transition-colors block leading-relaxed touch-manipulation">
                               <p>Krupówki 38A, Zakopane</p>
                               <p>{UI_TEXT.poland[lang]}</p>
                             </a>
                           </div>
                           <div>
                             <h5 className="text-white font-cinzel tracking-widest mb-4">{UI_TEXT.contact_label[lang]}</h5>
-                            <a href="tel:+48502525544" className="hover:text-gold transition-colors block mb-1">+48 502 525 544</a>
-                            <a href="https://instagram.com/ksiestwosushi" target="_blank" rel="noopener noreferrer" className="hover:text-gold transition-colors block">@ksiestwosushi</a>
+                            <a href="tel:+48502525544" className="hover:text-gold transition-colors block mb-1 touch-manipulation">+48 502 525 544</a>
+                            <a href="https://instagram.com/ksiestwosushi" target="_blank" rel="noopener noreferrer" className="hover:text-gold transition-colors block touch-manipulation">@ksiestwosushi</a>
                           </div>
                       </div>
 
@@ -762,7 +799,7 @@
 
                 {showInfo && (
                   <div 
-                    className="fixed inset-0 z-[100] bg-black/80 backdrop-blur-sm flex justify-center items-center p-6 transition-all"
+                    className="fixed inset-0 z-[100] bg-black/80 backdrop-blur-sm flex justify-center items-center p-6 transition-all supports-[height:100dvh]:h-[100dvh]"
                     onClick={() => setShowInfo(false)}
                   >
                     <div 
@@ -770,7 +807,7 @@
                       onClick={(e) => e.stopPropagation()}
                     >
                       <button 
-                        className="absolute top-6 right-6 text-3xl text-gray-300 hover:text-gold transition-colors leading-none"
+                        className="absolute top-6 right-6 text-3xl text-gray-300 hover:text-gold transition-colors leading-none touch-manipulation"
                         onClick={() => setShowInfo(false)}
                       >
                         &times;
@@ -796,6 +833,5 @@
     const root = ReactDOM.createRoot(document.getElementById('root'));
     root.render(<App />);
   </script>
-<script type="module" src="/index.tsx"></script>
 </body>
 </html>
